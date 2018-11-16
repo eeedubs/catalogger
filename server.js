@@ -43,6 +43,28 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+// Register Page
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
+// Resources Page
+app.get("/resources", (req, res) => {
+  res.render("resources");
+});
+
+// Specified Category Page
+app.get("/categories/:id", (req, res) => {
+  res.render("resources_show");
+});
+
+// Categories Redirect
+app.get("/resources", (req, res) => {
+  res.redirect("/");
+});
+
+// Search???????
+
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
 });
