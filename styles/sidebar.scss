@@ -8,22 +8,37 @@ $sidebar-font-stack: American Typewriter, sans;
     float: left;
     z-index: 1;
     position: relative;
-    height: 600px;
+    height: 700px;
     width: 10%;
     margin-top: -4px;
     background-color: $sidebar-bg-color;
-    button {
-        display: block;
-        align-items: center;
-        width: 50px;
-        height: 50px;
-        border-radius:50px;
-        background-color: #E86831;
-        color:white;
-        margin: 10px auto;
-        margin-top: 20px;
+    .categories {
+        padding-top: 20px;
+        button {
+            display: block;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius:50px;
+            background-color: #E86831;
+            color:white;
+            margin: 10px auto;
+            margin-top: 20px;
+            box-shadow: 
+            0 1px 2px #fff,
+            0 -1px 1px #666,
+            inset 0 -1px 1px rgba(0,0,0,0.5),
+            inset 0 1px 1px rgba(255,255,255,0.8);
+        }
+        .category-field {
+            margin-top: 5px;
+            margin-left: 5px;
+            width: 90%;
+            height: 24px;
+        }
         strong {
             padding: 0px autp;
+            margin-left: 20px;
         }
     }
 }
