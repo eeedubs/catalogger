@@ -17,6 +17,36 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
+//mock resource table
+const resources = [{
+  "123": {id: "123",
+        title: "History of Balloons",
+        description: "A water balloon (also known as a water bomb) is a latex rubber balloon filled with water used in water balloon fights, during some festivities, and as a practical joke.",
+        resourceURL: "http://www.historyofballoons.com/balloon-facts/facts-about-water-balloons/"},
+  "234": {id: "234",
+        title: "Platypus",
+        description: "The platypus (Ornithorhynchus anatinus), sometimes referred to as the duck-billed platypus, is a semiaquatic egg-laying mammal endemic to eastern Australia, including Tasmania. ",
+        resourceURL: "https://en.wikipedia.org/wiki/Platypus"}
+}];
+
+// mock user table
+const users = [{
+  "115": {
+    "id":"115",
+    "username":"PhillyBeanSteak",
+    "password":"asdfg"
+  },
+  "116": {
+    "id":"116",
+    "username":"SchwingOfTheHill",
+    "password":"asdfg"
+  },
+  "117": {
+    "id":"117",
+    "username":"John",
+    "password":"asdfg"
+  }
+}]
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
