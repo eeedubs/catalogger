@@ -9,9 +9,13 @@ body {
   }
 
   main.container {
-    width: 700px;
+    display: inline-block;
+    z-index: 0;
+    width: 90%;
+    height: 600px;
     margin: 0 auto;
     background-color: white;
-    padding: 10px;
+    padding-left: 100px;
+    margin-top: -4px;
   }
 }

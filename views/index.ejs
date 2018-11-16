@@ -3,7 +3,7 @@
   <head>
 
   <% include _header %>
-
+  <% include _sidebar %>
   <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
   <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
   <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
@@ -14,21 +14,11 @@
 
   <body>
     <main class="container"> 
-
-
-      <section>
-          <h1>Hello World!</h1>
-      </section>
-
-      <section>
-    <% include register.ejs %>
-      </section>
+      <!-- <aside>
+      <% include _sidebar %>
+      </aside> -->
+      <h1>Hello World!</h1>
+      <% include register.ejs %>
     </main>
-
-    <div class="side-bar">
-
-    </div>
-   
-  </body>
   </body>
 </html>
