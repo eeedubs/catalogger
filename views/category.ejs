@@ -5,40 +5,30 @@
 
     <% include _header %>
     <% include _sidebar %>
+    
+    <!-- STYLESHEETS -->
     <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
     <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
-
+    
+    <!-- BOOTSRAP SPECIFIC -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+    <!-- SCRIPTS -->
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
     </head>
 
     <body>
-        <main class="container">
-            <section class="category">
-                <h2>Category Container</h2>
-                <div class="resource">
-                    <a href="https://www.cbc.ca/news/canada/newfoundland-labrador/plane-crash-stephenville-1.4906941">https://www.cbc.ca/news/canada/newfoundland-labrador/plane-crash-stephenville-1.4906941</a>
-                    <p>A plane headed for Deer Lake in western Newfoundland made an emergency landing at Stephenville airport today because of an issue with its landing gear.
-                    The Provincial Airlines Flight 1922 plane tried to land in Deer Lake when it encountered the problem, the airline said in a news release.
-                    Given adverse weather conditions in Deer Lake, the pilot circled around before heading to Stephenville, where an emergency landing was necessary.</p>
+            <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                      <h1 class="display-4" style="margin-left: 370px;">Category _____</h1>
+                      <!-- <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p> -->
                     </div>
-                <div class="resource">
-                    <a href=https://electrek.co/2018/11/15/elon-musk-boring-company-diy-watchtowers-bricks-tunnel-dirt/>https://electrek.co/2018/11/15/elon-musk-boring-company-diy-watchtowers-bricks-tunnel-dirt/</a>
-                    <p>Getting rid of dirt is one of the largest costs of digging tunnels and Elon Musk’s Boring Company is exploring some creative ways to do that.
-                    They are launching “DIY watchtowers” with bricks made of dirt from their tunnels.
-                    They estimate that the cost of moving the dirt can represent up to 15% of the total cost of a tunnel, which is why they want to turn the dirt into a product itself.
-                    
-                    Musk claimed that the bricks are more solid than cinderblocks and he suggested that the company could sell them for just 10 cents in order to get rid of the dirt.</p>
-                </div>
-                <div class="resource">
-                    <a href="https://www.cnn.com/2018/11/16/us/california-fires/index.html">https://www.cnn.com/2018/11/16/us/california-fires/index.html</a>
-                    <p>As the death toll from Northern California's Camp Fire rose to 63 and those reported missing spiked to more than 600, rescue workers searching for human remains hope that hundreds of people who remain unaccounted for are still alive.
-                    "A lot of people are displaced, and a lot of people don't know we're looking for them," Butte County Sheriff and Coroner Kory Honea said late Thursday.</p>
-                </div>
-            </section>
+                  </div>   
+        <main class="container">
+          <% include _feed.ejs %>
         </main>
     </body>
 </html>
