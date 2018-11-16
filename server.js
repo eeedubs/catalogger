@@ -80,7 +80,6 @@ app.get("/", (req, res) => {
 
 // Register Page
 app.get("/register", (req, res) => {
-
   res.render("register");
 });
 
@@ -92,7 +91,7 @@ app.get("/resources", (req, res) => {
 
 // Specified Category Page
 app.get("/category/:id", (req, res) => {
-  res.render("resources/:id");
+  res.render("category");
 });
 
 // Categories Redirect
