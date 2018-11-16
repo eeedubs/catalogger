@@ -57,6 +57,16 @@ body {
         padding-right: 5px;
         background-color: lightblue;
       }
+
+      .card-img-top {
+        float: left;
+        
+        margin-right: 10px;
+        max-width: 130px;
+        max-height: 137px;
+        width: auto;
+        height: auto;
+      }
     }
   }
 }
