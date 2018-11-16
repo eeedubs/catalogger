@@ -119,5 +119,3 @@ app.post("/comment", (req, res) => {
 app.post("/like", (req, res) => {
   res.render("/");
 });
-
-
