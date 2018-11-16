@@ -1,0 +1,26 @@
+// renders to server.js and passes it on to layout.css
+
+$nav-bg-color: #3B3A3A;
+$nav-text-color: #E86831;
+$nav-font-stack: American Typewriter, sans;
+
+.nav {
+    display: inline-block;
+    width: 100%;
+    height: 60px;
+    z-index: 1;
+    padding-left: 2em;
+    padding-right: 2em;
+    background-color: $nav-bg-color;
+    font: 100% $nav-font-stack;
+    color: $nav-text-color;
+    h2 {
+        position: relative;
+        float: left;
+        bottom: 20px;
+        margin-left: 10px;
+        font-size: 40px;
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: white;
+    }
+}
