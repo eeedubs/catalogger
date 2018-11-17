@@ -14,6 +14,7 @@ module.exports = (knex) => {
   //   });
   //   })
 
+// REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -27,7 +28,7 @@ module.exports = (knex) => {
       })
   });
 
-
+// SUBMIT A NEW POST ROUTE
   router.post("/submit", (req, res) => {
     const title = req.body.title;
     const description = req.body.description;
@@ -44,6 +45,18 @@ module.exports = (knex) => {
         res.redirect("/")
       });
   })
+
+// COMMENT ROUTE
+  // router.post("comment", (req, res) => {
+  //   const comment = req.body.comment;
+  //   knex('user_comments')
+  //     .insert({
+  //       comment: comment
+  //     })
+  //     .then((results) => {
+  //       res.redirect("/")
+  //     });
+  // })
 
   return router;
 
