@@ -7,4 +7,11 @@ $(() => {
       $("<div>").text(user.name).appendTo($("body"));
     }
   });;
+
+
+  function createPost(resource){
+
+  }
+
+  
 });
