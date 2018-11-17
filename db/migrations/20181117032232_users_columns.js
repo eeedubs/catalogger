@@ -7,4 +7,9 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
   return knex.schema.dropTable('password');
+
+};
+
+exports.down = function(knex, Promise) {
+
 };

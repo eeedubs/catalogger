@@ -112,7 +112,9 @@ app.post("/register", (req, res) => {
   const password = req.body.password;
   console.log("username = ", username);
   console.log("password = ", password);
-  // Use knex integrations to access database
+    knex('midterm').insert(
+      {name: asdf,
+      })
   res.redirect("/");
 });
 
@@ -134,7 +136,7 @@ app.post("/submit", (req, res) => {
   const title = req.body.title;
   const description = req.body.description;
   // Use knex integrations to access database
-  res.render("/");
+  res.redirect("/");
 });
 
 // Like Resource
