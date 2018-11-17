@@ -1,25 +1,30 @@
 <form class="submitNew" method="POST" action="/submit">
     <div class="form-group">
-        <label for="username">Source Link</label>
+        <label for="resourceURL">Source Link</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="resourceURL" placeholder="Enter your URL"/>
             </div>
     </div>
 
     <div class="form-group">
-        <label for="password">Title</label>
+        <label for="title">Title</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="title" placeholder="Enter your Title"/>
             </div>
     </div>
 
     <div class="form-group">
-        <label for="confirm">Category</label>
+        <label for="category">Category</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="category" placeholder="Choose your category"/>
             </div>
     </div>
-
+    <div class="form-group">
+            <label for="confirm">Description</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="description" placeholder="Add a short description"/>
+                </div>
+        </div>
 <button type="submit">SUBMIT</button>
     
 </form>
