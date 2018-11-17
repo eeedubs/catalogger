@@ -7,14 +7,21 @@
     height: 600px;
     background-color: rgb(236, 236, 236);
 }
-a.list-group-item {
+button.list-group-item {
     background-color: rgb(236, 236, 236);
     height: 60px;
+    width: 100%;
+}
+button.list-group-item:hover {
+    background-color: lightblue;
+}
+
+button.list-group-item active {
+    margin-right: 0px;
 }
 
 .lead {
     margin:auto;
-    background-color: red;
     left:0;
     right:0;
 }
