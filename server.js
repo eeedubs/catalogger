@@ -100,8 +100,8 @@ app.get("/category", (req, res) => {
 });
 
 // User Profile update page
-app.get("/update", (req, res) => {
-  res.redirect("info");
+app.get("/info", (req, res) => {
+  res.render("info");
 });
 
 // Search???????
