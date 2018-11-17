@@ -7,6 +7,8 @@ $(() => {
 
     $url = $text[1];
     $title = $text[2];
+    $imageURL = $text[3];
+    $description = $text[4];
     
 
     $form.submit((event) => {
@@ -19,14 +21,12 @@ $(() => {
         data: $form.serialize()
       })
       .then(
-        () => {
-          console.log("wow this is some text ====> : ",
-           `${$text[0].value}, 
-            ${$text[1].value}, 
-            ${$text[2].value}, 
-            ${$text[3].value}, 
-            ${$text[4].value}`);
-        }
+        createPost({
+          resourceURL: $url.value,
+          title: $title.value,
+          imageURL: $imageURL.value,
+          description: $description.value
+        })
       )
     })
   })
@@ -37,17 +37,21 @@ $(() => {
   //   }
   // });;
 
+  function loadPosts(){
 
-  // function createPost({
-  //   id,
-  //   title,
-  //   description,
-  //   resourceURL,
-  //   imageURL
-  // }) {
+  };
+  function renderPosts(){
 
-  //   console.log("Resource Found!", id, title, description,resourceURL, imageURL);
-  // };
+  };
+  function createPost({
+    resourceURL,
+    title,
+    imageURL,
+    description
+  }) {
+
+    console.log("Resource Found!", resourceURL, title, imageURL, description);
+  };
 });
 
 
