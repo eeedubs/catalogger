@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router  = express.Router();
+const cookie = require('cookie-parser');
 
 module.exports = (knex) => {
 
@@ -18,6 +19,7 @@ module.exports = (knex) => {
   router.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    res.cookie("username", username);
     knex('users')
       .insert({
         name: username,
@@ -27,6 +29,14 @@ module.exports = (knex) => {
         res.redirect("/")
       })
   });
+
+  // LOGIN USER ROUTE
+  router.post("/login", (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    res.cookie("username", username);
+    res.redirect("/");
+  })
 
 // SUBMIT A NEW POST ROUTE
   router.post("/submit", (req, res) => {
@@ -46,9 +56,32 @@ module.exports = (knex) => {
       });
   })
 
+  // LOGOUT USER
+    router.post("/logout", (req, res) => {
+      res.clearCookie('username');
+      res.redirect("/register");
+    })
+
 // COMMENT ROUTE
   // router.post("comment", (req, res) => {
+
+    //1. You firstly need to get the user_id which is like Cookie Session
+    //2. You will get the comments from the user who type and pressed POST
+    //3. Resource Id - You need to have resource id as a hidden tag in the page
+
   //   const comment = req.body.comment;
+  //   knex.select('id').from('users').as('user_id').then()
+  //     .insert({
+  //       user_id: user_id,
+  //       comment: comment
+  //     })
+  //     .then((results) => {
+  //       res.redirect("/")
+  //     });
+  // })
+
+  // LIKE ROUTE
+  // router.post("like", (req, res) => {
   //   knex('user_comments')
   //     .insert({
   //       comment: comment

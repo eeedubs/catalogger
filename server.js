@@ -126,11 +126,6 @@ app.post("/login", (req, res) => {
   res.redirect("/");
 });
 
-// Logout
-app.post("/logout", (req, res) => {
-  res.redirect("/register");
-});
-
 // Submit Resource
 app.post("/submit", (req, res) => {
   const resourceURL = req.body.urlLink;
