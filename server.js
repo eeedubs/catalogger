@@ -107,16 +107,17 @@ app.get("/info", (req, res) => {
 // Search???????
 
 // Register new user
-app.post("/register", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  console.log("username = ", username);
-  console.log("password = ", password);
-    knex('midterm').insert(
-      {name: asdf,
-      })
-  res.redirect("/");
-});
+// app.post("/register", (req, res) => {
+//   const username = req.body.username;
+//   const password = req.body.password;
+//   console.log("username = ", username);
+//   console.log("password = ", password);
+//     knex('midterm').insert(
+//       {name: asdf,
+//       })
+//   res.redirect("/");
+// });
+
 
 // Login
 app.post("/login", (req, res) => {

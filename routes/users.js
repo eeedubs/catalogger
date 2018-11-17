@@ -12,6 +12,20 @@ module.exports = (knex) => {
       .then((results) => {
         res.json(results);
     });
+    })
+
+  router.post("/register", (req, res) => {
+    console.log("noiiice")
+    const username = req.body.username;
+    const password = req.body.password;
+    knex('users')
+      .insert({
+        name: username,
+        password: password
+      })
+      .then((results) => {
+        res.redirect("/")
+      })
   });
 
   return router;
