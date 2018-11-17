@@ -2,8 +2,12 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-    <% include _loginHeader %>
-    <% include _sidebar %>
+    
+        <!-- Login Form CSS links -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Ends here -->
 
     <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
     <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
@@ -15,8 +19,9 @@
     <script type="text/javascript" src="/scripts/app.js"></script>
     </head>
     <body>
+        <% include _loginHeader %>
         <main class="container">
-            <div class="registration"> 
+            <!-- <div class="registration"> 
             <h2>Register Now!</h2>
                 <form method="POST" action="/register">
                     <p>
@@ -27,7 +32,43 @@
                     <label><b>Password: </b></label><input type="password" name="password" placeholder="Enter password...">
                     <button>Confirm</button>
                 </form>
-            </div>
+            </div> -->
+
+            
+            <!-- Login -->
+            <div class="login-container registration">
+                    <div class="row">
+                        <div class="col-md-6 login-form-1">
+                            <h3>Login</h3>
+                            <form action="/login" method="POST">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Your Username *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Your Password *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btnSubmit" value="Login" />
+                                </div>
+                            </form>
+                        </div>
+                        <!-- Registration -->
+                        <div class="col-md-6 login-form-2">
+                            <h3>Register</h3>
+                            <form method="POST" action="/register">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="New Username *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="New Password *" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btnSubmit" value="Register" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
         </main>
     </body>
 </html>

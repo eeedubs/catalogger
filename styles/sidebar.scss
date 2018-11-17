@@ -9,14 +9,13 @@ $sidebar-font-stack: American Typewriter, sans;
     z-index: 1;
     position: relative;
     height: 700px;
-    width: 10%;
+    width: 120px;
     margin-top: -4px;
     background-color: $sidebar-bg-color;
     .categories {
         padding-top: 20px;
         button {
             display: block;
-            align-items: center;
             width: 50px;
             height: 50px;
             border-radius:50px;
@@ -31,12 +30,15 @@ $sidebar-font-stack: American Typewriter, sans;
             inset 0 1px 1px rgba(255,255,255,0.8);
         }
         .category-field {
+            position: relative;
+            left: 0px;
             margin-top: 5px;
             margin-left: 5px;
             width: 90%;
             height: 24px;
         }
         strong {
+            position: relative;
             padding: 0px autp;
             margin-left: 20px;
         }
