@@ -12,7 +12,6 @@ $(() => {
 
 $(document).ready(function() {
 
-
   // handles the toggling of the blue background on the sidebar buttons
   // preventDefault would have stopped the page from loading
   $('form .list-group-item').click(function(e) {
