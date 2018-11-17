@@ -10,12 +10,15 @@ $(() => {
 });
 
 
-$(document).ready(function() {
 
-  // handles the toggling of the blue background on the sidebar buttons
-  // preventDefault would have stopped the page from loading
-  $('form .list-group-item').click(function(e) {
-    $('form .list-group-item').removeClass('active');
-    $(this).addClass('active');
+$(document).ready(function($) {
+
+  $(function() {
+    var url = document.location.href;
+    $('.list-group form').each(function() {
+      if (url === this.action + "?") {
+        $(this).children('button.list-group-item').addClass("active");        
+      }
+    });
   });
 });
