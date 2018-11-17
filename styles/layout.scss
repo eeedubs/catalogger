@@ -3,23 +3,29 @@
 @import 'loginHeader';
 
 body {
-  background-color: #EEE;
+  background-color: white;
 
   main.container {
-    width: 90%;
+    display: inline-block;
+    position: relative;
     height: 600px;
     margin: 0 auto;
     background-color: white;
-    z-index: 0;
-    padding-left: 100px;
-    margin-top: -4px;
+    padding-left: 20px;
+
+    // .category-header {
+    //   padding: 10px auto;
+    //   width: inherit;
+    //   height: 100px;
+    // }
     
     #newResource {
       width: 450px;
       margin: 0 auto;
-      margin-bottom: 50px;
+      margin-bottom: 20px;
       background-color: rgb(236, 236, 236);
-      padding: 15px;
+      padding: 10px;
+      border: 2px solid black;
     }
 
     form.needs-validation {
@@ -58,7 +64,6 @@ body {
       padding-left: 10px;
       padding-bottom: 10px;
       padding-right: 10px;
-      margin-top: -23px;
       background-color: rgb(236, 236, 236);
 
       .resource {
@@ -68,7 +73,6 @@ body {
         border: 1px black solid;
         border-radius: 10px;
         width: 100%;
-        // height: 180px;
         margin-top: 10px;
         padding-top: 5px;
         padding-left: 5px;
@@ -82,19 +86,18 @@ body {
         .btn {
           float: right;
         }
+        .card-img-top {
+          float: left;
+  
+          margin-right: 10px;
+          max-width: 130px;
+          max-height: 137px;
+          width: auto;
+          height: auto;
+        }
       }
       .resource:hover {
         opacity: 1;
-      }
-
-      .card-img-top {
-        float: left;
-
-        margin-right: 10px;
-        max-width: 130px;
-        max-height: 137px;
-        width: auto;
-        height: auto;
       }
     }
   }
