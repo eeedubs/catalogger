@@ -19,8 +19,6 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
-
-
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -54,32 +52,20 @@ function getCookie(userID){
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
-
 // Home page
 app.get("/", (req, res) => {
-
   const username = req.cookies.username;
-  console.log('!!!! COOKIES! OMG ', req.cookies.username);
-
   if (username) {
-  // Query the database for the user by username
   knex('users')
   .select('id')
   .where('name', username)
   .then((data) => {
-    console.log('!!!data', data);
     const templateVars = {
       id : data[0].id,
     };
-    console.log('!!!templateVars', templateVars)
     res.render("index", templateVars);
   })
 }
-  // Grab the ID of that user from the database
-  // You are goign to buidl out a templateVars object where id= the userid
-  // You can pass other input into the templateVars if you want
-  // IF the user exists, you're going to res.render index("index", templateVars);
-  // else res.redirect to register page.
   else {
     res.redirect("/register");
   }
