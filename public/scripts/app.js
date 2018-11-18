@@ -45,7 +45,7 @@ $(() => {
   function renderResources(posts){
     for(let i = 0; i < posts.length; i++){
      const $resourcePost = createResource(posts[i]);
-     let $prependedResource = $(".container").prepend($resourcePost);
+     let $prependedResource = $(".postArea").prepend($resourcePost);
     }
   };
   function createResource({
