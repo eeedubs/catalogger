@@ -15,7 +15,6 @@ $(() => {
     url: "api/users"
   }).done((resources) => {
     for(resource of resources) {
-      console.log("resource = ", resource);
       $(`<div class="resource"><img class="card-img-top" src='${resource.imageURL}'><h3>${resource.title}</h3><a href="${resource.resourceURL}">Source</a><p>${resource.description}</p>`).prependTo($(".category"));
     }
   });;

@@ -28,14 +28,13 @@ module.exports = (knex) => {
   router.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    res.cookie("username", username);
     knex('users')
       .insert({
         name: username,
         password: password
       })
       .then((results) => {
-        res.redirect("/")
+        res.cookie("username", username).redirect("/");
       })
   });
 
@@ -46,6 +45,17 @@ module.exports = (knex) => {
     res.cookie("username", username);
     res.redirect("/");
   })
+
+  // function idFinder(username) {
+  //       console.log("!!!!!Kdlfn = ", username)
+  //   knex('users')
+  //   .select('id')
+  //   .where('name', username)
+  //   .then((results) => {
+  //     return id;
+  //   })
+  // };
+
 
 // SUBMIT A NEW POST ROUTE
   // router.post("/submit", (req, res) => {

@@ -19,36 +19,8 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
-//mock resource table
-const resources = [{
-  "123": {id: "123",
-        title: "History of Balloons",
-        description: "A water balloon (also known as a water bomb) is a latex rubber balloon filled with water used in water balloon fights, during some festivities, and as a practical joke.",
-        resourceURL: "http://www.historyofballoons.com/balloon-facts/facts-about-water-balloons/"},
-  "234": {id: "234",
-        title: "Platypus",
-        description: "The platypus (Ornithorhynchus anatinus), sometimes referred to as the duck-billed platypus, is a semiaquatic egg-laying mammal endemic to eastern Australia, including Tasmania. ",
-        resourceURL: "https://en.wikipedia.org/wiki/Platypus"}
-}];
 
-// mock user table
-const users = [{
-  "115": {
-    "id":"115",
-    "username":"PhillyBeanSteak",
-    "password":"asdfg"
-  },
-  "116": {
-    "id":"116",
-    "username":"SchwingOfTheHill",
-    "password":"asdfg"
-  },
-  "117": {
-    "id":"117",
-    "username":"John",
-    "password":"asdfg"
-  }
-}]
+
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -68,7 +40,7 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
-
+// DOES THIS FUNCTION EVER GET USED???
 function getCookie(userID){
   var cookie;
   for (var key in users){
@@ -82,17 +54,33 @@ function getCookie(userID){
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
-app.listen(PORT, () => {
-  console.log("Example app listening on port " + PORT);
-});
 
 // Home page
 app.get("/", (req, res) => {
-  var cookieName = require.cookies;
-  // console.log(getCookie(cookieName));
-  if (req.cookies['username']){
-    res.render("index");
-  } else {
+
+  const username = req.cookies.username;
+  console.log('!!!! COOKIES! OMG ', req.cookies.username);
+
+  if (username) {
+  // Query the database for the user by username
+  knex('users')
+  .select('id')
+  .where('name', username)
+  .then((data) => {
+    console.log('!!!data', data);
+    const templateVars = {
+      id : data[0].id,
+    };
+    console.log('!!!templateVars', templateVars)
+    res.render("index", templateVars);
+  })
+}
+  // Grab the ID of that user from the database
+  // You are goign to buidl out a templateVars object where id= the userid
+  // You can pass other input into the templateVars if you want
+  // IF the user exists, you're going to res.render index("index", templateVars);
+  // else res.redirect to register page.
+  else {
     res.redirect("/register");
   }
 });
@@ -170,17 +158,20 @@ app.get("/search", (req, res) => {
 
 
 app.post("/submit", (req, res) => {
+  console.log('body', req.body);
     const title = req.body.title;
     const description = req.body.description;
     const resourceURL = req.body.resourceURL;
     const imageURL = req.body.imageURL;
-    console.log("ok here")
+    const user_id = req.body.user_id;
+    console.log("user_id = ", user_id);
     knex('resources')
       .insert({
         resourceURL: resourceURL,
         title: title,
         imageURL: imageURL,
         description: description,
+        created_by: user_id
       })
       .then((results) => {
         res.redirect("/")
@@ -213,3 +204,8 @@ app.post("/like", (req, res) => {
     res.redirect("/register");
   }
 });
+
+app.listen(PORT, () => {
+  console.log("Example app listening on port " + PORT);
+});
+
