@@ -39,15 +39,17 @@ app.use("/styles", sass({
 app.use(express.static("public"));
 
 // DOES THIS FUNCTION EVER GET USED???
+
 // function getCookie(userID){
 //   var cookie;
 //   for (var key in users){
-//     if (users[key].username = userID){
+//     if (users[key].username === userID){
 //       cookie = users[key].username;
 //     }
 //   }
 //   return cookie;
 // }
+
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
