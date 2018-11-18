@@ -1,10 +1,10 @@
 $(() => {
 
   $(function () {
-    const $button = $("#commentFeed");
-    const $postComment = $("#commentPost");
-    const $commentSection = $("#comments")/*.hide()*/;
-    const $input = $("#commentInput");
+    const $button = $(".commentFeed");
+    const $postComment = $(".commentPost");
+    const $commentSection = $("section.comment-container")/*.hide()*/;
+    const $input = $(".commentInput");
 
     $button.click((event) => {
       event.preventDefault();
@@ -35,7 +35,7 @@ $(() => {
         <footer>
           <a class="btn btn-primary">Rate</a>
           <a class="btn btn-primary">Like</a>
-          <a id="commentFeed" class="btn btn-primary">Comment</a>
+          <a class="btn btn-primary commentFeed">Comment</a>
         </footer>
         <section id="comments" class="comment-container">
                 <form id="submitComment" method="POST" action="/comment">
