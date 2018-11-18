@@ -66,6 +66,17 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
+
+function getCookie(userID){
+  var cookie;
+  for (var key in users){
+    if (users[key].username = userID){
+      cookie = users[key].username;
+    }
+  }
+  return cookie;
+}
+
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
@@ -74,8 +85,14 @@ app.listen(PORT, () => {
 });
 
 // Home page
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", (require, response) => {
+  var cookieName = require.cookies;
+  console.log(getCookie(cookieName));
+  if (require.cookies === getCookie(require.cookies)){
+    response.render("index");
+  } else {
+    response.redirect("/register");
+  }
 });
 
 // Register Page
@@ -106,25 +123,12 @@ app.get("/info", (req, res) => {
 
 // Search???????
 
-// Register new user
-// app.post("/register", (req, res) => {
+// Login
+// app.post("/login", (req, res) => {
 //   const username = req.body.username;
 //   const password = req.body.password;
-//   console.log("username = ", username);
-//   console.log("password = ", password);
-//     knex('midterm').insert(
-//       {name: asdf,
-//       })
 //   res.redirect("/");
 // });
-
-
-// Login
-app.post("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  res.redirect("/");
-});
 
 // Submit Resource
 app.post("/submit", (req, res) => {
