@@ -2,13 +2,13 @@ $(() => {
 
   $(function () {
     //still selects all forms for some reason
-    $form = $("#submitNew");
-    $text = $(".form-control");
+    const $form = $("#submitNew");
+    const $text = $(".form-control");
 
-    $url = $text[1];
-    $title = $text[2];
-    $imageURL = $text[3];
-    $description = $text[4];
+    const $url = $text[1];
+    const $title = $text[2];
+    const $imageURL = $text[3];
+    const $description = $text[4];
     
 
     $form.submit((event) => {
@@ -49,10 +49,22 @@ $(() => {
     imageURL,
     description
   }) {
-    $resourceElm = $("<div>").addClass("resource");
-    $imgElm = $("<img>").addClass("card-img-top");
+    const $resourceElm = $("<div>").addClass("resource");
 
-    console.log("Resource Found!", resourceURL, title, imageURL, description);
+    const $imgElm = $("<img>").addClass("card-img-top").prop("src", imageURL).appendTo($resourceElm);
+    const $title = $("<h5>").appendTo($resourceElm).text(`${title} - `);
+    const $source = $("<a>").prop("href", resourceURL).appendTo($title);
+    const $description = $("<p>").appendTo($resourceElm).text(description);
+
+    const $footer = $("<footer>").appendTo($resourceElm);
+    const $comments = $("<a>").addClass("btn btn-primary")
+    .prop("href", "/").appendTo($footer);//|============== this may cause issues with comments button ==============|
+
+    const $articleSeperator = $("<div>").prop("style", "clear:both;").appendTo($resourceElm);
+
+
+    // return $resourceElm;
+    console.log("Resource Found!", $resourceElm);
   };
 });
 
