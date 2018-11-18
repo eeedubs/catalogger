@@ -1,12 +1,12 @@
 <nav class="nav">
   <h2>Fil'r</h2>
   <div class="input-bar">
-    <form class="search" type="search" action="/search" method="POST">
+    <form action="/search" method="POST">
       <input class="search-field" placeholder="Search for articles...">
-      <button class="search-button" style="background-color: #3c7a22" type="submit">Search</button>
+      <input class="search-button" type="submit" value="Search" name="search">
     </form>
-    <form class="logout" type="submit" action="/api/users/logout" method="POST">
-      <button class="logout-button" style="background-color: #007bff" type="submit" name="logout">Logout</button>
+    <form action="/api/users/logout" method="POST">
+      <input class="logout-button" type="submit" value="Logout" name="logout">
     </form>
   </div>
 </nav>
