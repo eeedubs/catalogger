@@ -2,7 +2,7 @@ $(() => {
 
   $(function () {
     const $button = $(".commentFeed");
-    const $postComment = $(".commentPost");
+    const $postComment = $("section.comment-container .commentPost");
     const $commentSection = $("section.comment-container")/*.hide()*/;
     const $input = $(".commentInput");
 
@@ -47,7 +47,9 @@ $(() => {
           </section>
         <div style="clear: both;"></div>
         `).prependTo($(".category"));
-        // $newElement.
+        const $commentFeedToggle = $newElement.find(".commentFeed");
+
+        console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
     }
     // makeNewEventHandlers(); // might not need
   });
