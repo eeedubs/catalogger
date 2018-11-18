@@ -88,7 +88,6 @@ $(() => {
     // return $resourceElm;
     console.log("Resource Found!", $resourceElm);
   };
-});
 
   // $(function() {
   //   var url = document.location.href;
@@ -97,12 +96,21 @@ $(() => {
   //   $('.jumbotron jumbotron-fluid .display-4').
   // });
 
+  function renameCategory() {
+    let extension = window.location.pathname.split('/');
+    for (let i in extension){
+      extension[i] = extension[i].charAt(0).toUpperCase() + extension[i].slice(1);
+    }
+    $('.display-4').text(extension.join(" "));
+  };
+
+  // Highlights the selected page as blue on the sidebar, and changes the header for each category
   $(function() {
     var url = document.location.href;
     $('.list-group form').each(function() {
       if (url === this.action + "?") {
         $(this).children('button.list-group-item').addClass("active"); 
-        console.log('.list-group form');       
+        renameCategory();    
       }
     });
   });
