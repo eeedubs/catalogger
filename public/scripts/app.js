@@ -1,9 +1,11 @@
+// App.js handles the functionality of various components within the site, without reloading
+// the web page
 $(() => {
 
   $(function () {
     const $button = $("#commentFeed");
     const $postComment = $("#commentPost");
-    const $commentSection = $("#comments")/*.hide()*/;
+    const $commentSection = $("#comments").hide();
     const $input = $("#commentInput");
 
     $button.click((event) => {
@@ -46,7 +48,8 @@ $(() => {
                 </div>
           </section>
         <div style="clear: both;"></div>
-        `).prependTo($(".category"));
+        `)
+        .prependTo($(".category"));
     }
   });
 
@@ -75,18 +78,6 @@ $(() => {
   //       })
   //   });
   // }
-
-  function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-    for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i].split('=');
-        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-    }
-    return query;
-}
-
-
 
  // Handles the naming of the category titles
   function renameCategory() {

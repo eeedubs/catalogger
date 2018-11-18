@@ -1,4 +1,4 @@
-// Handles all HTTP requests
+// server.js Handles all HTTP requests
 "use strict";
 
 require('dotenv').config();

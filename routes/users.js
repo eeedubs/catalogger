@@ -1,6 +1,5 @@
-"use strict";
-
 // users.js handles the inserting and retrieving of information from the database
+"use strict";
 
 const express = require('express');
 const router  = express.Router();
@@ -25,6 +24,16 @@ module.exports = (knex) => {
         res.json(results);
     });
   })
+
+  function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+  }
 
   router.get("/search", (req, res) => {
     const searchQuery = parseQuery(window.location.search);

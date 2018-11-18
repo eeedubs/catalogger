@@ -12,14 +12,14 @@ body {
     margin: 10px auto;
     background-color: white;
     padding-left: 20px;
-    width: 80%;
+    width: 90%;
 
     h1.display-4 {
       border-radius: 0px!important;
     }
 
     #newResource {
-      width: 450px;
+      width: inherit;
       margin: 0 auto;
       margin-bottom: 20px;
       background-color: rgb(236, 236, 236);
@@ -57,6 +57,7 @@ body {
       position: relative;
       font-size: 16px;
       margin: 0px auto;
+      width: 100%;
       padding-top: 10px;
       padding-left: 10px;
       padding-bottom: 10px;
@@ -92,25 +93,29 @@ body {
         section.comment-container {
           background-color: #f4ebed;
           padding: 10px 20px;
-          margin-top: 45px;
+          width: 100%;
+          margin-top: 20px;
           border: 2px solid black;
           border-radius: 5px;
 
           form#submitComment {
+            display: inline-flex;
+            justify-content: flex-end;
             margin: 5px auto;
             margin-bottom: 12px;
             height: 150px;
+            width: 100%;
             #commentPost {
-              float: right;
+              opacity: .6;              
               width: 100px;
+              height: 30px;
               background-color: lightgreen;
-              opacity: .6;
               border: .5px solid black;
-              border-radius: 5px;
-              padding: 11px;
-              padding-left: 13px;
+              border-radius: 15px;
+              margin-left: 20px;
+              padding-left: 15px;
+              padding-top: 3px;
               color: black;
-              display: block;
             }
             #commentPost:hover {
               opacity: 1;
@@ -125,10 +130,11 @@ body {
           
           div.comment {
             background: white;
-            margin: 5px auto;
+            height: 150px;
+            padding-bottom: 20px;
             border: 1px solid black;
             border-radius: 5px;
-            padding: 5px;
+            margin-bottom: 5px;
             padding-right: 3px;
             opacity: .6;
 
@@ -138,20 +144,23 @@ body {
               background-color: lightblue;
               border-radius: 5px;
               width: 70%;
-
               h4.username {
                 margin: auto;
-                margin-left: 30px;
+                margin-left: 2px;
               }
             }
-
+            p {
+              height: 60%;
+              margin-left: 8px;
+            }
             footer {
               background-color: lightblue;
-              width: 25%;
-              margin-left: 7%;
+              width: 100px;
+              height: 1.5em;
+              margin-left: 5px;
               .timestamp {
                 font-size: small;
-                margin-left: 70px;
+                padding-left: 5px;
               }
             }
           }
