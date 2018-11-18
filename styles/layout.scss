@@ -9,7 +9,7 @@ body {
     display: inline-block;
     position: relative;
     height: 600px;
-    margin: 0 auto;
+    margin: 10px auto;
     background-color: white;
     padding-left: 20px;
     
@@ -28,6 +28,8 @@ body {
 
       button.btn.btn-primary {
         margin-left: 95px;
+        margin: 0 5px;
+        color: white;
       }
     }
     .registration {
@@ -77,17 +79,87 @@ body {
           margin: 0px auto;
           display: inline-block;
         }
-        .btn {
-          float: right;
-        }
         .card-img-top {
           float: left;
-  
           margin-right: 10px;
           max-width: 130px;
           max-height: 137px;
           width: auto;
           height: auto;
+        }
+
+        section.comment-container {
+          background-color: #f4ebed;
+          padding: 10px 20px;
+          margin-top: 45px;
+          border: 2px solid black;
+          border-radius: 5px;
+
+          form#submitComment {
+            margin: 5px auto;
+            margin-bottom: 12px;
+            height: 50px;
+            #commentPost {
+              float: right;
+              width: 100px;
+              background-color: lightgreen;
+              opacity: .6;
+              border: .5px solid black;
+              border-radius: 5px;
+              padding: 11px;
+              padding-left: 13px;
+              color: black;
+              display: block;
+            }
+            #commentPost:hover {
+              opacity: 1;
+            }
+            textarea {
+              width: 85%;
+              height: 100%;
+              padding: 15px;
+              word-break: break-word;
+            }
+          }
+          
+          div.comment {
+            background: white;
+            margin: 5px auto;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            padding-right: 3px;
+            opacity: .6;
+
+            header {
+              padding: 5px;
+              margin-bottom: 3px;
+              background-color: lightblue;
+              border-radius: 5px;
+              width: 70%;
+
+              h4.username {
+                margin: auto;
+                margin-left: 30px;
+              }
+            }
+
+           
+
+            footer {
+              background-color: lightblue;
+              width: 25%;
+              margin-left: 7%;
+              .timestamp {
+                font-size: small;
+                margin-left: 70px;
+              }
+            }
+          }
+
+          div.comment:hover {
+            opacity: 1;
+          }
         }
       }
       .resource:hover {
