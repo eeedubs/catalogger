@@ -21,7 +21,7 @@ $(() => {
         data: $form.serialize()
       })
       .then(
-        createPost({
+        createResource({
           resourceURL: $url.value,
           title: $title.value,
           imageURL: $imageURL.value,
@@ -44,7 +44,8 @@ $(() => {
   };
   function renderResources(posts){
     for(let i = 0; i < posts.length; i++){
-      createResource(posts[i]);
+     const $resourcePost = createResource(posts[i]);
+     let $prependedResource = $(".container").prepend($resourcePost);
     }
   };
   function createResource({
@@ -61,8 +62,13 @@ $(() => {
     const $description = $("<p>").appendTo($resourceElm).text(description);
 
     const $footer = $("<footer>").appendTo($resourceElm);
-    const $comments = $("<a>").addClass("btn btn-primary")
-    .prop("href", "/").appendTo($footer);//|============== this may cause issues with comments button ==============|
+    //|============== this may cause issues with buttons (.prop("/") needs to be proper route) ==============|
+    const $like = $("<a>").addClass("btn btn-primary")
+    .prop("href", "/").text("Like").appendTo($footer);
+    const $comment = $("<a>").addClass("btn btn-primary")
+    .prop("href", "/").text("Comment").appendTo($footer);
+    const $rate = $("<a>").addClass("btn btn-primary")
+    .prop("href", "/").text("Rate").appendTo($footer);
 
     const $articleSeperator = $("<div>").prop("style", "clear:both;").appendTo($resourceElm);
 
