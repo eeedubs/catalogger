@@ -7,12 +7,13 @@ body {
 
   main.container {
     display: inline-block;
-    position: relative;
+    position: fixed;
     height: 600px;
     margin: 10px auto;
     background-color: white;
     padding-left: 20px;
-    
+    width: 80%;
+
     h1.display-4 {
       border-radius: 0px!important;
     }
