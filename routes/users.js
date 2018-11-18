@@ -15,6 +15,15 @@ module.exports = (knex) => {
   //   });
   //   })
 
+    router.get("/", (req, res) => {
+    knex
+      .select("*")
+      .from("resources")
+      .then((results) => {
+        res.json(results);
+    });
+    })
+
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
     const username = req.body.username;
