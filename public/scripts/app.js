@@ -15,8 +15,6 @@ $(() => {
     $postComment.click((event) => {
       event.preventDefault();
       console.log("Button Clicked!");
-
-      
     })
   })
 
@@ -38,8 +36,15 @@ $(() => {
           <a class="btn btn-primary">Rate</a>
           <a class="btn btn-primary">Like</a>
           <a id="commentFeed" class="btn btn-primary">Comment</a>
-          <% include _comments.ejs %>
         </footer>
+        <section id="comments" class="comment-container">
+                <form id="submitComment" method="POST" action="/comment">
+                    <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
+                    <a href="#" id="commentPost" class="btn-primary">Comment</a>
+                </form>
+                <div class="postArea">
+                </div>
+          </section>
         <div style="clear: both;"></div>
         `).prependTo($(".category"));
     }
