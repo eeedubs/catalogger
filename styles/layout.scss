@@ -98,6 +98,21 @@ body {
           margin-top: 45px;
           border: 2px solid black;
           border-radius: 5px;
+
+          form#submitComment {
+            margin: 5px auto;
+            margin-bottom: 12px;
+            #commentPost {
+              background-color: lightgreen;
+              border: .5px solid black;
+              border-radius: 5px;
+              padding: 10px;
+              color: black;
+              margin-bottom: 3px;
+            }
+          }
+          
+          
           
 
           div.comment {
@@ -108,7 +123,7 @@ body {
             padding: 5px;
             padding-right: 3px;
             opacity: .6;
-            
+
             header {
               padding: 5px;
               margin-bottom: 3px;
