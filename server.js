@@ -8,6 +8,8 @@ const express     = require("express");
 const bodyParser  = require("body-parser");
 const sass        = require("node-sass-middleware");
 const app         = express();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
@@ -85,13 +87,13 @@ app.listen(PORT, () => {
 });
 
 // Home page
-app.get("/", (require, response) => {
+app.get("/", (req, res) => {
   var cookieName = require.cookies;
-  console.log(getCookie(cookieName));
-  if (require.cookies === getCookie(require.cookies)){
-    response.render("index");
+  // console.log(getCookie(cookieName));
+  if (req.cookies['username']){
+    res.render("index");
   } else {
-    response.redirect("/register");
+    res.redirect("/register");
   }
 });
 
@@ -103,22 +105,38 @@ app.get("/register", (req, res) => {
 // Resources Page
 app.get("/resources", (req, res) => {
   // include session id, user, pass info to template vars
-  res.render("resources");
+  if (req.cookies['username']){
+    res.render("resources");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Specified Category Page
 app.get("/category/:id", (req, res) => {
+  if (req.cookies['username']){
   res.render("category");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Categories Redirect
 app.get("/category", (req, res) => {
-  res.redirect("/");
+  if (req.cookies['username']){
+    res.redirect("/");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // User Profile update page
 app.get("/info", (req, res) => {
-  res.render("info");
+  if (req.cookies['username']){
+    res.render("info");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Search???????
@@ -135,21 +153,37 @@ app.post("/submit", (req, res) => {
   const resourceURL = req.body.urlLink;
   const title = req.body.title;
   const description = req.body.description;
-  // Use knex integrations to access database
-  res.redirect("/");
+  if (req.cookies['username']){
+    // Use knex integrations to access database
+    res.redirect("/");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Like Resource
 app.post("/like", (req, res) => {
-  res.render("/");
+  if (req.cookies['username']){
+    res.render("/");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Comment On Resource
 app.post("/comment", (req, res) => {
-  res.render("/");
+  if (req.cookies['username']){
+    res.render("/");
+  } else {
+    res.redirect("/register");
+  }
 });
 
 // Categorise Resource
 app.post("/like", (req, res) => {
-  res.render("/");
+  if (req.cookies['username']){
+    res.render("/");
+  } else {
+    res.redirect("/register");
+  }
 });
