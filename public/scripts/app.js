@@ -1,6 +1,18 @@
 $(() => {
 
   $(function () {
+    const $button = $("#postNewComment");
+    const $commentSection = $("#comments").hide();
+    const $input = $("#commentInput");
+
+    $button.click((event) => {
+      event.preventDefault();
+      
+      $commentSection.slideToggle();
+      $input.focus();
+    })
+  })
+  $(function () {
     //still selects all forms for some reason
     const $form = $("#submitNew");
     const $text = $(".form-control");
