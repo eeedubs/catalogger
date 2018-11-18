@@ -13,6 +13,10 @@ body {
     background-color: white;
     padding-left: 20px;
     
+    h1.display-4 {
+      border-radius: 0px!important;
+    }
+
     #newResource {
       width: 450px;
       margin: 0 auto;
@@ -35,9 +39,7 @@ body {
       position: relative;
       border: 1px black solid;
       border-radius: 10px;
-      // font-size: 16px;
       width: 90%;
-      // height: 90% inherit;
       padding-top: 10px;
       padding-left: 20px;
       padding-bottom: 20px;
@@ -50,8 +52,6 @@ body {
     .category {
       display: inline-block;
       position: relative;
-      border: 1px black solid;
-      border-radius: 10px;
       font-size: 16px;
       margin: 0px auto;
       padding-top: 10px;
@@ -82,7 +82,6 @@ body {
         }
         .card-img-top {
           float: left;
-  
           margin-right: 10px;
           max-width: 130px;
           max-height: 137px;
