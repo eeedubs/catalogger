@@ -18,13 +18,18 @@
 
     <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
     <script type="text/javascript" src="/scripts/app.js"></script>
-    <script type="text/javascript" src="/routes/users.js"></script>
+
     </head>
     <body>
     <% include _header %>
     <% include _sidebar %>
         <main class="container">
             <section>
+              <% templateVars.forEach(function(result){ %>
+                <form name="test" method="POST" action="">
+                    <input type="hidden" value="<%=result.id%>" />
+                </form>
+              <%  }) %>
             </section>
         </main>
     </body>

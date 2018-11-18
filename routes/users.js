@@ -77,35 +77,6 @@ module.exports = (knex) => {
     res.redirect("/");
   })
 
-  // function idFinder(username) {
-  //       console.log("!!!!!Kdlfn = ", username)
-  //   knex('users')
-  //   .select('id')
-  //   .where('name', username)
-  //   .then((results) => {
-  //     return id;
-  //   })
-  // };
-
-
-// SUBMIT A NEW POST ROUTE
-  // router.post("/submit", (req, res) => {
-  //   const title = req.body.title;
-  //   const description = req.body.description;
-  //   const resourceURL = req.body.resourceURL;
-  //   const imageURL = req.body.imageURL;
-  //   console.log("ok here")
-  //   knex('resources')
-  //     .insert({
-  //       resourceURL: resourceURL,
-  //       title: title,
-  //       imageURL: imageURL,
-  //       description: description,
-  //     })
-  //     .then((results) => {
-  //       res.redirect("/")
-  //     });
-  // })
 
   // LOGOUT USER
     router.post("/logout", (req, res) => {
@@ -120,19 +91,16 @@ module.exports = (knex) => {
     //3. Resource Id - You need to have resource id as a hidden tag in the page
 
   router.post("/comment", (req, res) => {
-
-    id
-    comment
-    user_id
-    resource_id
-
-    const comment = req.body.comment;
-    const user_id = req.body.user_id;
+    console.log("it's a comment!")
+    const comment     = req.body.comment;
+    const user_id     = req.body.user_id;
     const resource_id = req.body
-      knex('user_likes')
-      .insert({
-        user_id: user_id,
-        comment: comment
+      knex('user_comments')
+      .insert
+      ({
+        comment:     comment,
+        user_id:     user_id
+        //resource_id:
       })
       .then((results) => {
         res.redirect("/")
