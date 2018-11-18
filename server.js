@@ -1,3 +1,4 @@
+// Handles all HTTP requests
 "use strict";
 
 require('dotenv').config();
