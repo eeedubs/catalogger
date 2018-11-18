@@ -2,25 +2,39 @@
 
 $nav-font-stack: American Typewriter, sans;
 
-.navbar {
+.nav {
+    background-color: rgb(236, 236, 236);
     width: 100%;
-    display: inline-block;
-    height: 42px;
-    margin-bottom: 5px;
-    padding-left: 2em;
+    height: 40px;
+    margin-bottom: 10px;
     font: 100% $nav-font-stack;
 }
-.navbar-brand {
-    font-weight: bold;
-    margin-right: 40px;
-}
-.flex-right {
+.nav h2 {
     display: flex;
-    justify-content: flex-end;
-    align-content: flex-end;
+    position: relative;
+    bottom: 15px;
+    font-weight: bold;
+    height: 30px;
+    margin-left: 40px;
+}
+.nav .input-bar {
+    font: 100% helvetica;
+    display: flex;
+    margin-left: auto;
+    height: 27px;
 }
 
-.btn {
+.nav .input-bar form {
+    justify-content: flex-end;
+    position: relative;
+    top: 5px;
+}
+.nav .input-bar form button {
+    border-radius: 20px;
+    width: 60px;
     color: white;
-
+}
+.nav .input-bar form .search-field {
+    width: 250px;
+    padding-left: 8px;
 }

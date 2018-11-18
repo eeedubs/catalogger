@@ -139,14 +139,21 @@ app.get("/info", (req, res) => {
   }
 });
 
-// Search???????
+app.get("/info", (req, res) => {
+  if (req.cookies['username']){
+    res.render("info");
+  } else {
+    res.redirect("/register");
+  }
+});
 
-// Login
-// app.post("/login", (req, res) => {
-//   const username = req.body.username;
-//   const password = req.body.password;
-//   res.redirect("/");
-// });
+app.get("/search", (req, res) => {
+  if (req.cookies['username']){
+    res.render("search");
+  } else {
+    res.redirect("/register");
+  }
+});
 
 // Submit Resource
 app.post("/submit", (req, res) => {
