@@ -174,13 +174,13 @@ app.post("/like", (req, res) => {
 });
 
 // Comment On Resource
-app.post("/comment", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
+// app.post("/comment", (req, res) => {
+//   if (req.cookies['username']){
+//     res.render("/");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 // Categorise Resource
 app.post("/like", (req, res) => {
