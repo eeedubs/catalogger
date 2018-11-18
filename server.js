@@ -19,36 +19,6 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes for each Resource
 const usersRoutes = require("./routes/users");
 
-//mock resource table
-const resources = [{
-  "123": {id: "123",
-        title: "History of Balloons",
-        description: "A water balloon (also known as a water bomb) is a latex rubber balloon filled with water used in water balloon fights, during some festivities, and as a practical joke.",
-        resourceURL: "http://www.historyofballoons.com/balloon-facts/facts-about-water-balloons/"},
-  "234": {id: "234",
-        title: "Platypus",
-        description: "The platypus (Ornithorhynchus anatinus), sometimes referred to as the duck-billed platypus, is a semiaquatic egg-laying mammal endemic to eastern Australia, including Tasmania. ",
-        resourceURL: "https://en.wikipedia.org/wiki/Platypus"}
-}];
-
-// mock user table
-const users = [{
-  "115": {
-    "id":"115",
-    "username":"PhillyBeanSteak",
-    "password":"asdfg"
-  },
-  "116": {
-    "id":"116",
-    "username":"SchwingOfTheHill",
-    "password":"asdfg"
-  },
-  "117": {
-    "id":"117",
-    "username":"John",
-    "password":"asdfg"
-  }
-}]
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -68,7 +38,7 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
-
+// DOES THIS FUNCTION EVER GET USED???
 function getCookie(userID){
   var cookie;
   for (var key in users){
@@ -82,17 +52,21 @@ function getCookie(userID){
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
-app.listen(PORT, () => {
-  console.log("Example app listening on port " + PORT);
-});
-
 // Home page
 app.get("/", (req, res) => {
-  var cookieName = require.cookies;
-  // console.log(getCookie(cookieName));
-  if (req.cookies['username']){
-    res.render("index");
-  } else {
+  const username = req.cookies.username;
+  if (username) {
+  knex('users')
+  .select('id')
+  .where('name', username)
+  .then((data) => {
+    const templateVars = {
+      id : data[0].id,
+    };
+    res.render("index", templateVars);
+  })
+}
+  else {
     res.redirect("/register");
   }
 });
@@ -156,17 +130,39 @@ app.get("/search", (req, res) => {
 });
 
 // Submit Resource
+// app.post("/submit", (req, res) => {
+//   const resourceURL = req.body.urlLink;
+//   const title = req.body.title;
+//   const description = req.body.description;
+//   if (req.cookies['username']){
+//     // Use knex integrations to access database
+//     res.redirect("/");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
+
+
 app.post("/submit", (req, res) => {
-  const resourceURL = req.body.urlLink;
-  const title = req.body.title;
-  const description = req.body.description;
-  if (req.cookies['username']){
-    // Use knex integrations to access database
-    res.redirect("/");
-  } else {
-    res.redirect("/register");
-  }
-});
+  console.log('body', req.body);
+    const title = req.body.title;
+    const description = req.body.description;
+    const resourceURL = req.body.resourceURL;
+    const imageURL = req.body.imageURL;
+    const user_id = req.body.user_id;
+    console.log("user_id = ", user_id);
+    knex('resources')
+      .insert({
+        resourceURL: resourceURL,
+        title: title,
+        imageURL: imageURL,
+        description: description,
+        created_by: user_id
+      })
+      .then((results) => {
+        res.redirect("/")
+      });
+  })
 
 // Like Resource
 app.post("/like", (req, res) => {
@@ -178,13 +174,13 @@ app.post("/like", (req, res) => {
 });
 
 // Comment On Resource
-app.post("/comment", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
+// app.post("/comment", (req, res) => {
+//   if (req.cookies['username']){
+//     res.render("/");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 // Categorise Resource
 app.post("/like", (req, res) => {
@@ -194,3 +190,8 @@ app.post("/like", (req, res) => {
     res.redirect("/register");
   }
 });
+
+app.listen(PORT, () => {
+  console.log("Example app listening on port " + PORT);
+});
+
