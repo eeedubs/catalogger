@@ -37,13 +37,17 @@ $(() => {
   //   }
   // });;
 
-  function loadPosts(){
+
+  //|============== Functions for handling post creation ==============|
+  function loadResources(){
 
   };
-  function renderPosts(){
-
+  function renderResources(posts){
+    for(let i = 0; i < posts.length; i++){
+      createResource(posts[i]);
+    }
   };
-  function createPost({
+  function createResource({
     resourceURL,
     title,
     imageURL,
