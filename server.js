@@ -72,7 +72,7 @@ app.use(express.static("public"));
 function getCookie(userID){
   var cookie;
   for (var key in users){
-    if (users[key].username = userID){
+    if (users[key].username === userID){
       cookie = users[key].username;
     }
   }

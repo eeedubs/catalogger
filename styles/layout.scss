@@ -7,7 +7,7 @@ body {
 
   main.container {
     display: inline-block;
-    position: fixed;
+    position: static;
     height: 600px;
     margin: 10px auto;
     background-color: white;
