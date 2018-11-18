@@ -2,12 +2,21 @@ $(() => {
 
   $(function () {
     const $button = $("#commentFeed");
-    const $commentSection = $("#comments").hide();
+    const $postComment = $("#commentPost");
+    const $commentSection = $("#comments")/*.hide()*/;
     const $input = $("#commentInput");
 
     $button.click((event) => {
       event.preventDefault();
-      console.log("Button Clicked!!");
+      $commentSection.slideToggle();
+      $input.focus();
+    })
+
+    $postComment.click((event) => {
+      event.preventDefault();
+      console.log("Button Clicked!");
+
+      
     })
   })
 
