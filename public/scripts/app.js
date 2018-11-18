@@ -38,7 +38,7 @@ $(() => {
   // });;
 
 
-  //|============== Functions for handling post creation ==============|
+  //|============== Functions for handling post creation (not finished yet) ==============|
   function loadResources(){
 
   };

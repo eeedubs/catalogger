@@ -93,9 +93,50 @@ body {
         }
 
         section.comment-container {
-          background-color: gray;
-          padding: 0 20px;
+          background-color: #f4ebed;
+          padding: 10px 20px;
           margin-top: 45px;
+          border: 2px solid black;
+          border-radius: 5px;
+          
+
+          div.comment {
+            background: white;
+            margin: 5px auto;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            padding-right: 3px;
+            opacity: .6;
+            header {
+              padding: 5px;
+              margin-bottom: 3px;
+              background-color: lightblue;
+              border-radius: 5px;
+              width: 70%;
+
+              h4.username {
+                margin: auto;
+                margin-left: 30px;
+              }
+            }
+
+           
+
+            footer {
+              background-color: lightblue;
+              width: 25%;
+              margin-left: 7%;
+              .timestamp {
+                font-size: small;
+                margin-left: 70px;
+              }
+            }
+          }
+
+          div.comment:hover {
+            opacity: 1;
+          }
         }
       }
       .resource:hover {
