@@ -48,22 +48,23 @@ module.exports = (knex) => {
   })
 
 // SUBMIT A NEW POST ROUTE
-  router.post("/submit", (req, res) => {
-    const title = req.body.title;
-    const description = req.body.description;
-    const resourceURL = req.body.resourceURL;
-    const imageURL = req.body.imageURL;
-    knex('resources')
-      .insert({
-        resourceURL: resourceURL,
-        title: title,
-        imageURL: imageURL,
-        description: description,
-      })
-      .then((results) => {
-        res.redirect("/")
-      });
-  })
+  // router.post("/submit", (req, res) => {
+  //   const title = req.body.title;
+  //   const description = req.body.description;
+  //   const resourceURL = req.body.resourceURL;
+  //   const imageURL = req.body.imageURL;
+  //   console.log("ok here")
+  //   knex('resources')
+  //     .insert({
+  //       resourceURL: resourceURL,
+  //       title: title,
+  //       imageURL: imageURL,
+  //       description: description,
+  //     })
+  //     .then((results) => {
+  //       res.redirect("/")
+  //     });
+  // })
 
   // LOGOUT USER
     router.post("/logout", (req, res) => {

@@ -15,15 +15,11 @@ $(() => {
     url: "api/users"
   }).done((resources) => {
     for(resource of resources) {
-      console.log("resource = ", resource)
+      console.log("resource = ", resource);
       $("<div>").text(resource.title).prependTo($(".category"));
     }
   });;
-});
 
-
-
-$(document).ready(function($) {
 
   $(function() {
     var url = document.location.href;

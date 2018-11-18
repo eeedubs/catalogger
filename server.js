@@ -156,17 +156,36 @@ app.get("/search", (req, res) => {
 });
 
 // Submit Resource
+// app.post("/submit", (req, res) => {
+//   const resourceURL = req.body.urlLink;
+//   const title = req.body.title;
+//   const description = req.body.description;
+//   if (req.cookies['username']){
+//     // Use knex integrations to access database
+//     res.redirect("/");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
+
+
 app.post("/submit", (req, res) => {
-  const resourceURL = req.body.urlLink;
-  const title = req.body.title;
-  const description = req.body.description;
-  if (req.cookies['username']){
-    // Use knex integrations to access database
-    res.redirect("/");
-  } else {
-    res.redirect("/register");
-  }
-});
+    const title = req.body.title;
+    const description = req.body.description;
+    const resourceURL = req.body.resourceURL;
+    const imageURL = req.body.imageURL;
+    console.log("ok here")
+    knex('resources')
+      .insert({
+        resourceURL: resourceURL,
+        title: title,
+        imageURL: imageURL,
+        description: description,
+      })
+      .then((results) => {
+        res.redirect("/")
+      });
+  })
 
 // Like Resource
 app.post("/like", (req, res) => {
