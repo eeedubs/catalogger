@@ -28,6 +28,8 @@ body {
 
       button.btn.btn-primary {
         margin-left: 95px;
+        margin: 0 5px;
+        color: white;
       }
     }
     .registration {
@@ -88,6 +90,12 @@ body {
           max-height: 137px;
           width: auto;
           height: auto;
+        }
+
+        section.comment-container {
+          background-color: gray;
+          padding: 0 20px;
+          margin-top: 45px;
         }
       }
       .resource:hover {
