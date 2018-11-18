@@ -5,7 +5,22 @@ $(() => {
     url: "api/users"
   }).done((resources) => {
     for(resource of resources) {
-      $(`<div class="resource"><img class="card-img-top" src='${resource.imageURL}'><h3>${resource.title}</h3><a href="${resource.resourceURL}">Source</a><p>${resource.description}</p>`).prependTo($(".category"));
+      $(`
+      <div class="resource">
+        <img class="card-img-top" src='${resource.imageURL}'>
+        <h3>
+        ${resource.title} - <a href="${resource.resourceURL}">Source</a>
+        </h3>
+        <p>
+        ${resource.description}
+        </p>
+        <footer>
+          <a class="btn btn-primary">Rate</a>
+          <a class="btn btn-primary">Like</a>
+          <a id="postNewComment" class="btn btn-primary">Comment</a>
+
+        </footer>
+        `).prependTo($(".category"));
     }
   });
 
