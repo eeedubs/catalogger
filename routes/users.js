@@ -60,7 +60,7 @@ module.exports = (knex) => {
     //3. Resource Id - You need to have resource id as a hidden tag in the page
 
   router.post("/comment", (req, res) => {
-
+    console.log("it's a comment!")
     const comment     = req.body.comment;
     const user_id     = req.body.user_id;
     const resource_id = req.body
