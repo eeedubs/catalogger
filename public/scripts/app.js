@@ -1,12 +1,12 @@
 $(() => {
 
   $(function () {
-    const $button = $(".commentFeed");
-    const $postComment = $("section.comment-container .commentPost");
+    const $buttons = $("div.resource").children("footer").children("a");
+    const $postComment = $("section.comment-container").children("form").children(".commentPost");
     const $commentSection = $("section.comment-container")/*.hide()*/;
     const $input = $(".commentInput");
 
-    $button.click((event) => {
+    $buttons.click((event) => {
       event.preventDefault();
       $commentSection.slideToggle();
       $input.focus();
@@ -40,7 +40,7 @@ $(() => {
         <section id="comments" class="comment-container">
                 <form id="submitComment" method="POST" action="/comment">
                     <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
-                    <a href="#" id="commentPost" class="btn-primary">Comment</a>
+                    <a href="#" class="btn-primary commentPost">Comment</a>
                 </form>
                 <div class="postArea">
                 </div>
