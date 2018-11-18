@@ -49,6 +49,8 @@ $(() => {
     imageURL,
     description
   }) {
+    $resourceElm = $("<div>").addClass("resource");
+    $imgElm = $("<img>").addClass("card-img-top");
 
     console.log("Resource Found!", resourceURL, title, imageURL, description);
   };
