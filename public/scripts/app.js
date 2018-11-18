@@ -23,7 +23,7 @@ $(() => {
     url: "api/users"
   }).done((resources) => {
     for(resource of resources) {
-      $(`
+      const $newElement = $(`
       <div class="resource">
         <img class="card-img-top" src='${resource.imageURL}'>
         <h3>
@@ -47,7 +47,9 @@ $(() => {
           </section>
         <div style="clear: both;"></div>
         `).prependTo($(".category"));
+        // $newElement.
     }
+    // makeNewEventHandlers(); // might not need
   });
 
  // Handles the renaming of the category titles
