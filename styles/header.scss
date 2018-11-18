@@ -22,10 +22,11 @@ $nav-font-stack: American Typewriter, sans;
     margin-left: 40px;
 }
 .nav .input-bar {
-    font: 100% helvetica;
+    font: 100% Times;
     display: flex;
     border: none;
     margin-left: auto;
+    margin-right: 60px;
     position: relative;
     top: 10px;
 }
@@ -37,27 +38,41 @@ $nav-font-stack: American Typewriter, sans;
     width: inherit;
 }
 .nav .input-bar form .search-field {
-    width: 250px;
+    width: 300px;
     padding-left: 8px;
 }
 .nav .input-bar .search-button {
     background-color: #549b36;
     color: black;
-    font-weight: bold;
+    opacity: 0.6;
+    height: 22px;
+    // font-weight: bold;
     border-color: transparent;
-    border-radius: 25px;
+    border-radius: 5px;
     width: 60px;
+}
+
+.nav .input-bar .search-button:hover {
+    opacity: 1;
+    border: 1px solid black;
 }
 
 .nav .input-bar .logout-button {
     background-color: #007bff;
     color: black;
-    font-weight: bold;
+    opacity: 0.6;
+    // font-weight: bold;
     border-color: transparent;
-    border-radius: 20px;
+    border-radius: 5px;
     width: 60px;
+    height: 22px;
     margin-left:3px;
     margin-right: 5px;
     position: relative;
     top: 1px;
+}
+
+.nav .input-bar .logout-button:hover {
+    opacity: 1;
+    border: 1px solid black;
 }

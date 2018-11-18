@@ -89,13 +89,7 @@ $(() => {
     console.log("Resource Found!", $resourceElm);
   };
 
-  // $(function() {
-  //   var url = document.location.href;
-  //   $('.list-group form').each(function() {
-  //     if (url === this. 
-  //   $('.jumbotron jumbotron-fluid .display-4').
-  // });
-
+ // Handles the renaming of the category titles
   function renameCategory() {
     let extension = window.location.pathname.split('/');
     for (let i in extension){
@@ -104,7 +98,8 @@ $(() => {
     $('.display-4').text(extension.join(" "));
   };
 
-  // Highlights the selected page as blue on the sidebar, and changes the header for each category
+  // Highlights the selected page as blue on the sidebar
+  // Changes the header for each category by calling on renameCategory
   $(function() {
     var url = document.location.href;
     $('.list-group form').each(function() {
