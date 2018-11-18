@@ -1,5 +1,16 @@
 $(() => {
 
+  $(function () {
+    const $button = $("#commentFeed");
+    const $commentSection = $("#comments").hide();
+    const $input = $("#commentInput");
+
+    $button.click((event) => {
+      event.preventDefault();
+      console.log("Button Clicked!!");
+    })
+  })
+
   $.ajax({
     method: "GET",
     url: "api/users"
@@ -17,9 +28,10 @@ $(() => {
         <footer>
           <a class="btn btn-primary">Rate</a>
           <a class="btn btn-primary">Like</a>
-          <a id="postNewComment" class="btn btn-primary">Comment</a>
-
+          <a id="commentFeed" class="btn btn-primary">Comment</a>
+          <% include _comments.ejs %>
         </footer>
+        <div style="clear: both;"></div>
         `).prependTo($(".category"));
     }
   });
