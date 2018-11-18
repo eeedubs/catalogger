@@ -39,34 +39,34 @@ app.use("/styles", sass({
 app.use(express.static("public"));
 
 // DOES THIS FUNCTION EVER GET USED???
-function getCookie(userID){
-  var cookie;
-  for (var key in users){
-    if (users[key].username = userID){
-      cookie = users[key].username;
-    }
-  }
-  return cookie;
-}
+// function getCookie(userID){
+//   var cookie;
+//   for (var key in users){
+//     if (users[key].username = userID){
+//       cookie = users[key].username;
+//     }
+//   }
+//   return cookie;
+// }
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
+
   const username = req.cookies.username;
   if (username) {
-  knex('users')
-  .select('id')
-  .where('name', username)
-  .then((data) => {
-    const templateVars = {
-      id : data[0].id,
-    };
-    res.render("index", templateVars);
-  })
-}
-  else {
+    knex('users')
+    .select('id')
+    .where('name', username)
+    .then((data) => {
+      const templateVars = {
+        id : data[0].id,
+      };
+      res.render("index", templateVars);
+    }); //then bracket closes
+  } else {
     res.redirect("/register");
   }
 });
@@ -76,15 +76,25 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-// Resources Page
+
+
+// Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 app.get("/resources", (req, res) => {
   // include session id, user, pass info to template vars
   if (req.cookies['username']){
-    res.render("resources");
+    knex('resources')
+    .select('id')
+    .then((data)=>{
+      //console.log("Select query for Resources ",data);
+      res.render("index", {templateVars: data});
+    });
+
   } else {
     res.redirect("/register");
   }
 });
+
+
 
 // Specified Category Page
 app.get("/category/:id", (req, res) => {
@@ -113,13 +123,13 @@ app.get("/info", (req, res) => {
   }
 });
 
-app.get("/info", (req, res) => {
-  if (req.cookies['username']){
-    res.render("info");
-  } else {
-    res.redirect("/register");
-  }
-});
+// app.get("/info", (req, res) => {
+//   if (req.cookies['username']){
+//     res.render("info");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 app.get("/search", (req, res) => {
   if (req.cookies['username']){
@@ -128,20 +138,6 @@ app.get("/search", (req, res) => {
     res.redirect("/register");
   }
 });
-
-// Submit Resource
-// app.post("/submit", (req, res) => {
-//   const resourceURL = req.body.urlLink;
-//   const title = req.body.title;
-//   const description = req.body.description;
-//   if (req.cookies['username']){
-//     // Use knex integrations to access database
-//     res.redirect("/");
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
-
 
 app.post("/submit", (req, res) => {
   console.log('body', req.body);
