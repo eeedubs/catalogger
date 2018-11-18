@@ -1,17 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
 
-<html lang="en">
-<head>
-  <title>Search Results</title>
-</head>
+    <!-- Bootstrap: top nav bar -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-<body>
-    <main class="container">
-        <section>
-            <h2>
-            Found x Results:
-            </h2>
-        </section>
-    </main>
-</body>
+    <!-- Bootstrap: side nav bar -->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/vendor/normalize-4.1.1.css" type="text/css" />
+    <link rel="stylesheet" href="/vendor/border-box.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/layout.css" type="text/css" />
+
+    <script type="text/javascript" src="/vendor/jquery-3.0.0.js"></script>
+    <script type="text/javascript" src="/scripts/app.js"></script>
+    <script type="text/javascript" src="/routes/users.js"></script>
+    </head>
+    <body>
+    <% include _header %>
+    <% include _sidebar %>
+        <main class="container">
+            <section>
+                <% include _feed.ejs %>
+            </section>
+        </main>
+    </body>
 </html>

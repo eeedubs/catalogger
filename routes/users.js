@@ -1,5 +1,7 @@
 "use strict";
 
+// users.js handles the inserting and retrieving of information from the database
+
 const express = require('express');
 const router  = express.Router();
 const cookie = require('cookie-parser');
@@ -15,14 +17,34 @@ module.exports = (knex) => {
   //   });
   //   })
 
-    router.get("/", (req, res) => {
+  router.get("/", (req, res) => {
     knex
       .select("*")
       .from("resources")
       .then((results) => {
         res.json(results);
     });
-    })
+  })
+
+  router.get("/search", (req, res) => {
+    const searchQuery = parseQuery(window.location.search);
+    console.log(searchQuery);
+    knex.select().from('resources')
+      .where('title', 'LIKE', `%${searchQuery}%`)
+      .orWhere('description', 'LIKE', `%${searchInput}%`)
+      .asCallback(function(err, result){
+          console.log("Searching...");
+          if (err) {
+              throw err;
+          }
+          console.log(`Found ${result.length} articles matching your search for '${command}':`);
+          result.forEach(function(row) {
+              console.log(`${row}`);
+              res.json(row);
+          })
+      })
+  });
+
 
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
@@ -90,10 +112,10 @@ module.exports = (knex) => {
 
   router.post("/comment", (req, res) => {
 
-id
-comment
-user_id
-resource_id
+    id
+    comment
+    user_id
+    resource_id
 
     const comment = req.body.comment;
     const user_id = req.body.user_id;

@@ -1,9 +1,9 @@
 <nav class="nav">
   <h2>Fil'r</h2>
   <div class="input-bar">
-    <form id="search-form" action="/search" method="POST">
-      <input class="search-field" placeholder="Search for articles...">
-      <input class="search-button" type="submit" value="Search" name="search">
+    <form id="search-form" action="/search" method="GET">
+      <input class="search-field" name="q" placeholder="Search for articles...">
+      <input class="search-button" type="submit" value="Search">
     </form>
     <form id="logout-form" action="/api/users/logout" method="POST">
       <input class="logout-button" type="submit" value="Logout" name="logout">

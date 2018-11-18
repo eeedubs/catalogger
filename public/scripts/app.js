@@ -9,7 +9,45 @@ $(() => {
     }
   });
 
- // Handles the renaming of the category titles
+
+  // function searchResources() {
+  //   // const searchForm = $('.input-bar .search-form');
+  //   const test = window.location.search;
+  //   console.log(test);
+  //   console.log(searchForm);
+  //   const query = window.location.search.substring(1);
+  //   console.log('Query variable: ', $query);
+  //   const searchInput = $query.split('&');
+  //   searchForm.submit((event) => {
+  //       knex.select().from('resources')
+  //       .where('title', 'LIKE', `%${searchInput}%`)
+  //       .orWhere('description', 'LIKE', `%${searchInput}%`)
+  //       .asCallback(function(err, result){
+  //           console.log("Searching...");
+  //           if (err) {
+  //               throw err;
+  //           }
+  //           console.log(`Found ${result.length} articles matching your search for '${command}':`);
+  //           result.forEach(function(row) {
+  //               console.log(`${row}`);
+  //           })
+  //       })
+  //   });
+  // }
+
+  function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+}
+
+
+
+ // Handles the naming of the category titles
   function renameCategory() {
     let extension = window.location.pathname.split('/');
     for (let i in extension){
