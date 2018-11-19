@@ -3,15 +3,20 @@
 $(() => {
   // 
   $(function () {
-    let $buttons = $("div.resource").children("footer").children("button");
-    let $postComment = $("section.comment-container").children("form").children(".commentPost");
-    let $commentSection = $("section.comment-container").show();
-    let $input = $(".commentInput");
+    //comment social button
+    let $buttons = $("div.resource").children("footer").children("button.btn.btn-primary.commentFeed");
+    //post new comment button
+    let $postComment = $("div.comment-container").children("form").children(".commentPost");
+    //comment container
+    let $commentSection = $("div.comment-container");
+    //comment input field
+    let $commentInput = $("div.comment-container").children("form").children(".commentInput");
 
     $buttons.click((event) => {
-      event.preventDefault();
+      // event.preventDefault();
       $commentSection.slideToggle();
-      $input.focus();
+      // $commentInput.slideToggle();
+      $commentInput.focus();
     })
 
     $.ajax({
@@ -46,15 +51,16 @@ $(() => {
           </div>
         </div>
           `).prependTo($(".all-resources"));
-          const $commentFeedToggle = $newElement.find(".commentFeed");
+          // const $commentFeedToggle = $newElement.find(".commentFeed");
 
-          console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
+          // console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
       }
       // makeNewEventHandlers(); // might not need
     });
 
+    // handles the posting of new comments
 
-    // handles the toggling of the comment section sliding
+    // $postComment.on('submit', function(event) {
     $postComment.click((event) => {
       event.preventDefault();
       console.log("Button Clicked!");
@@ -83,9 +89,6 @@ $(() => {
       })
     })
   });
-
-
-
 
     // Handles the naming of the category titles
   function renameCategory() {
