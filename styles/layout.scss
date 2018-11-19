@@ -18,7 +18,7 @@ body {
       border-radius: 0px!important;
     }
 
-    #newResource {
+    .submitNew {
       width: inherit;
       margin: 0 auto;
       margin-bottom: 20px;
@@ -31,6 +31,7 @@ body {
       padding-top: 100px;
       padding-left: 100px;
 
+      //Rate, Like and Comment buttons
       button.btn.btn-primary {
         margin-left: 95px;
         margin: 0 5px;
@@ -52,7 +53,7 @@ body {
       background-color: rgb(236, 236, 236);
     }
 
-    .category {
+    .all-resources {
       display: inline-block;
       position: relative;
       font-size: 16px;
@@ -89,8 +90,8 @@ body {
           width: auto;
           height: auto;
         }
-
-        section.comment-container {
+// START OF comment container
+        .comment-container {
           // display: none;
           //ABOVE WAS JUST ADDED
           background-color: #f4ebed;
@@ -100,15 +101,16 @@ body {
           border: 2px solid black;
           border-radius: 5px;
 
-          form#submitComment {
+          //form
+          .submitComment {
             display: inline-flex;
             justify-content: flex-end;
             margin: 5px auto;
             margin-bottom: 12px;
             height: 150px;
             width: 100%;
-            
-                          
+
+            //input
             .commentPost {
               opacity: .6;  
               width: 100px;
@@ -121,10 +123,11 @@ body {
               padding-top: 3px;
               color: black;
             }
-            #commentPost:hover {
+            .commentPost:hover {
               opacity: 1;
             }
-            textarea {
+            //input
+            .commentInput {
               width: 85%;
               height: 100%;
               padding: 15px;
@@ -132,7 +135,7 @@ body {
             }
           }
 
-          div.comment {
+          div .comment {
             background: white;
             height: 150px;
             padding-bottom: 20px;

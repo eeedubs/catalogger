@@ -194,15 +194,17 @@ app.post("/like", (req, res) => {
 });
 
 // Comment On Resource
-app.post("/comment", (req, res) => {
-  if (req.cookies['username']){
-    const comment = req.body.commentInput;
-    res.render("/", comment);
-    // console.log(req.body.commentInput);
-  } else {
-    res.redirect("/register");
-  }
-});
+// app.post("/comment", (req, res) => {
+//   if (req.cookies['username']){
+//     const comment = req.body.commentInput;
+//     const 
+//     knex('resources')
+//     res.render("/", comment);
+//     // console.log(req.body.commentInput);
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 // app.post("/search", (req, res) => {
 //   const username = req.cookies.username;

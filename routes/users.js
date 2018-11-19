@@ -73,18 +73,18 @@ module.exports = (knex) => {
 
   router.post("/comment", (req, res) => {
     console.log("it's a comment!")
-    const comment     = req.body.comment;
-    const user_id     = req.body.user_id;
-    const resource_id = req.body
+    const newComment = req.body.commentInput;
+    const userId     = req.body.user_id;
+    // const resourceId = req.body;
       knex('user_comments')
-      .insert
-      ({
-        comment:     comment,
-        user_id:     user_id
-        //resource_id:
+      .insert({
+        comment: newComment,
+        user_id: userId
+        // resource_id: resourceId
       })
       .then((results) => {
-        res.redirect("/")
+        res.json(results);
+        // res.redirect("/")
       });
   })
 

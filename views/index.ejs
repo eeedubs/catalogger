@@ -25,10 +25,13 @@
     <% include _header %>
     <% include _sidebar %>
     <main class="container">
-      <section id="newResource">
+      <section class="newResource">
         <% include _newResource.ejs %>
       </section>
-      <% include _feed.ejs %>
+      <!-- <section class="category"> -->
+      <section class="feed">
+        <% include _feed.ejs %>
+      </section>
     </main>
   </body>
 </html>
