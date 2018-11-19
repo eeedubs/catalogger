@@ -107,6 +107,8 @@ body {
             width: 100%;
             #commentPost {
               opacity: .6;              
+            .commentPost {
+              float: right;
               width: 100px;
               height: 30px;
               background-color: lightgreen;
