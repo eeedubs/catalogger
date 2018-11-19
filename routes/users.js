@@ -1,9 +1,11 @@
 // users.js handles the inserting and retrieving of information from the database
+// (server-side)
 "use strict";
 
 const express = require('express');
 const router  = express.Router();
 const cookie = require('cookie-parser');
+const bodyParser = require('body-parser');
 
 module.exports = (knex) => {
 
@@ -25,35 +27,14 @@ module.exports = (knex) => {
     });
   })
 
-  function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i].split('=');
-      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
-    }
-    return query;
-  }
-
-  router.get("/search", (req, res) => {
-    const searchQuery = parseQuery(window.location.search);
-    console.log(searchQuery);
-    knex.select().from('resources')
-      .where('title', 'LIKE', `%${searchQuery}%`)
-      .orWhere('description', 'LIKE', `%${searchInput}%`)
-      .asCallback(function(err, result){
-          console.log("Searching...");
-          if (err) {
-              throw err;
-          }
-          console.log(`Found ${result.length} articles matching your search for '${command}':`);
-          result.forEach(function(row) {
-              console.log(`${row}`);
-              res.json(row);
-          })
-      })
-  });
-
+  // function getQuery() {
+  //   document.querySelector('form').addEventListener('submit', (event) => {
+  //     event.preventDefault();
+  //     let $searchInput = $(`form#search-form .search-field`)[0].value;
+  //      console.log($searchInput);
+  //   });
+  // }
+  // getQuery();
 
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {

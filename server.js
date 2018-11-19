@@ -1,4 +1,4 @@
-// server.js Handles all HTTP requests
+// server.js Handles all HTTP requests (server-side)
 "use strict";
 
 require('dotenv').config();
@@ -39,25 +39,11 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
-// DOES THIS FUNCTION EVER GET USED???
-
-// function getCookie(userID){
-//   var cookie;
-//   for (var key in users){
-//     if (users[key].username === userID){
-//       cookie = users[key].username;
-//     }
-//   }
-//   return cookie;
-// }
-
-
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
 // Home page
 app.get("/", (req, res) => {
-
   const username = req.cookies.username;
   if (username) {
     knex('users')
@@ -79,8 +65,6 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-
-
 // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 app.get("/resources", (req, res) => {
   // include session id, user, pass info to template vars
@@ -96,8 +80,6 @@ app.get("/resources", (req, res) => {
     res.redirect("/register");
   }
 });
-
-
 
 // Specified Category Page
 app.get("/category/:id", (req, res) => {
@@ -144,25 +126,56 @@ function searchResources(userId, term){
 }
 
 app.get("/search", (req, res) => {
-  if (req.cookies['username']){
-    // if we don't have params, do a regular get and render everything
-    // if we do, perform a search and render the results
-    let query;
-    if(!req.query.q){
-      // if no query, load all resources
-      query = getAllResources(req.cookies['username']);
-    } else {
-      // else, load the resources for the user
-      query = searchResources(req.cookies['username'], req.query.q)
-    }
-    query
-    .then((results) => {
-      res.render("search", {results });
+  let searchQuery = req.body.search-query;
+  console.log(searchQuery);
+  knex
+    .select().from('resources')
+    .where('title', 'LIKE', `%${searchQuery}%`)
+    .orWhere('description', 'LIKE', `%${searchInput}%`)
+    .then ((results) => {
+      res.render("search", results);
+      // console.log(results);
     });
-} else {
-    res.redirect("/register");
-  }
-});
+  });
+
+
+// app.get("/search", (req, res) => {
+//   const username = req.cookies.username;  
+//   if (username) {
+//     knex('users')
+//     .select('id')
+//     .where('name', username)
+//     .then((data) => {
+//       const templateVars = {
+//         id : data[0].id,
+//       };
+//       res.render("index", templateVars);
+//     });
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
+
+// app.get("/search", (req, res) => {
+//   if (req.cookies['username']){
+//     // if we don't have params, do a regular get and render everything
+//     // if we do, perform a search and render the results
+//     let query;
+//     if(!req.query.q){
+//       // if no query, load all resources
+//       query = getAllResources(req.cookies['username']);
+//     } else {
+//       // else, load the resources for the user
+//       query = searchResources(req.cookies['username'], req.query.q)
+//     }
+//     query
+//     .then((results) => {
+//       res.render("search", {results });
+//     });
+// } else {
+//     res.redirect("/register");
+//   }
+// });
 
 app.post("/submit", (req, res) => {
   console.log('body', req.body);
