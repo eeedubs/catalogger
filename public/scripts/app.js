@@ -13,7 +13,7 @@ $(() => {
     let $commentInput = $("div.comment-container").children("form").children(".commentInput");
 
     $buttons.click((event) => {
-      event.preventDefault();
+      // event.preventDefault();
       // console.log("Comment toggle button clicked!");
       $commentSection.slideToggle();
       // $commentInput.slideToggle();
@@ -41,13 +41,13 @@ $(() => {
             <button class="btn btn-primary commentFeed">Comment</button>
           </footer>
           <div class="comment-container">
-                  <form class="submitComment" method="POST" action="/api/users/comment">
-                      <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
-                      <input class="commentPost" type="submit" value="Comment">
-                  </form>
-                  <div class="postArea">
-                  </div>
+            <form class="submitComment" method="POST" action="/api/users/comment">
+                <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
+                <input class="commentPost" type="submit" value="Comment">
+            </form>
+            <div class="postArea">
             </div>
+          </div>
           <div style="clear: both;">
           </div>
         </div>
@@ -64,7 +64,7 @@ $(() => {
     // $postComment.on('submit', function(event) {
     $postComment.click((event) => {
       event.preventDefault();
-      $commentSection.slideToggle();
+      // $commentSection.slideToggle();
       console.log("Button Clicked!");
       $.ajax({
         method: "POST",
