@@ -1,7 +1,6 @@
 // App.js handles the functionality of various components within the site, without reloading
 // the web page (jQuery - client side)
 $(() => {
-  
   // 
   $(function () {
     const $button = $("#commentFeed");

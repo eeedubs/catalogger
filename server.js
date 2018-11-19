@@ -42,24 +42,6 @@ app.use(express.static("public"));
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
-// Home page
-app.get("/", (req, res) => {
-  const username = req.cookies.username;
-  if (username) {
-    knex('users')
-    .select('id')
-    .where('name', username)
-    .then((data) => {
-      const templateVars = {
-        id : data[0].id,
-      };
-      res.render("index", templateVars);
-    }); //then bracket closes
-  } else {
-    res.redirect("/register");
-  }
-});
-
 // Register Page
 app.get("/register", (req, res) => {
   res.render("register");
@@ -72,7 +54,7 @@ app.get("/resources", (req, res) => {
     knex('resources')
     .select('id')
     .then((data)=>{
-      //console.log("Select query for Resources ",data);
+      console.log("Select query for Resources ",data);
       res.render("index", {templateVars: data});
     });
 
@@ -108,53 +90,37 @@ app.get("/info", (req, res) => {
   }
 });
 
-// app.get("/info", (req, res) => {
-//   if (req.cookies['username']){
-//     res.render("info");
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
-
-
-function getAllResources(userId){
-  return Promise.resolve([]);
-}
-
-function searchResources(userId, term){
-  return Promise.resolve([]);
-}
-
+// Search for resources page
 app.get("/search", (req, res) => {
-  let searchQuery = req.body.search-query;
-  console.log(searchQuery);
-  knex
-    .select().from('resources')
-    .where('title', 'LIKE', `%${searchQuery}%`)
-    .orWhere('description', 'LIKE', `%${searchInput}%`)
-    .then ((results) => {
-      res.render("search", results);
-      // console.log(results);
-    });
+  let searchQuery = req.query.searchQuery;
+  const username = req.cookies.username;  
+  if (username) {
+    knex('users')
+    .select('id')
+    .where('name', username)
+    .then((data) => {
+      console.log(searchQuery);
+      knex
+        .select().from('resources')
+        .where('title', 'LIKE', `%${searchQuery}%`)
+        .orWhere('description', 'LIKE', `%${searchQuery}%`)
+        .then ((results) => {
+          res.render("search", results);
+          console.log(results);
+        });
+      });
+    } else {
+      res.redirect("/register");
+    }
   });
 
-
-// app.get("/search", (req, res) => {
-//   const username = req.cookies.username;  
-//   if (username) {
-//     knex('users')
-//     .select('id')
-//     .where('name', username)
-//     .then((data) => {
-//       const templateVars = {
-//         id : data[0].id,
-//       };
-//       res.render("index", templateVars);
-//     });
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
+  // function getAllResources(userId){
+  //   return Promise.resolve([]);
+  // }
+  
+  // function searchResources(userId, term){
+  //   return Promise.resolve([]);
+  // }
 
 // app.get("/search", (req, res) => {
 //   if (req.cookies['username']){
@@ -176,6 +142,26 @@ app.get("/search", (req, res) => {
 //     res.redirect("/register");
 //   }
 // });
+
+// Home page
+app.get("/", (req, res) => {
+  const username = req.cookies.username;
+  if (username) {
+    knex('users')
+    .select('id')
+    .where('name', username)
+    .then((data) => {
+      const templateVars = {
+        id: data[0].id
+      };
+      res.render("index", templateVars);
+    });
+    //then bracket closes
+  } else {
+    res.redirect("/register");
+  }
+});
+
 
 app.post("/submit", (req, res) => {
   console.log('body', req.body);
@@ -216,15 +202,15 @@ app.post("/like", (req, res) => {
 //   }
 // });
 
-app.post("/search", (req, res) => {
-  const username = req.cookies.username;
-  if (username) {
-    // const search = req.body.search;
-    res.render("search");
-  } else {
-    res.redirect("/register");
-  }
-})
+// app.post("/search", (req, res) => {
+//   const username = req.cookies.username;
+//   if (username) {
+//     // const search = req.body.search;
+//     res.render("search");
+//   } else {
+//     res.redirect("/register");
+//   }
+// })
 
 // Categorise Resource
 app.post("/like", (req, res) => {
