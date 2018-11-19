@@ -3,10 +3,10 @@
 $(() => {
   // 
   $(function () {
-    const $buttons = $("div.resource").children("footer").children("a");
-    const $postComment = $("section.comment-container").children("form").children(".commentPost");
-    const $commentSection = $("section.comment-container")/*.hide()*/;
-    const $input = $(".commentInput");
+    let $buttons = $("div.resource").children("footer").children("button");
+    let $postComment = $("section.comment-container").children("form").children(".commentPost");
+    let $commentSection = $("section.comment-container").show();
+    let $input = $(".commentInput");
 
     $buttons.click((event) => {
       event.preventDefault();
@@ -15,7 +15,6 @@ $(() => {
     })
 
     // handles the toggling of the comment section sliding
-
     $postComment.click((event) => {
       event.preventDefault();
       console.log("Button Clicked!");
@@ -37,19 +36,20 @@ $(() => {
         ${resource.description}
         </p>
         <footer>
-          <a class="btn btn-primary">Rate</a>
-          <a class="btn btn-primary">Like</a>
-          <a class="btn btn-primary commentFeed">Comment</a>
+          <button class="btn btn-primary">Rate</button>
+          <button class="btn btn-primary">Like</button>
+          <button class="btn btn-primary commentFeed">Comment</button>
         </footer>
         <section id="comments" class="comment-container">
                 <form id="submitComment" method="POST" action="/comment">
                     <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
-                    <a href="#" class="btn-primary commentPost">Comment</a>
+                    <input class="btn-primary commentPost" type="submit" value="Comment">
                 </form>
                 <div class="postArea">
                 </div>
           </section>
         <div style="clear: both;"></div>
+      </div>
         `).prependTo($(".category"));
         const $commentFeedToggle = $newElement.find(".commentFeed");
 

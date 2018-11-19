@@ -54,8 +54,8 @@ app.get("/resources", (req, res) => {
     knex('resources')
     .select('id')
     .then((data)=>{
-      console.log("Select query for Resources ",data);
-      res.render("index", {templateVars: data});
+      console.log("Select query for Resources ", data);
+      res.render("index", {id: data.id});
     });
 
   } else {
@@ -162,7 +162,7 @@ app.get("/", (req, res) => {
   }
 });
 
-
+// FOR ADDING NEW RESOURCES
 app.post("/submit", (req, res) => {
   console.log('body', req.body);
   const title = req.body.title;
@@ -194,13 +194,15 @@ app.post("/like", (req, res) => {
 });
 
 // Comment On Resource
-// app.post("/comment", (req, res) => {
-//   if (req.cookies['username']){
-//     res.render("/");
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
+app.post("/comment", (req, res) => {
+  if (req.cookies['username']){
+    const comment = req.body.commentInput;
+    res.render("/", comment);
+    // console.log(req.body.commentInput);
+  } else {
+    res.redirect("/register");
+  }
+});
 
 // app.post("/search", (req, res) => {
 //   const username = req.cookies.username;
