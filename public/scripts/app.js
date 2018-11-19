@@ -26,38 +26,36 @@ $(() => {
     }).done((resources) => {
       for(resource of resources) {
         // COPIES STRUCTURE FROM _feed.ejs
-        const $newElement = $(`
-        <div class="resource">
-          <img class="card-img-top" src='${resource.imageURL}'>
-          <h3>
-          ${resource.title} - <a href="${resource.resourceURL}">Source</a>
-          </h3>
-          <p>
-          ${resource.description}
-          </p>
-          <footer>
-            <button class="btn btn-primary">Rate</button>
-            <button class="btn btn-primary">Like</button>
-            <button class="btn btn-primary commentFeed">Comment</button>
-          </footer>
-          <div class="comment-container">
-            <form class="submitComment" method="POST" action="/api/users/comment">
+        let $newElement = $(`
+          <div class="resource">
+            <img class="card-img-top" src='${resource.imageURL}'>
+            <h3>${resource.title} - <a href="${resource.resourceURL}">Source</a></h3>
+            <p>
+              ${resource.description}
+            </p>
+            <footer>
+              <button class="btn btn-primary">Rate</button>
+              <button class="btn btn-primary">Like</button>
+              <button class="btn btn-primary commentFeed">Comment</button>
+            </footer>
+            <div class="comment-container">
+              <form class="submitComment" method="POST" action="/api/users/comment">
                 <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
-                <input class="commentPost" type="submit" value="Comment">
-            </form>
-            <div class="postArea">
+                <input class="commentPost" type="submit" value="Post">
+              </form>
+              <div class="postArea">
+              </div>
+            </div>
+            <div style="clear: both;">
             </div>
           </div>
-          <div style="clear: both;">
-          </div>
-        </div>
-          `).prependTo($("div.all-resources"));
+        `).prependTo($("div.all-resources"));
           // const $commentFeedToggle = $newElement.find(".commentFeed");
 
           // console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
-      }
+        }
       // makeNewEventHandlers(); // might not need
-    });
+      });
 
     // handles the posting of new comments
 
@@ -72,7 +70,7 @@ $(() => {
       }).done((comments) => {
         for(eachComment of comments){
           // COPIES STRUCTURE FROM _comments.ejs
-          const $newComment = $(`
+          let $newComment = $(`
           <div class="comment">
             <header>
               <h4 class="username">${eachComment.userId}</h4>
@@ -86,7 +84,7 @@ $(() => {
               </span>
             </footer>
           </div>
-          `).appendTo(".postArea");
+          `).appendTo("div.postArea");
         }
       })
     })

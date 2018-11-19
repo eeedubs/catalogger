@@ -24,13 +24,16 @@
     <% include _header %>
     <% include _sidebar %>
         <main class="container">
-            <section>
-              <% templateVars.forEach(function(result){ %>
+            <!-- <section> -->
+            <section class="feed">
+                <% include _feed.ejs %>
+            </section>
+              <!-- <% templateVars.forEach(function(result){ %>
                 <form name="test" method="POST" action="">
                     <input type="hidden" value="<%=result.id%>" />
                 </form>
-              <%  }) %>
-            </section>
+              <%  }) %> -->
+            <!-- </section> -->
         </main>
     </body>
 </html>
