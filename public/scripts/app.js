@@ -4,13 +4,13 @@ $(() => {
   // 
   $(function () {
     //comment social button
-    let $buttons = $("div.resource").children("footer").children("button.btn.btn-primary.commentFeed");
+    let $buttons = $("div.resource").children(".comment-container").children("form.submitContent").children("button.btn.btn-primary.commentFeed");
     //post new comment button
-    let $postComment = $("div.resource").children("div.comment-container").children("form").children(".commentPost");
+    let $commentForm = $("div.resource").children("div.comment-container").children("form.submitContent");
     //comment container
-    let $commentSection = $("div.comment-container");
+    let $commentSection = $("div.resource").children("div.comment-container");
     //comment input field
-    let $commentInput = $("div.comment-container").children("form").children(".commentInput");
+    let $commentInput = $("div.resource").children("div.comment-container").children("form.submitContent").children(".commentInput");
 
     $buttons.click((event) => {
       // event.preventDefault();
@@ -20,6 +20,19 @@ $(() => {
       $commentInput.focus();
     })
 
+    // function createResource (resource){
+    //   var $allResources = $("<div>").addClass("all-resources");
+    //   var $resource = $("<div>").addClass("resource").appendTo($allResources);
+    //   var $img = $("<img>").addClass("card-img-top").attr("src", "`${resource.imageURL}`").appendTo($resource);
+    //   var $title = $("<h3>").text("`${resource.title}` - <a href='`${resource.resourceURL}`'>Source</a></h3>").appendTo($resource);
+    //   var $description = $("<p>").text("`$(resource.description}`").appendTo($resource);
+    //   var $footer = $("<footer>").appendTo($resource);
+    //   var $rateButton = $("<button>").addClass("btn btn-primary").text("Rate").appendTo($footer);
+    //   var $likeButton = $("<button>").addClass("btn btn-primary").text("Like").appendTo($footer);
+    //   var $commentButton = $("<button>").addClass("btn btn-primary commentFeed").text("Comment").appendTo($footer);
+    // }
+
+   
     $.ajax({
       method: "GET",
       url: "api/users"
@@ -40,11 +53,6 @@ $(() => {
                 <button class="btn btn-primary commentFeed">Comment</button>
               </footer>
               <div class="comment-container">
-                <form class="submitComment" method="POST" action="/api/users/comment">
-                  <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
-                  <input class="commentPost" type="submit" value="Post">
-                </form>
-                <div class="postArea"></div>
               </div>
               <div style="clear: both;">
               </div>
@@ -59,10 +67,22 @@ $(() => {
 
     // handles the posting of new comments
 
-    // $postComment.on('submit', function(event) {
-    $postComment.click((event) => {
+   function createComment (comment) {
+        var $container = $("<div>").addClass("comment-container");
+        var $comment = $("<div>").addClass("comment").appendTo($container);
+        var $header = $("<header>").appendTo($comment);
+        var $userName = $("<h4>").addClass("username").text("`${eachComment.userId}`").appendTo($header);
+        var $content = $("<p>").text(`${eachComment.newComment}`).appendTo($comment);
+        var $footer = $("<footer>").appendTo($comment);
+        var $span = $("<span>").addClass("timestamp").text("19 seconds ago").appendTo($footer);
+        
+      }
+
+
+
+    $commentForm.click((event) => {
       event.preventDefault();
-      // $commentSection.slideToggle();
+      $commentSection.slideToggle();
       console.log("Button Clicked!");
       $.ajax({
         method: "POST",
@@ -71,22 +91,26 @@ $(() => {
         for(eachComment of comments){
           // COPIES STRUCTURE FROM _comments.ejs
           let $newComment = $(`
-            <div class="comment-container">
-              <div class="comment">
-                <header>
-                  <h4 class="username">${eachComment.userId}</h4>
-                </header>
-                <p>
-                  ${eachComment.newComment}
-                </p>
-                <footer>
-                  <span class="timestamp">
-                    19 seconds ago
-                  </span>
-                </footer>
-              </div>
+            <div class="comment">
+              <form class="submitComment" method="POST" action="/api/users/comment">
+                <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
+                <input class="commentPost" type="submit" value="Post">
+              </form>
             </div>
-          `).appendTo("div.postArea");
+            <div class="postArea">
+              <header>
+                <h4 class="username">${eachComment.userId}</h4>
+              </header>
+              <p>
+                ${eachComment.newComment}
+              </p>
+              <footer>
+                <span class="timestamp">
+                  19 seconds ago
+                </span>
+              </footer>
+            </div>
+          `).appendTo("div.commentContainer");
         }
       })
     })

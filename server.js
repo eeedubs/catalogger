@@ -66,7 +66,12 @@ app.get("/resources", (req, res) => {
 // Specified Category Page
 app.get("/category/:id", (req, res) => {
   if (req.cookies['username']){
-  res.render("category");
+    knex('resources')
+    .select('id')
+    .then((data)=> {
+      console.log("Select query for categories", data);
+      res.render("category", {id: data.id});
+    });
   } else {
     res.redirect("/register");
   }
