@@ -27,31 +27,31 @@ $(() => {
       for(resource of resources) {
         // COPIES STRUCTURE FROM _feed.ejs
         let $newElement = $(`
-          <div class="resource">
-            <img class="card-img-top" src='${resource.imageURL}'>
-            <h3>${resource.title} - <a href="${resource.resourceURL}">Source</a></h3>
-            <p>
-              ${resource.description}
-            </p>
-            <footer>
-              <button class="btn btn-primary">Rate</button>
-              <button class="btn btn-primary">Like</button>
-              <button class="btn btn-primary commentFeed">Comment</button>
-            </footer>
-            <div class="comment-container">
-              <form class="submitComment" method="POST" action="/api/users/comment">
-                <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
-                <input class="commentPost" type="submit" value="Post">
-              </form>
-              <div class="postArea">
+          <div class="all-resources">
+            <div class="resource">
+              <img class="card-img-top" src='${resource.imageURL}'>
+              <h3>${resource.title} - <a href="${resource.resourceURL}">Source</a></h3>
+              <p>
+                ${resource.description}
+              </p>
+              <footer>
+                <button class="btn btn-primary">Rate</button>
+                <button class="btn btn-primary">Like</button>
+                <button class="btn btn-primary commentFeed">Comment</button>
+              </footer>
+              <div class="comment-container">
+                <form class="submitComment" method="POST" action="/api/users/comment">
+                  <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
+                  <input class="commentPost" type="submit" value="Post">
+                </form>
+                <div class="postArea"></div>
+              </div>
+              <div style="clear: both;">
               </div>
             </div>
-            <div style="clear: both;">
-            </div>
           </div>
-        `).prependTo($("div.all-resources"));
+        `).prependTo($("section.feed"));
           // const $commentFeedToggle = $newElement.find(".commentFeed");
-
           // console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
         }
       // makeNewEventHandlers(); // might not need
@@ -71,19 +71,21 @@ $(() => {
         for(eachComment of comments){
           // COPIES STRUCTURE FROM _comments.ejs
           let $newComment = $(`
-          <div class="comment">
-            <header>
-              <h4 class="username">${eachComment.userId}</h4>
-            </header>
-            <p>
-              ${eachComment.newComment}
-            </p>
-            <footer>
-              <span class="timestamp">
-                19 seconds ago
-              </span>
-            </footer>
-          </div>
+            <div class="comment-container">
+              <div class="comment">
+                <header>
+                  <h4 class="username">${eachComment.userId}</h4>
+                </header>
+                <p>
+                  ${eachComment.newComment}
+                </p>
+                <footer>
+                  <span class="timestamp">
+                    19 seconds ago
+                  </span>
+                </footer>
+              </div>
+            </div>
           `).appendTo("div.postArea");
         }
       })
