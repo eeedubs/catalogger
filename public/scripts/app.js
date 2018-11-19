@@ -6,14 +6,15 @@ $(() => {
     //comment social button
     let $buttons = $("div.resource").children("footer").children("button.btn.btn-primary.commentFeed");
     //post new comment button
-    let $postComment = $("div.comment-container").children("form").children(".commentPost");
+    let $postComment = $("div.resource").children("div.comment-container").children("form").children(".commentPost");
     //comment container
     let $commentSection = $("div.comment-container");
     //comment input field
     let $commentInput = $("div.comment-container").children("form").children(".commentInput");
 
     $buttons.click((event) => {
-      // event.preventDefault();
+      event.preventDefault();
+      // console.log("Comment toggle button clicked!");
       $commentSection.slideToggle();
       // $commentInput.slideToggle();
       $commentInput.focus();
@@ -50,7 +51,7 @@ $(() => {
           <div style="clear: both;">
           </div>
         </div>
-          `).prependTo($(".all-resources"));
+          `).prependTo($("div.all-resources"));
           // const $commentFeedToggle = $newElement.find(".commentFeed");
 
           // console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
@@ -63,6 +64,7 @@ $(() => {
     // $postComment.on('submit', function(event) {
     $postComment.click((event) => {
       event.preventDefault();
+      $commentSection.slideToggle();
       console.log("Button Clicked!");
       $.ajax({
         method: "POST",
