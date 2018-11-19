@@ -3,17 +3,10 @@
 $(() => {
 
   $(function () {
-<<<<<<< HEAD
-    const $button = $("#commentFeed");
-    const $postComment = $("#commentPost");
-    const $commentSection = $("#comments").hide();
-    const $input = $("#commentInput");
-=======
     const $buttons = $("div.resource").children("footer").children("a");
     const $postComment = $("section.comment-container").children("form").children(".commentPost");
     const $commentSection = $("section.comment-container")/*.hide()*/;
     const $input = $(".commentInput");
->>>>>>> feature/realtime-posting
 
     $buttons.click((event) => {
       event.preventDefault();
@@ -55,15 +48,10 @@ $(() => {
                 </div>
           </section>
         <div style="clear: both;"></div>
-<<<<<<< HEAD
-        `)
-        .prependTo($(".category"));
-=======
         `).prependTo($(".category"));
         const $commentFeedToggle = $newElement.find(".commentFeed");
 
         console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
->>>>>>> feature/realtime-posting
     }
     // makeNewEventHandlers(); // might not need
   });
