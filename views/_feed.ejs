@@ -1,40 +1,76 @@
 <section class="category">
     <!-- RESOURCE STARTS HERE -->
-    <div class="resource">
-        <img class="card-img-top" src="https://www.fillmurray.com/200/300">
-        <h3>Article 1 - <a href="https://www.cbc.ca/news/canada/newfoundland-labrador/plane-crash-stephenville-1.4906941">Source</a></h3>
-        <p>
-            A plane headed for Deer Lake in western Newfoundland made an emergency landing at Stephenville airport today because of an issue with its landing gear.
-            The Provincial Airlines Flight 1922 plane tried to land in Deer Lake when it encountered the problem, the airline said in a news release.
-            Given adverse weather conditions in Deer Lake, the pilot circled around before heading to Stephenville, where an emergency landing was necessary.
-        </p>
-        <footer>
-            <!-- category -->
-            <!-- rating -->
-            <!-- comments section -->
-            <a href="#" class="btn btn-primary">Rate</a>
-            <a href="#" class="btn btn-primary">Like</a>
-            <a href="#" id="commentFeed" class="btn btn-primary">Comment</a>
-        </footer>
-        <!-- COMMENTS START HERE -->
-        <section id="comments" class="comment-container">
-            <form id="submitComment" method="POST" action="/comment">
-                <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
-                <a href="anythingIwant" id="commentPost" class="btn-primary">Comment</a>
-            </form>
-            <div class="postArea">
-                <div class="comment">
-                    <header>
-                        <h4 class="username">TheMan1901</h4>
-                    </header>
-                    <p>
-                        This is a cool article, I love the language used.
-                    </p>
-                    <footer>
-                        <span class="timestamp">
-                            19 seconds ago
-                        </span>
-                    </footer>
+        <div class="resource">
+            <img class="card-img-top" src="https://www.fillmurray.com/200/300">
+            <h3>Article 1 -
+                <a href="https://www.cbc.ca/news/canada/newfoundland-labrador/plane-crash-stephenville-1.4906941">Source</a>
+            </h3>
+            <p>
+                A plane headed for Deer Lake in western Newfoundland made an emergency landing at Stephenville airport today because of an issue with its landing gear.
+                The Provincial Airlines Flight 1922 plane tried to land in Deer Lake when it encountered the problem, the airline said in a news release.
+                Given adverse weather conditions in Deer Lake, the pilot circled around before heading to Stephenville, where an emergency landing was necessary.
+            </p>
+            <footer>
+                <!-- category -->
+                <!-- rating -->
+                <!-- comments section -->
+                <a href="#" class="btn btn-primary">Rate</a>
+                <a href="#" class="btn btn-primary">Like</a>
+                <a href="#" class="btn btn-primary commentFeed">Comment</a>
+            </footer>
+            <!-- COMMENTS START HERE -->
+            <section id="comments" class="comment-container">
+                <form id="submitComment" method="POST" action="/comment">
+                    <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
+                    <a href="#" class="btn-primary commentPost">Comment</a>
+                </form>
+                <div class="postArea">
+                        <div class="comment">
+                                <header>
+                                    <h4 class="username">
+                                    TheMan1901
+                                    </h4>
+                                </header>
+                                <p>
+                                This is a cool article, I love the language used.
+                                </p>
+                                <footer>
+                                    <span class="timestamp">
+                                    19 seconds ago
+                                    </span>
+                                </footer>
+                            </div>
+                            <div class="comment">
+                                    <header>
+                                            <h4 class="username">
+                                            TheWorstMan1902
+                                            </h4>
+                                        </header>
+                                    <p>
+                                    This is a dumb article, I hate the language used.
+                                    </p>
+                                    <footer>
+                                        <span class="timestamp">
+                                        20 seconds ago
+                                        </span>
+                                    </footer>
+                                </div>
+                                <div class="comment">
+                                        <header>
+                                                <h4 class="username">
+                                                TheRealHero
+                                                </h4>
+                                            </header>
+                                        <p>
+                                        You think this is a good resource? I know way more than whoever wrote this article.
+                                        Bad show.
+                                        </p>
+                                        <footer>
+                                            <span class="timestamp">
+                                            21 seconds ago
+                                            </span>
+                                        </footer>
+                                    </div>
                 </div>
                 <div class="comment">
                     <header>

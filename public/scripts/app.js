@@ -3,13 +3,12 @@
 $(() => {
   // 
   $(function () {
-    const $button = $("#commentFeed");
-    const $postComment = $("#commentPost");
-    const $commentSection = $("#comments").hide();
-    const $input = $("#commentInput");
+    const $buttons = $("div.resource").children("footer").children("a");
+    const $postComment = $("section.comment-container").children("form").children(".commentPost");
+    const $commentSection = $("section.comment-container")/*.hide()*/;
+    const $input = $(".commentInput");
 
-    // handles the toggling of the comment section sliding
-    $button.click((event) => {
+    $buttons.click((event) => {
       event.preventDefault();
       $commentSection.slideToggle();
       $input.focus();
@@ -28,7 +27,7 @@ $(() => {
     url: "api/users"
   }).done((resources) => {
     for(resource of resources) {
-      $(`
+      const $newElement = $(`
       <div class="resource">
         <img class="card-img-top" src='${resource.imageURL}'>
         <h3>
@@ -40,20 +39,23 @@ $(() => {
         <footer>
           <a class="btn btn-primary">Rate</a>
           <a class="btn btn-primary">Like</a>
-          <a id="commentFeed" class="btn btn-primary">Comment</a>
+          <a class="btn btn-primary commentFeed">Comment</a>
         </footer>
         <section id="comments" class="comment-container">
                 <form id="submitComment" method="POST" action="/comment">
                     <textarea type="text" id="commentInput" name="commentInput" placeholder="Type your comment..."></textarea>
-                    <a href="#" id="commentPost" class="btn-primary">Comment</a>
+                    <a href="#" class="btn-primary commentPost">Comment</a>
                 </form>
                 <div class="postArea">
                 </div>
           </section>
         <div style="clear: both;"></div>
-        `)
-        .prependTo($(".category"));
+        `).prependTo($(".category"));
+        const $commentFeedToggle = $newElement.find(".commentFeed");
+
+        console.log("<a class='btn btn-primary commentFeed'>Comment</a> :  ====> ", $commentFeedToggle);
     }
+    // makeNewEventHandlers(); // might not need
   });
 
  // Handles the naming of the category titles
