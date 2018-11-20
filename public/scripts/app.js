@@ -3,57 +3,53 @@
 $(() => {
 
   $(function () {
-    //comment social button
-    let $buttons = $("div.resource").children(".comment-container").children("form.submitContent").children("button.btn.btn-primary.commentFeed");
-    //post new comment button
-    let $commentForm = $("div.resource").children("div.comment-container").children("form.submitContent");
-    //comment container
-    let $commentSection = $("div.resource").children("div.comment-container");
-    //comment input field
-    let $commentInput = $("div.resource").children("div.comment-container").children("form.submitContent").children(".commentInput");
+    // let $buttons = $("div.resource").children(".comment-container").children("form.submitContent").children("button.btn.btn-primary.commentFeed");
+    // let $commentForm = $("div.resource").children("div.comment-container").children("form.submitContent");
+    // let $commentSection = $("div.resource").children("div.comment-container");
+    // let $commentInput = $("div.resource").children("div.comment-container").children("form.submitContent").children(".commentInput");
+    
+    // $buttons.click((event) => {
+    //   // event.preventDefault();
+    //   // console.log("Comment toggle button clicked!");
+    //   $commentSection.slideToggle();
+    //   $commentInput.focus();
+    // })
 
-    $buttons.click((event) => {
-      // event.preventDefault();
-      // console.log("Comment toggle button clicked!");
-      $commentSection.slideToggle();
-      $commentInput.focus();
-    })
-
+    //CREATES THE RESOURCE DOM TREE
     function createResource (resource){
       var $allResources = $("<div>").addClass("all-resources");
       var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
-      var $img = $("<img>").addClass("card-img-top").attr("src", "`${resource.imageURL}`").appendTo($singleResource);
-      var $title = $("<h3>").text("`${resource.title}` - <a href='`${resource.resourceURL}`'>Source</a></h3>").appendTo($singleResource);
-      var $description = $("<p>").text("`$(resource.description}`").appendTo($singleResource);
+      var $img = $("<img>").addClass("card-img-top").attr("src", "`${resources.imageURL}`").appendTo($singleResource);
+      var $title = $("<h3>").text("`${resources.title}` - <a href='`${resources.resourceURL}`'>Source</a></h3>").appendTo($singleResource);
+      var $description = $("<p>").text("`$(resources.description}`").appendTo($singleResource);
       var $footer = $("<footer>").appendTo($singleResource);
-      var $rateButton = $("<button>").addClass("btn btn-primary").text("Rate").appendTo($footer);
-      var $likeButton = $("<button>").addClass("btn btn-primary").text("Like").appendTo($footer);
-      var $commentButton = $("<button>").addClass("btn btn-primary commentFeed").text("Comment").appendTo($footer);
+      var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
+      var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
+      var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
       return $allResources;
     }
 
-    let $commentToggleButton = 
-
-    function getResources(resourceData){
-      // get resources for an array of resource data
+    //RENDERS THE RESOURCES
+    function renderResources(resourceData){
       resourceData.forEach(function(resource) {
         var $resource = createResource(resource);
         $("section.feed").prepend($resource);
       });
     };
 
-    function loadResources() {
+    //LOADS THE RESOURCES ON PAGE LOAD (GET)
+    $(function loadResources() {
       $.ajax({
         method: "GET",
         url: "api/users"
       }).done((resources) => {
         console.log("Got resources! Rendering...");
-        getResources(resources);
+        renderResources(resources);
       })
       .fail(() => {
         alert("Error: resources not rendering properly!");
       });
-    }
+    });
 
 
     // For constructing the resource postings:
@@ -86,36 +82,61 @@ $(() => {
     //     }
     //   });
 
-    // handles the posting of new comments
+    // CREATES THE COMMENT DOM TREE
     function createComment (comment) {
       var $eachComment = $("<div>").addClass("comment");
       var $header = $("<header>").appendTo($eachComment);
-      var $userName = $("<h4>").addClass("username").text("`${eachComment.userId}`").appendTo($header);
-      var $content = $("<p>").text(`${eachComment.newComment}`).appendTo($eachComment);
+      var $userName = $("<h4>").addClass("username").text("`${user_comments.userId}`").appendTo($header);
+      var $content = $("<p>").text(`${user_comments.comment}`).appendTo($eachComment);
       var $footer = $("<footer>").appendTo($eachComment);
       var $span = $("<span>").addClass("timestamp").text("19 seconds ago").appendTo($footer);
       return $eachComment;
     }
 
-    function getComments(commentData){
+    //HANDLES THE TOGGLING OF COMMENTS (NOT POSTING)
+    $(function toggleComments() {
+      let $commentToggleButton = $(".feed .all-resources .resource footer .social-buttons .comment");
+      $commentToggleButton.on("click", function() {
+        $(".feed .all-resources .resource .comment-container").slideToggle("slow");
+        $(".feed .all-resources .resource .comment-container .comment form.submitComment .commentInput").focus();
+      })
+    });
+
+    //RENDERS THE COMMENTS
+    function renderComments(commentData){
       commentData.forEach(function(comment) {
         var $comment = createComment(comment);
         $("div.comment-container").prepend($comment);
       });
     };
 
-    function loadComments() {
+    //LOADS THE COMMENTS
+    // function loadComments() {
+    $(".feed .all-resources .resource .comment-container .comment form").on("submit", function(event) {
+      event.preventDefault();
+      const formContent = $(this).serialize();
       $.ajax({
-        method: "POST",
+        method: "GET",
         url: "api/users"
       }).done((comments) => {
         console.log("Got comments! Rendering...");
-        getComments(comments);
+        renderComments(comments);
       })
       .fail(() => {
         alert("Error: comments not rendering properly!");
       });
-    }
+    });
+  })
+
+  //   $(".feed .all-resources .resource .comment-container .comment form").on("submit", function(event) {
+  //     event.preventDefault();
+  //     const formContent = $(this).serialize();
+  //     $.ajax({
+  //       method: "POST",
+  //       url: "api/users"
+  //     }).done((comments) =
+
+  // })
 
       // COPIES STRUCTURE FROM _comments.ejs
   //   $commentForm.click((event) => {
@@ -164,7 +185,7 @@ $(() => {
 
     // Highlights the selected page as blue on the sidebar
     // Changes the header for each category by calling on renameCategory
-  $(function() {
+  $(function changePageName() {
     var url = document.location.href;
     $('.list-group form').each(function() {
       if (url === this.action + "?") {
@@ -174,7 +195,7 @@ $(() => {
       }
     });
   });
-});
+})
 
 
 //   $.ajax({
