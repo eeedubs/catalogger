@@ -2,7 +2,7 @@
 // the web page (jQuery - client side)
 $(() => {
 
-  $(function () {
+  // $(function () {
     // let $buttons = $("div.resource").children(".comment-container").children("form.submitContent").children("button.btn.btn-primary.commentFeed");
     // let $commentForm = $("div.resource").children("div.comment-container").children("form.submitContent");
     // let $commentSection = $("div.resource").children("div.comment-container");
@@ -126,7 +126,7 @@ $(() => {
         alert("Error: comments not rendering properly!");
       });
     });
-  })
+  // })
 
   //   $(".feed .all-resources .resource .comment-container .comment form").on("submit", function(event) {
   //     event.preventDefault();
