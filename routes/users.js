@@ -9,15 +9,7 @@ const bodyParser = require('body-parser');
 
 module.exports = (knex) => {
 
-  // router.get("/", (req, res) => {
-  //   knex
-  //     .select("*")
-  //     .from("users")
-  //     .then((results) => {
-  //       res.json(results);
-  //   });
-  //   })
-
+  // LOAD ALL RESOURCES FOR HOME PAGE
   router.get("/", (req, res) => {
     knex
       .select("*")
@@ -27,14 +19,15 @@ module.exports = (knex) => {
     });
   })
 
-  // function getQuery() {
-  //   document.querySelector('form').addEventListener('submit', (event) => {
-  //     event.preventDefault();
-  //     let $searchInput = $(`form#search-form .search-field`)[0].value;
-  //      console.log($searchInput);
-  //   });
-  // }
-  // getQuery();
+
+  router.get("/comment", (req, res) => {
+    knex 
+    .select("*")
+    .from("user_comments")
+    .then((results) => {
+      res.json(results);
+    });
+  });
 
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
@@ -65,28 +58,46 @@ module.exports = (knex) => {
       res.redirect("/register");
     })
 
+  // Comment On Resource
+  router.post("/comment", (req, res) => {
+    const userComment = req.body.commentInput;
+    const userId = req.body.user_id;
+    knex('user_comments')
+    .insert({
+      comment: userComment,
+      user_id: userId
+    })
+    .then((results) => {
+      res.status(201).redirect("/");
+    });
+  })
+
+
 // COMMENT ROUTE
 
     //1. You firstly need to get the user_id which is like Cookie Session
     //2. You will get the comments from the user who type and pressed POST
     //3. Resource Id - You need to have resource id as a hidden tag in the page
 
-  router.post("/comment", (req, res) => {
-    console.log("it's a comment!")
-    const newComment = req.body.commentInput;
-    const userId     = req.body.user_id;
-    // const resourceId = req.body;
-      knex('user_comments')
-      .insert({
-        comment: newComment,
-        user_id: userId
-        // resource_id: resourceId
-      })
-      .then((results) => {
-        res.json(results);
-        // res.redirect("/")
-      });
-  })
+  // router.post("/comment", (req, res) => {
+  //   // console.log("it's a comment!")
+  //   const newComment = req.body.commentInput;
+  //   console.log("new comment: ", newComment);
+  //   const userId     = knex.select('id').from('users').where('name', '=', `%${req.cookies.username}%`);
+  //   console.log("user's ID: ", userId);
+  //   const resourceId = req.body.resourceId;
+  //   // const resourceId = knex.select('id').from('resources').where('title', 'LIKE', `%${resourceByName}%`);
+  //   console.log("resource ID: ", resourceId);
+  //   knex('user_comments')
+  //     .insert({
+  //       user_id: userId,
+  //       comment: newComment,
+  //       resource_id: resourceId
+  //     })
+  //     .then((results) => {
+  //       res.json(results);
+  //     });
+  // })
 
   // LIKE ROUTE
   // router.post("like", (req, res) => {

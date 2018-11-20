@@ -42,17 +42,21 @@ app.use(express.static("public"));
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
 
+
 // Register Page
 app.get("/register", (req, res) => {
   res.render("register");
 });
 
+
 // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 app.get("/resources", (req, res) => {
   // include session id, user, pass info to template vars
   if (req.cookies['username']){
+    // if cookies are found
     knex('resources')
     .select('id')
+    // select the id from resources, then pass that into the /resources
     .then((data)=>{
       console.log("Select query for Resources ", data);
       res.render("index", {id: data.id});
@@ -63,10 +67,11 @@ app.get("/resources", (req, res) => {
   }
 });
 
-// Specified Category Page
+
+// Specified Category Page - ATTACHES A HIDDEN ID TAG TO THE CATEGORY
 app.get("/category/:id", (req, res) => {
   if (req.cookies['username']){
-    knex('resources')
+    knex('categories')
     .select('id')
     .then((data)=> {
       console.log("Select query for categories", data);
@@ -98,7 +103,7 @@ app.get("/info", (req, res) => {
 // Search for resources page
 app.get("/search", (req, res) => {
   let searchQuery = req.query.searchQuery;
-  const username = req.cookies.username;  
+  const username = req.cookies.username;
   if (username) {
     knex('users')
     .select('id')
@@ -118,6 +123,75 @@ app.get("/search", (req, res) => {
       res.redirect("/register");
     }
   });
+
+// Home page
+app.get("/", (req, res) => {
+  const username = req.cookies.username;
+  if (username) {
+    knex('users')
+    .select('id')
+    .where('name', username)
+    .then((data) => {
+      const templateVars = {
+        id: data[0].id
+      };
+      res.render("index", templateVars);
+    });
+  } else {
+    res.redirect("/register");
+  }
+});
+
+/////////////////
+///POST ROUTES///
+/////////////////
+
+
+// FOR ADDING NEW RESOURCES - WORKS √
+app.post("/submit", (req, res) => {
+  console.log('body', req.body);
+  const title = req.body.title;
+  const description = req.body.description;
+  const resourceURL = req.body.resourceURL;
+  const imageURL = req.body.imageURL;
+  const user_id = req.body.user_id;
+  console.log("user_id = ", user_id);
+  knex('resources')
+    .insert({
+      resourceURL: resourceURL,
+      title: title,
+      imageURL: imageURL,
+      description: description,
+      created_by: user_id
+    })
+    .then((results) => {
+      res.redirect("/");
+    });
+})
+
+// Like Resource - X
+app.post("/like", (req, res) => {
+  if (req.cookies['username']){
+    res.render("/");
+  } else {
+    res.redirect("/register");
+  }
+});
+
+
+// Categorise Resource
+app.post("/like", (req, res) => {
+  if (req.cookies['username']){
+    res.render("/");
+  } else {
+    res.redirect("/register");
+  }
+});
+
+app.listen(PORT, () => {
+  console.log("Example app listening on port " + PORT);
+});
+
 
   // function getAllResources(userId){
   //   return Promise.resolve([]);
@@ -148,68 +222,6 @@ app.get("/search", (req, res) => {
 //   }
 // });
 
-// Home page
-app.get("/", (req, res) => {
-  const username = req.cookies.username;
-  if (username) {
-    knex('users')
-    .select('id')
-    .where('name', username)
-    .then((data) => {
-      const templateVars = {
-        id: data[0].id
-      };
-      res.render("index", templateVars);
-    });
-    //then bracket closes
-  } else {
-    res.redirect("/register");
-  }
-});
-
-// FOR ADDING NEW RESOURCES
-app.post("/submit", (req, res) => {
-  console.log('body', req.body);
-  const title = req.body.title;
-  const description = req.body.description;
-  const resourceURL = req.body.resourceURL;
-  const imageURL = req.body.imageURL;
-  const user_id = req.body.user_id;
-  console.log("user_id = ", user_id);
-  knex('resources')
-    .insert({
-      resourceURL: resourceURL,
-      title: title,
-      imageURL: imageURL,
-      description: description,
-      created_by: user_id
-    })
-    .then((results) => {
-      res.redirect("/")
-    });
-  })
-
-// Like Resource
-app.post("/like", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
-
-// Comment On Resource
-// app.post("/comment", (req, res) => {
-//   if (req.cookies['username']){
-//     const comment = req.body.commentInput;
-//     const 
-//     knex('resources')
-//     res.render("/", comment);
-//     // console.log(req.body.commentInput);
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
 
 // app.post("/search", (req, res) => {
 //   const username = req.cookies.username;
@@ -220,17 +232,3 @@ app.post("/like", (req, res) => {
 //     res.redirect("/register");
 //   }
 // })
-
-// Categorise Resource
-app.post("/like", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
-
-app.listen(PORT, () => {
-  console.log("Example app listening on port " + PORT);
-});
-
