@@ -19,9 +19,9 @@ $(() => {
     function createResource (resource){
       var $allResources = $("<div>").addClass("all-resources");
       var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
-      var $img = $("<img>").addClass("card-img-top").attr("src", "`${resources.imageURL}`").appendTo($singleResource);
-      var $title = $("<h3>").text("`${resources.title}` - <a href='`${resources.resourceURL}`'>Source</a></h3>").appendTo($singleResource);
-      var $description = $("<p>").text("`$(resources.description}`").appendTo($singleResource);
+      var $img = $("<img>").addClass("card-img-top").attr("src", "`${resource.imageURL}`").appendTo($singleResource);
+      var $title = $("<h3>").text("`${resource.title}` - <a href='${resource.resourceURL}'>Source</a></h3>").appendTo($singleResource);
+      var $description = $("<p>").text("$(resource.description}").appendTo($singleResource);
       var $footer = $("<footer>").appendTo($singleResource);
       var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
       var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
@@ -86,8 +86,8 @@ $(() => {
     function createComment (comment) {
       var $eachComment = $("<div>").addClass("comment");
       var $header = $("<header>").appendTo($eachComment);
-      var $userName = $("<h4>").addClass("username").text("`${user_comments.userId}`").appendTo($header);
-      var $content = $("<p>").text(`${user_comments.comment}`).appendTo($eachComment);
+      var $userName = $("<h4>").addClass("username").text("${comment.userId}").appendTo($header);
+      var $content = $("<p>").text("${user_comments.comment}").appendTo($eachComment);
       var $footer = $("<footer>").appendTo($eachComment);
       var $span = $("<span>").addClass("timestamp").text("19 seconds ago").appendTo($footer);
       return $eachComment;
