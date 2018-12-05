@@ -1,12 +1,15 @@
 // App.js handles the functionality of various components within the site, without reloading
 // the web page (jQuery - client side)
 
+$(document).ready(function(){
 //CREATES THE RESOURCE DOM TREE
 function createResource (resource){
   var $allResources = $("<div>").addClass("all-resources");
     var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
       var $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
       var $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
+      // $resourceId contains the id to each resource
+      var $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
       var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
       var $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
       // footer contains the social buttons, including the button to toggle comments
@@ -28,12 +31,27 @@ function createComment (comment) {
   var $eachComment = $("<div>").addClass("comment");
     var $header = $("<header>").appendTo($eachComment);
       var $description = $(`<input type="hidden" id="commentId" name="commentId" value="${comment.id}">`).appendTo($eachComment);
-      var $userName = $(`<h4 class="username">${comment.user_id}</h4>`).appendTo($header);
+      var $userName = $(`<h4 class="username">${comment.user_name}</h4>`).appendTo($header);
     var $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
     var $footer = $("<footer>").appendTo($eachComment);
-      var $span = $("<span>").addClass("timestamp").text("19 seconds ago").appendTo($footer);
+      var $span = $("<span>").addClass("timestamp").text(unixDate(comment.time_created)).appendTo($footer);
   return $eachComment;
 }    
+
+function unixDate(digits){
+  const daysAgo = Math.floor((Date.now() - digits) / 86400000);
+  const hoursAgo = Math.floor((Date.now() - digits) / 3600000);
+  const minutesAgo = Math.floor((Date.now() - digits) / 60000);
+  if (daysAgo < 2 && hoursAgo < 2 && minutesAgo < 2){
+      return "Moments ago.";
+  } else if (daysAgo < 2 && hoursAgo < 2){
+      return minutesAgo + " minutes ago.";
+  } else if (daysAgo < 2 && hoursAgo >= 2){
+      return hoursAgo + " hours ago.";
+  } else {
+      return daysAgo + " days ago";
+  }
+}
 
 window.addEventListener("click", function(event){
   if (event.toElement.innerHTML === "Comment"){
@@ -42,8 +60,6 @@ window.addEventListener("click", function(event){
     $(".commentInput").focus();
   }
 });
-
-$(document).ready(function(){
 
   //RENDERS THE RESOURCES
   // 
@@ -55,15 +71,12 @@ $(document).ready(function(){
     });
   };
 
-  // $("div .comment-container").on("click", function() {
-  //   $("div comment-container").slideToggle("slow");
-  //   console.log("woohoo");
-  // });
-  
 
   //RENDERS THE COMMENTS
   function renderComments(commentData){
     commentData.forEach(function(comment) {
+      // if (comment.resource_id === )
+      console.log("Rendering comments: ", comment);
       var $comment = createComment(comment);
       $("section.feed div.all-resources div.resource div.comment-container div.postArea").prepend($comment);
     });
@@ -73,7 +86,7 @@ $(document).ready(function(){
   $(function loadResources() {
     $.ajax({
       method: "GET",
-      url: "api/users"
+      url: "api/users/resources"
     }).done((resources) => {
       renderResources(resources);
     })
@@ -86,7 +99,7 @@ $(document).ready(function(){
   $(function loadComments() {
     $.ajax({
       method: "GET",
-      url: "api/users"
+      url: "api/users/comments"
     }).done((comments) => {
       renderComments(comments);
     })
@@ -94,17 +107,6 @@ $(document).ready(function(){
       alert("Error: comments not rendering properly!");
     });
   });
-  
-
-    //HANDLES THE TOGGLING OF COMMENTS (NOT POSTING)
-  // $(window).load(function () {
-  //   $("#comment").on("click", function() {
-  //       // event.preventDefault();
-  //     console.log("Toggle comment button clicked!");
-  //     $("footer").slideToggle("slow");
-  //     $(".commentInput").focus();
-  //   })
-  // })
 
     // POST THE COMMENTS and RELOAD
   $(".submitComment").on("submit", function(event) {

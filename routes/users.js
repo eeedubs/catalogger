@@ -15,30 +15,30 @@ module.exports = (knex) => {
       .select("*")
       .from("resources")
       .then((results) => {
+        // Prints each result to the terminal console
+        results.forEach((result) => {
+          console.log(JSON.stringify(result) + "\n");
+        })
+        // Sends the results in JSON format
         res.json(results);
-    });
-  })
+      })
+    })
+
+  // I need to figure out how to pass two different sets of parameters to app.js
+  // The resources have been sent successfully, but not the comments
 
 
   router.get("/comments", (req, res) => {
     knex 
     .select("*")
     .from("user_comments")
-    .then((results) => {
-      res.json(results);
+    .then((comments) => {
+      comments.forEach((comment) => {
+        console.log(JSON.stringify(comment) + "\n");
+      })
+      res.json(comments);
     });
   });
-
-  // Like Resource - X
-  router.post("/like", (req, res) => {
-    if (req.cookies['username']){
-      res.render("/");
-    } else {
-      res.redirect("/register");
-    }
-  });
-
-
 
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
@@ -72,11 +72,22 @@ module.exports = (knex) => {
   // Comment On Resource
   router.post("/comment", (req, res) => {
     const userComment = req.body.commentInput;
-    const userId = req.body.user_id;
+    const username = req.cookies.username
+    // const resourceId = req.body.
+    const userId = knex
+      .select('user_id')
+      .from('user_comments')
+      .where('name', 'IS', username)
+      .then((result) => {
+        return result
+      });
+    console.log("user's id is: ", userId);
     knex('user_comments')
     .insert({
       comment: userComment,
-      user_id: userId
+      user_name: username,
+      time_created: Date.now()
+      // user_id: userId
     })
     .then((results) => {
       res.status(201).redirect("/");
