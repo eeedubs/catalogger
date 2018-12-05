@@ -29,6 +29,17 @@ module.exports = (knex) => {
     });
   });
 
+  // Like Resource - X
+  router.post("/like", (req, res) => {
+    if (req.cookies['username']){
+      res.render("/");
+    } else {
+      res.redirect("/register");
+    }
+  });
+
+
+
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
     const username = req.body.username;
