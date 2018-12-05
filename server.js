@@ -169,24 +169,6 @@ app.post("/submit", (req, res) => {
     });
 })
 
-// Like Resource - X
-app.post("/like", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
-
-
-// Categorise Resource
-app.post("/like", (req, res) => {
-  if (req.cookies['username']){
-    res.render("/");
-  } else {
-    res.redirect("/register");
-  }
-});
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
