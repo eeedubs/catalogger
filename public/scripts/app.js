@@ -7,7 +7,7 @@ function createResource (resource){
     var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
       var $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
       var $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
-      // var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
+      var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
       var $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
       // footer contains the social buttons, including the button to toggle comments
       var $footer = $("<footer>").appendTo($singleResource);
@@ -27,12 +27,21 @@ function createResource (resource){
 function createComment (comment) {
   var $eachComment = $("<div>").addClass("comment");
     var $header = $("<header>").appendTo($eachComment);
+      var $description = $(`<input type="hidden" id="commentId" name="commentId" value="${comment.id}">`).appendTo($eachComment);
       var $userName = $(`<h4 class="username">${comment.user_id}</h4>`).appendTo($header);
     var $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
     var $footer = $("<footer>").appendTo($eachComment);
       var $span = $("<span>").addClass("timestamp").text("19 seconds ago").appendTo($footer);
   return $eachComment;
 }    
+
+window.addEventListener("click", function(event){
+  if (event.toElement.innerHTML === "Comment"){
+    console.log(event);
+    $("div .comment-container").slideToggle("slow");
+    $(".commentInput").focus();
+  }
+});
 
 $(document).ready(function(){
 
@@ -82,12 +91,14 @@ $(document).ready(function(){
   
 
     //HANDLES THE TOGGLING OF COMMENTS (NOT POSTING)
-  $(".social-buttons.comment").on("click", function() {
-      // event.preventDefault();
-    console.log("Toggle comment button clicked!");
-    $("footer").slideToggle("slow");
-    $(".commentInput").focus();
-  })
+  // $(window).load(function () {
+  //   $("#comment").on("click", function() {
+  //       // event.preventDefault();
+  //     console.log("Toggle comment button clicked!");
+  //     $("footer").slideToggle("slow");
+  //     $(".commentInput").focus();
+  //   })
+  // })
 
     // POST THE COMMENTS and RELOAD
   $(".submitComment").on("submit", function(event) {
