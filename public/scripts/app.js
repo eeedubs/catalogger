@@ -37,7 +37,7 @@ function createComment (comment) {
 
 window.addEventListener("click", function(event){
   if (event.toElement.innerHTML === "Comment"){
-    console.log(event);
+    // console.log(event);
     $("div .comment-container").slideToggle("slow");
     $(".commentInput").focus();
   }
@@ -49,11 +49,17 @@ $(document).ready(function(){
   // 
   function renderResources(resourceData){
     resourceData.forEach(function(resource) {
-      // console.log("Rendering resources: ", resource);
+      console.log("Rendering resources: ", resource);
       var $resource = createResource(resource);
       $("section.feed").prepend($resource);
     });
   };
+
+  // $("div .comment-container").on("click", function() {
+  //   $("div comment-container").slideToggle("slow");
+  //   console.log("woohoo");
+  // });
+  
 
   //RENDERS THE COMMENTS
   function renderComments(commentData){

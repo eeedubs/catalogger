@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 module.exports = (knex) => {
 
   // LOAD ALL RESOURCES FOR HOME PAGE
-  router.get("/", (req, res) => {
+  router.get("/resources", (req, res) => {
     knex
       .select("*")
       .from("resources")
@@ -20,7 +20,7 @@ module.exports = (knex) => {
   })
 
 
-  router.get("/comment", (req, res) => {
+  router.get("/comments", (req, res) => {
     knex 
     .select("*")
     .from("user_comments")
