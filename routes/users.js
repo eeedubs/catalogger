@@ -14,13 +14,13 @@ module.exports = (knex) => {
     knex
       .select("*")
       .from("resources")
-      .then((results) => {
+      .then((resources) => {
         // Prints each result to the terminal console
-        results.forEach((result) => {
-          console.log(JSON.stringify(result) + "\n");
+        resources.forEach((resource) => {
+          // console.log(JSON.stringify(resource) + "\n");
         })
-        // Sends the results in JSON format
-        res.json(results);
+        // Sends the resources in JSON format
+        res.json(resources);
       })
     })
 
@@ -72,27 +72,28 @@ module.exports = (knex) => {
   // Comment On Resource
   router.post("/comment", (req, res) => {
     const userComment = req.body.commentInput;
-    const username = req.cookies.username
-    // const resourceId = req.body.
-    const userId = knex
-      .select('user_id')
-      .from('user_comments')
-      .where('name', 'IS', username)
-      .then((result) => {
-        return result
+    const username = req.cookies.username;
+    const resourceId = req.body.resourceId;
+    let userId;
+    knex('users')
+      .select('id')
+      .where('name', '=', username)
+      .then(function(result){
+        userId = result[0].id;
+        console.log("The user's ID is: ", userId);
+        return knex('user_comments')
+          .insert({
+            comment: userComment,
+            user_name: username,
+            time_created: Date.now(),
+            user_id: userId,
+            resource_id: resourceId
+          })
+          .then(() => {
+            res.status(201).redirect("/");
+          });
+        })
       });
-    console.log("user's id is: ", userId);
-    knex('user_comments')
-    .insert({
-      comment: userComment,
-      user_name: username,
-      time_created: Date.now()
-      // user_id: userId
-    })
-    .then((results) => {
-      res.status(201).redirect("/");
-    });
-  })
 
 
 // COMMENT ROUTE

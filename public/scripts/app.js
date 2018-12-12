@@ -2,70 +2,71 @@
 // the web page (jQuery - client side)
 
 $(document).ready(function(){
-//CREATES THE RESOURCE DOM TREE
-function createResource (resource){
-  var $allResources = $("<div>").addClass("all-resources");
-    var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
-      var $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
-      var $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
-      // $resourceId contains the id to each resource
-      var $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
-      var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
-      var $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
-      // footer contains the social buttons, including the button to toggle comments
-      var $footer = $("<footer>").appendTo($singleResource);
-        var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
-        var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
-        var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
-        // commentContainer contains all of the posted comments
-      var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
-        var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
-          var $textArea = $(`<textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>`).appendTo($commentForm);
-          var $postButton = $(`<input class="commentPost" type="submit" value="Post">`).appendTo($commentForm);
-        var $commentSection = $("<div>").addClass("postArea").appendTo($commentContainer);
-  return $allResources;
-}
-
-// CREATES THE COMMENT DOM TREE
-function createComment (comment) {
-  var $eachComment = $("<div>").addClass("comment");
-    var $header = $("<header>").appendTo($eachComment);
-      var $description = $(`<input type="hidden" id="commentId" name="commentId" value="${comment.id}">`).appendTo($eachComment);
-      var $userName = $(`<h4 class="username">${comment.user_name}</h4>`).appendTo($header);
-    var $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
-    var $footer = $("<footer>").appendTo($eachComment);
-      var $span = $("<span>").addClass("timestamp").text(unixDate(comment.time_created)).appendTo($footer);
-  return $eachComment;
-}    
-
-function unixDate(digits){
-  const daysAgo = Math.floor((Date.now() - digits) / 86400000);
-  const hoursAgo = Math.floor((Date.now() - digits) / 3600000);
-  const minutesAgo = Math.floor((Date.now() - digits) / 60000);
-  if (daysAgo < 2 && hoursAgo < 2 && minutesAgo < 2){
-      return "Moments ago.";
-  } else if (daysAgo < 2 && hoursAgo < 2){
-      return minutesAgo + " minutes ago.";
-  } else if (daysAgo < 2 && hoursAgo >= 2){
-      return hoursAgo + " hours ago.";
-  } else {
-      return daysAgo + " days ago";
+  //CREATES THE RESOURCE DOM TREE
+  function createResource (resource){
+    var $allResources = $("<div>").addClass("all-resources");
+      var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
+        var $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
+        var $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
+        // $resourceId contains the id to each resource
+        var $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
+        // var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
+        var $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
+        // footer contains the social buttons, including the button to toggle comments
+        var $footer = $("<footer>").appendTo($singleResource);
+          var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
+          var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
+          var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
+          // commentContainer contains all of the posted comments
+        var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
+          var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
+            var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($commentForm);        
+            var $textArea = $(`<textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>`).appendTo($commentForm);
+            var $postButton = $(`<input class="commentPost" type="submit" value="Post">`).appendTo($commentForm);
+          var $commentSection = $("<div>").addClass("postArea").appendTo($commentContainer);
+    return $allResources;
   }
-}
 
-window.addEventListener("click", function(event){
-  if (event.toElement.innerHTML === "Comment"){
-    // console.log(event);
-    $("div .comment-container").slideToggle("slow");
-    $(".commentInput").focus();
+  // CREATES THE COMMENT DOM TREE
+  function createComment (comment) {
+    var $eachComment = $("<div>").addClass("comment");
+      var $header = $("<header>").appendTo($eachComment);
+        var $commentId = $(`<input type="hidden" id="commentId" name="commentId" value="${comment.id}">`).appendTo($eachComment);
+        var $userName = $(`<h4 class="username">${comment.user_name}</h4>`).appendTo($header);
+      var $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
+      var $footer = $("<footer>").appendTo($eachComment);
+        var $span = $("<span>").addClass("timestamp").text(unixDate(comment.time_created)).appendTo($footer);
+    return $eachComment;
+  }    
+
+  function unixDate(digits){
+    const daysAgo = Math.floor((Date.now() - digits) / 86400000);
+    const hoursAgo = Math.floor((Date.now() - digits) / 3600000);
+    const minutesAgo = Math.floor((Date.now() - digits) / 60000);
+    if (daysAgo < 2 && hoursAgo < 2 && minutesAgo < 2){
+        return "Moments ago.";
+    } else if (daysAgo < 2 && hoursAgo < 2){
+        return minutesAgo + " minutes ago.";
+    } else if (daysAgo < 2 && hoursAgo >= 2){
+        return hoursAgo + " hours ago.";
+    } else {
+        return daysAgo + " days ago";
+    }
   }
-});
+
+  window.addEventListener("click", function(event){
+    if (event.toElement.innerHTML === "Comment"){
+      // console.log(event);
+      $("div .comment-container").slideToggle("slow");
+      $(".commentInput").focus();
+    }
+  });
 
   //RENDERS THE RESOURCES
   // 
   function renderResources(resourceData){
     resourceData.forEach(function(resource) {
-      console.log("Rendering resources: ", resource);
+      // console.log("Rendering resources: ", resource);
       var $resource = createResource(resource);
       $("section.feed").prepend($resource);
     });
@@ -73,12 +74,21 @@ window.addEventListener("click", function(event){
 
 
   //RENDERS THE COMMENTS
+
+  // for each comment
+    // for each div.comment-container
+      // let target equal the hidden resourceId
+      // if the target value equals the comment's resouce id
+        // build the comment and prepend it to the resource's post area
   function renderComments(commentData){
     commentData.forEach(function(comment) {
-      // if (comment.resource_id === )
-      console.log("Rendering comments: ", comment);
-      var $comment = createComment(comment);
-      $("section.feed div.all-resources div.resource div.comment-container div.postArea").prepend($comment);
+      $("div.comment-container").each(function (index, value){
+        let target = $(this).children('form').children("input#resourceId");
+        if (target[0].value == comment.resource_id){
+          let $comment = createComment(comment);
+          $(this).children('div.postArea').prepend($comment);
+        }
+      })
     });
   };
 
@@ -117,7 +127,7 @@ window.addEventListener("click", function(event){
       url: "api/users",
       data: formContent
     }).done((comments) => {
-      console.log("Got comments: ", comments);
+      // console.log("Got comments: ", comments);
       loadComments();
     })
     .fail(() => {
