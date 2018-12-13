@@ -80,7 +80,7 @@ module.exports = (knex) => {
       .where('name', '=', username)
       .then(function(result){
         userId = result[0].id;
-        console.log("The user's ID is: ", userId);
+        // console.log("The user's ID is: ", userId);
         return knex('user_comments')
           .insert({
             comment: userComment,
@@ -90,37 +90,10 @@ module.exports = (knex) => {
             resource_id: resourceId
           })
           .then(() => {
-            res.status(201).redirect("/");
+            res.status(201);
           });
         })
       });
-
-
-// COMMENT ROUTE
-
-    //1. You firstly need to get the user_id which is like Cookie Session
-    //2. You will get the comments from the user who type and pressed POST
-    //3. Resource Id - You need to have resource id as a hidden tag in the page
-
-  // router.post("/comment", (req, res) => {
-  //   // console.log("it's a comment!")
-  //   const newComment = req.body.commentInput;
-  //   console.log("new comment: ", newComment);
-  //   const userId     = knex.select('id').from('users').where('name', '=', `%${req.cookies.username}%`);
-  //   console.log("user's ID: ", userId);
-  //   const resourceId = req.body.resourceId;
-  //   // const resourceId = knex.select('id').from('resources').where('title', 'LIKE', `%${resourceByName}%`);
-  //   console.log("resource ID: ", resourceId);
-  //   knex('user_comments')
-  //     .insert({
-  //       user_id: userId,
-  //       comment: newComment,
-  //       resource_id: resourceId
-  //     })
-  //     .then((results) => {
-  //       res.json(results);
-  //     });
-  // })
 
   // LIKE ROUTE
   // router.post("like", (req, res) => {

@@ -130,7 +130,7 @@ app.get("/", (req, res) => {
   if (username) {
     knex('users')
     .select('id')
-    .where('name', username)
+    .where('name', '=', username)
     .then((data) => {
       const templateVars = {
         id: data[0].id

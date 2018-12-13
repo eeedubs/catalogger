@@ -54,15 +54,12 @@ $(document).ready(function(){
     }
   }
 
-  window.addEventListener("click", function(event){
-    if (event.toElement.innerHTML === "Comment"){
-      // console.log(event);
-      $("div .comment-container").slideToggle("slow");
-      $(".commentInput").focus();
-    }
+  // COMMENT BOX TOGGLER
+  $("body").on("click", "button.comment", function(event) {
+    $(event.target).parent("footer").siblings("div.comment-container").slideToggle("slow");
   });
 
-  //RENDERS THE RESOURCES
+  //RENDERS (appends) THE RESOURCES
   // 
   function renderResources(resourceData){
     resourceData.forEach(function(resource) {
@@ -73,7 +70,7 @@ $(document).ready(function(){
   };
 
 
-  //RENDERS THE COMMENTS
+  //RENDERS (appends) THE COMMENTS
 
   // for each comment
     // for each div.comment-container
@@ -92,7 +89,7 @@ $(document).ready(function(){
     });
   };
 
-  //LOADS THE RESOURCES ON PAGE LOAD (GET)
+  //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
     $.ajax({
       method: "GET",
@@ -105,7 +102,7 @@ $(document).ready(function(){
     });
   });
 
-  // LOADS THE COMMENTS - this works
+  // LOADS THE COMMENTS ON PAGE LOAD - this works
   $(function loadComments() {
     $.ajax({
       method: "GET",
@@ -118,91 +115,67 @@ $(document).ready(function(){
     });
   });
 
-    // POST THE COMMENTS and RELOAD
-  $(".submitComment").on("submit", function(event) {
+  function appendComment(comment) {
+    $("div.comment-container").each(function(){
+      let target = $(this).children('form').children("input#resourceId");
+      if (target[0].value == comment.resource_id){
+        let $comment = createComment(comment);
+        $(this).children('div.postArea').prepend($comment);
+      }
+    })
+  }
+
+  // For each div.comment container
+  // let the target equal the resource ID
+  // if the target resource's id equals the comment's resource ID
+  function removeComment(comment) {
+    $("div.comment-container").each(function(){
+      let target = $(this).children('form').children("input#resourceId");
+      if (target[0].value == comment.resource_id){
+        $(this).children('div.postArea').children("div.comment")[0].remove();
+      }
+    })
+  }
+
+  
+  
+  //   $.ajax({
+  //     method: "GET",
+  //     url: "api/users"
+  //   }).done((users) => {
+  //     for(user of users) {
+  //       console.log("!!!!!!!!! user = ", user)
+  //       $("<div>").text(user.name).appendTo($("body"));
+  //     }
+  //   });;
+
+
+
+  // POST THE COMMENTS and RELOAD
+  $("body").on("submit", "form.submitComment", function(event) {
     event.preventDefault();
-    const formContent = $(this).serialize();
+    let username = document.cookie.replace(/%40/, '').split('=').pop();
+    let newComment = {
+      comment: event.target.commentInput.value,
+      user_name: username,
+      time_created: Date.now(),
+      resource_id: event.target.resourceId.value
+    }
+    appendComment(newComment);
+    let formData = $(this).serialize();
     $.ajax({
       method: "POST",
-      url: "api/users",
-      data: formContent
-    }).done((comments) => {
-      // console.log("Got comments: ", comments);
-      loadComments();
+      url: "api/users/comment",
+      data: formData,
+      success: function(){
+        $("form.submitComment")[0].reset();
+      }
     })
-    .fail(() => {
-      alert("Error: comments not rendering properly!");
+    .fail((error) => {
+      removeComment(newComment);
+      alert(`${error.status}: ${error.statusText}`);
     });
   });
-
-    // For constructing the resource postings:
-    // $.ajax({
-    //   method: "GET",
-    //   url: "api/users"
-    // }).done((resources) => {
-    //   for(resource of resources) {
-    //     // COPIES STRUCTURE FROM _feed.ejs
-    //     let $newElement = $(`
-    //       <div class="all-resources">
-    //         <div class="resource">
-    //           <img class="card-img-top" src='${resource.imageURL}'>
-    //           <h3>
-    //              ${resource.title} - <a href="${resource.resourceURL}">Source</a>
-    //           </h3>
-    //           <p>
-    //             ${resource.description}
-    //           </p>
-    //           <footer>
-    //             <button class="btn btn-primary">Rate</button>
-    //             <button class="btn btn-primary">Like</button>
-    //             <button class="btn btn-primary commentFeed">Comment</button>
-    //           </footer>
-    //           <div class="comment-container">
-    //           </div>
-    //           <div style="clear: both;">
-    //           </div>
-    //         </div>
-    //       </div>
-    //     `).prependTo($("section.feed"));
-    //     }
-    //   });
-
-
-      // COPIES STRUCTURE FROM _comments.ejs
-  //   $commentForm.click((event) => {
-  //     event.preventDefault();
-  //     $commentSection.slideToggle();
-  //     console.log("Button Clicked!");
-  //     $.ajax({
-  //       method: "POST",
-  //       url: "api/users"
-  //     }).done((comments) => {
-  //       for(eachComment of comments){
-  //         let $newComment = $(`
-  //           <div class="comment">
-  //             <form class="submitComment" method="POST" action="/api/users/comment">
-  //               <textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>
-  //               <input class="commentPost" type="submit" value="Post">
-  //             </form>
-  //           </div>
-  //           <div class="postArea">
-  //             <header>
-  //               <h4 class="username">${eachComment.userId}</h4>
-  //             </header>
-  //             <p>
-  //               ${eachComment.newComment}
-  //             </p>
-  //             <footer>
-  //               <span class="timestamp">
-  //                 19 seconds ago
-  //               </span>
-  //             </footer>
-  //           </div>
-  //         `).appendTo("div.commentContainer");
-  //       }
-  //     })
-  //   })
-  // });
 
 
     // Handles the naming of the category titles
@@ -228,12 +201,3 @@ $(document).ready(function(){
   });
 })
 
-//   $.ajax({
-//     method: "GET",
-//     url: "api/users"
-//   }).done((users) => {
-//     for(user of users) {
-//       console.log("!!!!!!!!! user = ", user)
-//       $("<div>").text(user.name).appendTo($("body"));
-//     }
-//   });;
