@@ -49,8 +49,19 @@ module.exports = (knex) => {
         name: username,
         password: password
       })
-      .then((results) => {
-        res.cookie("username", username).redirect("/");
+      .returning('id')
+      .then(function (userId) {
+        return knex('categories')
+          .insert([
+            { label: 'Category 1', user_id: userId[0] },
+            { label: 'Category 2', user_id: userId[0] },
+            { label: 'Category 3', user_id: userId[0] },
+            { label: 'Category 4', user_id: userId[0] },
+            { label: 'Category 5', user_id: userId[0] }
+          ])
+          .then(() => {
+            res.cookie("username", username).redirect("/");
+          });
       })
   });
 
