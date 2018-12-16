@@ -9,15 +9,16 @@ const express     = require("express");
 const bodyParser  = require("body-parser");
 const sass        = require("node-sass-middleware");
 const app         = express();
+const bcrypt      = require ("bcrypt");
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-// Cookies only last for one hour
+// Cookies only last for 30 minutes
 const cookieSession = require('cookie-session');
 app.use(cookieSession({
   name: "session",
   keys: ["userID"],
-  maxAge: 60 * 60 * 1000
+  maxAge: 30 * 60 * 1000
 }));
 
 const uuidv1 = require('uuid/v1');

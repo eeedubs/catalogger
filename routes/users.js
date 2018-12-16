@@ -7,6 +7,7 @@ const router  = express.Router();
 const cookie = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
+const bcrypt      = require ("bcrypt");
 const uuidv1 = require('uuid/v1');
 
 
@@ -55,99 +56,96 @@ module.exports = (knex) => {
 
 // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    // const randomInt = "user" + Math.random().toString(36).substring(2, 10);
-    const uniqueId = uuidv1();
-    console.log(`Name: ${username}, Password: ${password}`);
-    knex('users')
-    .select('*')
-    .where('name', '=', username)
-    .then((results) => {
-      console.log(`results = ${results}`);
-      if (results[0]){
-        res.redirect(400, '/register');
-      } else {
-        return knex('users')
-        .insert({
-          // id: randomInt,
-          name: username,
-          password: password,
-          cookie_session: uniqueId
-        })
-        .then(() => {
-          req.session.user_id = uniqueId;
-          res.redirect('/');
-        })
-      }
-    })
-  });
-
-  // LOGIN HELPER FUNCTION
-  function loginKnex (username, password){
-    return knex('users')
-    .select('*')
-    .where('name', '=', username)
-    .then((exists) => {
-      if (exists[0]){
-        if (exists[0].password === password){
-          return true;
+    let username = req.body.username;
+    let password = req.body.password;
+    let uniqueId = uuidv1();
+    if (!username && !password){
+      res.status(400).send("400 Bad Request Error: username and password are missing.");      
+    } else if (!username){
+      res.status(400).send("400 Bad Request Error: username is missing.");
+    } else if (!password){
+      res.status(400).send("400 Bad Request Error: password is missing.");
+    } else {
+      let hashedPassword = bcrypt.hashSync(password, 10);
+      password = null;
+      knex('users')
+      .select('*')
+      .where('name', '=', username)
+      .then((results) => {
+        if (results[0]){
+          res.status(400).send("400 Bad Request Error: an account with this username already exists.");
         } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    })
-  }
-
-  // LOGIN USER ROUTE
-  router.post("/login", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    const uniqueId = uuidv1();
-    console.log(loginKnex(username, password));
-    knex('users')
-    .select('*')
-    .where('name', '=', username)
-    .then((exists) => {
-      if (exists[0]){
-        if (exists[0].password === password){
           return knex('users')
-          .update('cookie_session', uniqueId)
-          .where('name', '=', username)
+          .insert({
+            // id: randomInt,
+            name: username,
+            password: hashedPassword,
+            cookie_session: uniqueId
+          })
           .then(() => {
             req.session.user_id = uniqueId;
             res.redirect('/');
           })
-        } else {
-          res.redirect(400, '/register');
         }
-      } else {
-        res.redirect(400, '/register');
-      }
-    })
-  })
+      })
+    }
+  });
 
-  //   knex('users')
+  // LOGIN HELPER FUNCTION
+  // function loginKnex (username, password){
+  //   return knex('users')
   //   .select('*')
   //   .where('name', '=', username)
   //   .then((exists) => {
-  //     console.log(exists);
   //     if (exists[0]){
-  //       if (exists[0].password === password){
-  //         return knex('users')
-  //         res.session.user_id = uniqueId;
-  //         res.redirect("/");
+  //       if (bcrypt.compareSync(password, exists[0].password)){
+  //       // if (exists[0].password === password){
+  //         return true;
   //       } else {
-  //         res.redirect(400, '/register');
+  //         return false;
   //       }
   //     } else {
-  //       res.redirect(400, '/register');
+  //       return false;
   //     }
   //   })
-  // })
+  // }
 
+  // LOGIN USER ROUTE
+  router.post("/login", (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    let uniqueId = uuidv1();
+    if (!username){
+      res.status(400).send("400 Bad Request Error: username is missing.");
+    }
+    else if (!password){
+      res.status(400).send("400 Bad Request Error: password is missing.");
+    } else {
+      knex('users')
+      .select('*')
+      .where('name', '=', username)
+      .then((exists) => {
+        if (exists[0]){
+          if (bcrypt.compareSync(password, exists[0].password)){
+            password = null;
+            return knex('users')
+            .update('cookie_session', uniqueId)
+            .where('name', '=', username)
+            .then(() => {
+              req.session.user_id = uniqueId;
+              res.redirect('/');
+            })
+          } else {
+            res.status(400).send("400 Bad Request Error: username and/or password is incorrect.");
+            // res.redirect(400, '/register');
+          }
+        } else {
+          res.status(400).send("400 Bad Request Error: username and/or password is incorrect.");
+          // res.redirect(400, '/register');
+        }
+      })
+    }
+  })
 
   // LOGOUT USER
     router.post("/logout", (req, res) => {
