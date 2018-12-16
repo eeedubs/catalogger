@@ -12,6 +12,16 @@ const app         = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+// Cookies only last for one hour
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+  name: "session",
+  keys: ["userID"],
+  maxAge: 60 * 60 * 1000
+}));
+
+const uuidv1 = require('uuid/v1');
+
 const knexConfig  = require("./knexfile");
 const knex        = require("knex")(knexConfig[ENV]);
 const morgan      = require('morgan');
@@ -41,6 +51,16 @@ app.use(express.static("public"));
 
 // Mount all resource routes
 app.use("/api/users", usersRoutes(knex));
+
+
+function getCookie(userId){
+  knex('users')
+  .select('*')
+  .where('id', '=', userId)
+  .then((exists) => {
+    return exists[0];
+  })
+}
 
 
 // Register Page
@@ -114,39 +134,39 @@ app.get("/info", (req, res) => {
 });
 
 // Search for resources page
-app.get("/search", (req, res) => {
-  let searchQuery = req.query.searchQuery;
-  const username = req.cookies.username;
-  if (username) {
-    knex('users')
-    .select('id')
-    .where('name', username)
-    .then((data) => {
-      console.log(searchQuery);
-      knex
-        .select().from('resources')
-        .where('title', 'LIKE', `%${searchQuery}%`)
-        .orWhere('description', 'LIKE', `%${searchQuery}%`)
-        .then ((results) => {
-          res.render("search", results);
-          console.log(results);
-        });
-      });
-    } else {
-      res.redirect("/register");
-    }
-  });
+// app.get("/search", (req, res) => {
+//   let searchQuery = req.query.searchQuery;
+//   const username = req.cookies.username;
+//   if (username) {
+//     knex('users')
+//     .select('id')
+//     .where('name', username)
+//     .then((data) => {
+//       console.log(searchQuery);
+//       knex
+//         .select().from('resources')
+//         .where('title', 'LIKE', `%${searchQuery}%`)
+//         .orWhere('description', 'LIKE', `%${searchQuery}%`)
+//         .then ((results) => {
+//           res.render("search", results);
+//           console.log(results);
+//         });
+//       });
+//     } else {
+//       res.redirect("/register");
+//     }
+//   });
 
 // Home page
 app.get("/", (req, res) => {
-  const username = req.cookies.username;
-  if (username) {
+  const userId = req.session.user_id;
+  if (userId) {
     knex('users')
-    .select('id')
-    .where('name', '=', username)
+    .select('*')
+    .where('cookie_session', '=', userId)
     .then((data) => {
       const templateVars = {
-        id: data[0].id
+        user_id: data[0].id
       };
       res.render("index", templateVars);
     });
@@ -162,7 +182,7 @@ app.get("/", (req, res) => {
 
 // FOR ADDING NEW RESOURCES - WORKS √
 app.post("/submit", (req, res) => {
-  console.log('body', req.body);
+  // console.log('body', req.body);
   const title = req.body.title;
   const description = req.body.description;
   const resourceURL = req.body.resourceURL;
