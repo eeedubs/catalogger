@@ -1,0 +1,10 @@
+TRUNCATE resources cascade;
+TRUNCATE users cascade;
+TRUNCATE categories cascade;
+ALTER SEQUENCE users_id_seq RESTART WITH 4;
+ALTER SEQUENCE resources_id_seq RESTART WITH 5;
+ALTER SEQUENCE categories_id_seq RESTART WITH 16;
+
+then
+
+knex seed:run
