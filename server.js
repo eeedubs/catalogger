@@ -163,7 +163,7 @@ app.get("/", (req, res) => {
   const userId = req.session.user_id;
   if (userId) {
     knex('users')
-    .select('*')
+    .select('id')
     .where('cookie_session', '=', userId)
     .then((data) => {
       const templateVars = {

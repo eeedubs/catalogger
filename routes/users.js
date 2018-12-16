@@ -77,14 +77,28 @@ module.exports = (knex) => {
         } else {
           return knex('users')
           .insert({
-            // id: randomInt,
             name: username,
             password: hashedPassword,
             cookie_session: uniqueId
           })
           .then(() => {
-            req.session.user_id = uniqueId;
-            res.redirect('/');
+            return knex('users')
+            .select('id')
+            .where('name', '=', username)
+            .then((data) => {
+              return knex('categories')
+              .insert([
+                { label: 'Category 1', user_id: data[0].id },
+                { label: 'Category 2', user_id: data[0].id },
+                { label: 'Category 3', user_id: data[0].id },
+                { label: 'Category 4', user_id: data[0].id },
+                { label: 'Category 5', user_id: data[0].id }
+              ])
+              .then(() => {
+                req.session.user_id = uniqueId;
+                res.redirect('/');
+              })
+            })
           })
         }
       })
