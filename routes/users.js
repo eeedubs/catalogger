@@ -14,18 +14,22 @@ const uuidv1 = require('uuid/v1');
 module.exports = (knex) => {
 
   // LOAD ALL RESOURCES FOR HOME PAGE
-  router.get("/resources", (req, res) => {
-    knex
-      .select("*")
-      .from("resources")
+  router.get('/resources', (req, res) => {
+    knex('resources')
+      .select('*')
       .then((resources) => {
-        // Prints each result to the terminal console
-        resources.forEach((resource) => {
-          // console.log(JSON.stringify(resource) + "\n");
-        })
         // Sends the resources in JSON format
         res.json(resources);
       })
+    })
+
+
+    router.get("/categories/:id", (req, res) => {
+      let id = req.params.id;
+      knex('resources')
+      .select('*')
+      .where('number 
+
     })
 
   // I need to figure out how to pass two different sets of parameters to app.js
@@ -88,11 +92,11 @@ module.exports = (knex) => {
             .then((data) => {
               return knex('categories')
               .insert([
-                { label: 'Category 1', user_id: data[0].id },
-                { label: 'Category 2', user_id: data[0].id },
-                { label: 'Category 3', user_id: data[0].id },
-                { label: 'Category 4', user_id: data[0].id },
-                { label: 'Category 5', user_id: data[0].id }
+                { label: 'Category 1', number: 1, user_id: data[0].id },
+                { label: 'Category 2', number: 2,user_id: data[0].id },
+                { label: 'Category 3', number: 3, user_id: data[0].id },
+                { label: 'Category 4', number: 4, user_id: data[0].id },
+                { label: 'Category 5', number: 5, user_id: data[0].id }
               ])
               .then(() => {
                 req.session.user_id = uniqueId;
