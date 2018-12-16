@@ -91,28 +91,32 @@ $(document).ready(function(){
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
-    $.ajax({
-      method: "GET",
-      url: "api/users/resources"
-    }).done((resources) => {
-      renderResources(resources);
-    })
-    .fail(() => {
-      alert("Error: resources not rendering properly!");
-    });
+    if (document.location === '/'){
+      $.ajax({
+        method: "GET",
+        url: "api/users/resources"
+      }).done((resources) => {
+        renderResources(resources);
+      })
+      .fail(() => {
+        alert("Error: resources not rendering properly!");
+      });
+    }
   });
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
   $(function loadComments() {
-    $.ajax({
-      method: "GET",
-      url: "api/users/comments"
-    }).done((comments) => {
-      renderComments(comments);
-    })
-    .fail(() => {
-      alert("Error: comments not rendering properly!");
-    });
+    if (document.location === '/'){
+      $.ajax({
+        method: "GET",
+        url: "api/users/comments"
+      }).done((comments) => {
+        renderComments(comments);
+      })
+      .fail(() => {
+        alert("Error: comments not rendering properly!");
+      });
+    }
   });
 
   function appendComment(comment) {

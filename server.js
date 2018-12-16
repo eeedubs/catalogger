@@ -49,37 +49,41 @@ app.get("/register", (req, res) => {
 });
 
 
-// Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
-app.get("/resources", (req, res) => {
-  // include session id, user, pass info to template vars
-  if (req.cookies['username']){
-    // if cookies are found
-    knex('resources')
-    .select('id')
-    // select the id from resources, then pass that into the /resources
-    .then((data)=>{
-      console.log("Select query for Resources ", data);
-      res.render("index", {id: data.id});
-    });
+// // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
+// app.get("/resources", (req, res) => {
+//   // include session id, user, pass info to template vars
+//   if (req.cookies['username']){
+//     // if cookies are found
+//     knex('resources')
+//     .select('id')
+//     // select the id from resources, then pass that into the /resources
+//     .then((data)=>{
+//       console.log("Select query for Resources ", data);
+//       res.render("index", {id: data.id});
+//     });
 
-  } else {
-    res.redirect("/register");
-  }
-});
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 
 // Specified Category Page - ATTACHES A HIDDEN ID TAG TO THE CATEGORY
 app.get("/category/:id", (req, res) => {
-  if (req.cookies['username']){
-    knex('categories')
-    .select('id')
-    .then((data)=> {
-      console.log("Select query for categories", data);
-      res.render("category", {id: data.id});
-    });
-  } else {
-    res.redirect("/register");
-  }
+  const username = req.cookies.username;
+    if (username) {
+      knex('users')
+      .select('id')
+      .where('name', '=', username)
+      .then((data) => {
+        const templateVars = {
+          id: data[0].id
+        };
+        res.render("category", templateVars);
+      });
+    } else {
+      res.redirect("/register");
+    }
 });
 
 // Categories Redirect
@@ -93,8 +97,17 @@ app.get("/category", (req, res) => {
 
 // User Profile update page
 app.get("/info", (req, res) => {
-  if (req.cookies['username']){
-    res.render("info");
+  const username = req.cookies.username;
+    if (username) {
+      knex('users')
+      .select('id')
+      .where('name', '=', username)
+      .then((data) => {
+        const templateVars = {
+          id: data[0].id
+        };
+        res.render("info", templateVars);
+    })
   } else {
     res.redirect("/register");
   }
@@ -169,48 +182,35 @@ app.post("/submit", (req, res) => {
     });
 })
 
-
-app.listen(PORT, () => {
-  console.log("Example app listening on port " + PORT);
-});
-
-
-  // function getAllResources(userId){
+// function getAllResources(userId){
   //   return Promise.resolve([]);
   // }
   
   // function searchResources(userId, term){
-  //   return Promise.resolve([]);
-  // }
-
-// app.get("/search", (req, res) => {
-//   if (req.cookies['username']){
-//     // if we don't have params, do a regular get and render everything
-//     // if we do, perform a search and render the results
-//     let query;
-//     if(!req.query.q){
-//       // if no query, load all resources
-//       query = getAllResources(req.cookies['username']);
-//     } else {
-//       // else, load the resources for the user
-//       query = searchResources(req.cookies['username'], req.query.q)
-//     }
-//     query
-//     .then((results) => {
-//       res.render("search", {results });
-//     });
-// } else {
-//     res.redirect("/register");
-//   }
-// });
-
-
-// app.post("/search", (req, res) => {
-//   const username = req.cookies.username;
-//   if (username) {
-//     // const search = req.body.search;
-//     res.render("search");
-//   } else {
-//     res.redirect("/register");
-//   }
-// })
+    //   return Promise.resolve([]);
+    // }
+    
+    // app.get("/search", (req, res) => {
+      //   if (req.cookies['username']){
+        //     // if we don't have params, do a regular get and render everything
+        //     // if we do, perform a search and render the results
+        //     let query;
+        //     if(!req.query.q){
+          //       // if no query, load all resources
+          //       query = getAllResources(req.cookies['username']);
+          //     } else {
+            //       // else, load the resources for the user
+            //       query = searchResources(req.cookies['username'], req.query.q)
+            //     }
+            //     query
+            //     .then((results) => {
+              //       res.render("search", {results });
+              //     });
+              // } else {
+                //     res.redirect("/register");
+                //   }
+                // });
+                
+app.listen(PORT, () => {
+  console.log("Example app listening on port " + PORT);
+});

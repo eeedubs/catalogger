@@ -44,22 +44,47 @@ module.exports = (knex) => {
   router.post("/register", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    console.log(`Name: ${username}, Password: ${password}`);
     knex('users')
-      .insert({
-        name: username,
-        password: password
-      })
-      .then((results) => {
-        res.cookie("username", username).redirect("/");
-      })
+    .select('*')
+    .where('name', '=', username)
+    .then((results) => {
+      console.log(`results = ${results}`);
+      if (results[0]){
+        res.redirect(400, '/register');
+      } else {
+        return knex('users')
+        .insert({
+          name: username,
+          password: password
+        })
+        .then(() => {
+          res.cookie('username', username).redirect('/')
+        })
+      }
+    })
   });
 
   // LOGIN USER ROUTE
   router.post("/login", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    res.cookie("username", username);
-    res.redirect("/");
+    knex('users')
+    .select('*')
+    .where('name', '=', username)
+    .then((exists) => {
+      console.log(exists);
+      if (exists[0]){
+        if (exists[0].password === password){
+          res.cookie("username", username);
+          res.redirect("/");
+        } else {
+          res.redirect(400, '/register');
+        }
+      } else {
+        res.redirect(400, '/register');
+      }
+    })
   })
 
 
