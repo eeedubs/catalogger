@@ -19,7 +19,7 @@ exports.seed = function(knex, Promise) {
         knex('categories').insert({label: 'Category 2', user_id: 3}),
         knex('categories').insert({label: 'Category 3', user_id: 3}),
         knex('categories').insert({label: 'Category 4', user_id: 3}),
-        knex('categories').insert({label: 'Category 5', user_id: 3})
+        knex('categories').insert({label: 'Category 5', user_id: 3}),
       ]);
     });
 };

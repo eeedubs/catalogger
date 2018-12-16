@@ -91,28 +91,32 @@ $(document).ready(function(){
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
-    $.ajax({
-      method: "GET",
-      url: "api/users/resources"
-    }).done((resources) => {
-      renderResources(resources);
-    })
-    .fail(() => {
-      alert("Error: resources not rendering properly!");
-    });
+    if (document.location.pathname === '/'){
+      $.ajax({
+        method: "GET",
+        url: "api/users/resources"
+      }).done((resources) => {
+        renderResources(resources);
+      })
+      .fail(() => {
+        alert("Error: resources not rendering properly!");
+      });
+    }
   });
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
   $(function loadComments() {
-    $.ajax({
-      method: "GET",
-      url: "api/users/comments"
-    }).done((comments) => {
-      renderComments(comments);
-    })
-    .fail(() => {
-      alert("Error: comments not rendering properly!");
-    });
+    if (document.location === '/'){
+      $.ajax({
+        method: "GET",
+        url: "api/users/comments"
+      }).done((comments) => {
+        renderComments(comments);
+      })
+      .fail(() => {
+        alert("Error: comments not rendering properly!");
+      });
+    }
   });
 
   function appendComment(comment) {
@@ -154,29 +158,36 @@ $(document).ready(function(){
   // POST THE COMMENTS and RELOAD
   $("body").on("submit", "form.submitComment", function(event) {
     event.preventDefault();
-    let username = document.cookie.replace(/%40/, '').split('=').pop();
-    let newComment = {
-      comment: event.target.commentInput.value,
-      user_name: username,
-      time_created: Date.now(),
-      resource_id: event.target.resourceId.value
-    }
-    appendComment(newComment);
-    let formData = $(this).serialize();
     $.ajax({
-      method: "POST",
-      url: "api/users/comment",
-      data: formData,
-      success: function(){
-        $("form.submitComment")[0].reset();
+      method: "GET",
+      url: "api/users/user_id",
+      success: function(data){
+        let newComment = {
+          comment: event.target.commentInput.value,
+          user_name: data[0].name,
+          time_created: Date.now(),
+          resource_id: event.target.resourceId.value
+        }
+        appendComment(newComment);
+        let formData = $(this).serialize();
+        $.ajax({
+          method: "POST",
+          url: "api/users/comment",
+          data: formData,
+          success: function(){
+            $("form.submitComment")[0].reset();
+          }
+        })
+        .fail((error) => {
+          removeComment(newComment);
+          alert(`${error.status}: ${error.statusText}`);
+        });
       }
     })
     .fail((error) => {
-      removeComment(newComment);
       alert(`${error.status}: ${error.statusText}`);
-    });
-  });
-
+    })
+  })
 
     // Handles the naming of the category titles
   function renameCategory() {
