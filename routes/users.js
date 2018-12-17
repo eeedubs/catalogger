@@ -24,13 +24,13 @@ module.exports = (knex) => {
     })
 
 
-    router.get("/categories/:id", (req, res) => {
-      let id = req.params.id;
-      knex('resources')
-      .select('*')
-      .where('number 
+    // router.get("/categories/:id", (req, res) => {
+    //   let id = req.params.id;
+    //   knex('resources')
+    //   .select('*')
+    //   .where('number 
 
-    })
+    // })
 
   // I need to figure out how to pass two different sets of parameters to app.js
   // The resources have been sent successfully, but not the comments
