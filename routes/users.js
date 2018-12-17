@@ -93,7 +93,7 @@ module.exports = (knex) => {
               return knex('categories')
               .insert([
                 { label: 'Category 1', number: 1, user_id: data[0].id },
-                { label: 'Category 2', number: 2,user_id: data[0].id },
+                { label: 'Category 2', number: 2, user_id: data[0].id },
                 { label: 'Category 3', number: 3, user_id: data[0].id },
                 { label: 'Category 4', number: 4, user_id: data[0].id },
                 { label: 'Category 5', number: 5, user_id: data[0].id }
@@ -196,6 +196,29 @@ module.exports = (knex) => {
           });
         })
       });
+  
+  // router.post("/categorize", (req, res) => {
+  //   const categoryNumber = req.body.category;
+  //   const resourceId = req.body.resourceId;
+  //   const userId = req.session.user_id;
+  //   knex('categories')
+  //   .select('*')
+  //   .where('user_id', '=', userId)
+  //   .andWhere('number', '=', categoryNumber)
+  //   .then((results) => {
+  //     return knex('category_resources')
+  //       .insert({
+  //         resource_id: resourceId,
+  //         category_id: results[0].id,
+  //         user_id: userId
+  //       })
+  //       .then(() => {
+  //         res.status(201);
+  //       })
+  //     })
+  //   })
+
+
 
   // LIKE ROUTE
   // router.post("like", (req, res) => {

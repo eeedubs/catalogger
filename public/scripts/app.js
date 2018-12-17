@@ -17,6 +17,12 @@ $(document).ready(function(){
           var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
           var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
           var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
+          var $selectList = $("<select>").addClass("select-category").text("Categorize").appendTo($footer);
+            var $select1 = $(`<option value=1>Category 1</option>`).appendTo($selectList);
+            var $select2 = $(`<option value=2>Category 2</option>`).appendTo($selectList);
+            var $select3 = $(`<option value=3>Category 3</option>`).appendTo($selectList);
+            var $select4 = $(`<option value=4>Category 4</option>`).appendTo($selectList);
+            var $select5 = $(`<option value=5>Category 5</option>`).appendTo($selectList);
           // commentContainer contains all of the posted comments
         var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
           var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
