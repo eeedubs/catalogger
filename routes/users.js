@@ -13,6 +13,35 @@ const uuidv1 = require('uuid/v1');
 
 module.exports = (knex) => {
 
+
+  // need to get all resources that are associated with a number and a user from category_resources
+  router.get(':id/categoryResources', (req, res) => {
+    let categoryNumber = req.params.id;
+    console.log(categoryNumber);
+    let sessionId = req.session.user_id;
+    knex('users')
+      .select('*')
+      .where('cookie_session', '=', sessionId)
+      .then((results) => {
+        if (results[0]){
+          let userId = results[0].id;
+          return knex('resources')
+            .select('*')
+            .where('id', '=', 'category_resources.resource_id')
+            .andWhere('category_resources.category_number', '=', categoryNumber)
+            .andWhere('category_resources.user_id', '=', userId)
+            .join('category_resources', {'resources.id': 'category_resources.resource_id'})
+            .then((resources) => {
+              resources.forEach((resource) => {
+                console.log(JSON.stringify(resource) + '\n');
+              })
+              res.json(resources);
+            })
+        }
+      })
+  })
+
+
   // LOAD ALL RESOURCES FOR HOME PAGE
   router.get('/resources', (req, res) => {
     knex('resources')
@@ -22,10 +51,6 @@ module.exports = (knex) => {
         res.json(resources);
       })
     })
-
-    // router.get("/categoryResources", (req, res) => {
-    //   knex
-    // }
 
   // I need to figure out how to pass two different sets of parameters to app.js
   // The resources have been sent successfully, but not the comments
@@ -195,9 +220,8 @@ module.exports = (knex) => {
 
       router.post("/categorize", (req, res) => {
         const resourceId = req.body.resourceId;
-        const categoryNum = req.body.value;
+        const categoryNum = req.body.categoryId;
         const sessionId = req.session.user_id;
-        console.log(req.body);
         knex('users')
         .select('*')
         .where('cookie_session', '=', sessionId)
@@ -211,7 +235,7 @@ module.exports = (knex) => {
               user_id: userId
             })
             .then(() => {
-              res.status(201);
+              res.status(201).json({success: true});
             })
         })
       })

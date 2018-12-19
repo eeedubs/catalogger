@@ -19,7 +19,7 @@ $(document).ready(function(){
           var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
           var $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
             var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($selectForm);        
-            var $selectList = $("<select>").addClass("select-category").appendTo($selectForm);
+            var $selectList = $(`<select id="select-category">`).appendTo($selectForm);
               var $option  = $(`<option>Categorize</option>`).appendTo($selectList);
               var $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
               var $select2 = $(`<option value="2">Category 2</option>`).appendTo($selectList);
@@ -101,22 +101,23 @@ $(document).ready(function(){
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
-    if (document.location.pathname === '/'){
-      $.ajax({
-        method: "GET",
-        url: "api/users/resources"
-      }).done((resources) => {
-        renderResources(resources);
-      })
-      .fail((error) => {
-        alert(`Error: resources not rendering properly: ${error}`);
-      });
-    } else if (document.location.pathname.includes("/category")){
+    // if (document.location.pathname === '/'){
+    if (document.location.pathname.includes("/category")){
       $.ajax({
         method: "GET",
         url: "api/users/categoryResources"
       }).done((categoryResources) => {
         renderResources(categoryResources);
+      })
+      .fail((error) => {
+        alert(`Error: resources not rendering properly: ${error}`);
+      });
+    } else {
+      $.ajax({
+        method: "GET",
+        url: "api/users/resources"
+      }).done((resources) => {
+        renderResources(resources);
       })
       .fail((error) => {
         alert(`Error: resources not rendering properly: ${error}`);
@@ -163,15 +164,18 @@ $(document).ready(function(){
 
   $("body").on("submit", "form.submitCategory", function(event) {
     event.preventDefault();
-    console.log("clicked!");
-    console.log(this);
-    let formData = $(this).serialize();
+    let selectValue = $(this).children('#select-category').val();
+    let resourceId = $(this).children('#resourceId').val();
     $.ajax({
       method: "POST",
       url: "api/users/categorize",
-      data: formData
-    }).done(() => {
-      alert("Categorization successful!");  
+      data: {
+        resourceId: resourceId,
+        categoryId: selectValue
+      },
+      success: function(){
+        alert("The categorization was successful!");
+      }
     }).fail((error) => {
       alert(`${error.status}: ${error.statusText}`);
     })
