@@ -14,15 +14,10 @@ const uuidv1 = require('uuid/v1');
 module.exports = (knex) => {
 
   // LOAD ALL RESOURCES FOR HOME PAGE
-  router.get("/resources", (req, res) => {
-    knex
-      .select("*")
-      .from("resources")
+  router.get('/resources', (req, res) => {
+    knex('resources')
+      .select('*')
       .then((resources) => {
-        // Prints each result to the terminal console
-        resources.forEach((resource) => {
-          // console.log(JSON.stringify(resource) + "\n");
-        })
         // Sends the resources in JSON format
         res.json(resources);
       })
@@ -81,14 +76,28 @@ module.exports = (knex) => {
         } else {
           return knex('users')
           .insert({
-            // id: randomInt,
             name: username,
             password: hashedPassword,
             cookie_session: uniqueId
           })
           .then(() => {
-            req.session.user_id = uniqueId;
-            res.redirect('/');
+            return knex('users')
+            .select('id')
+            .where('name', '=', username)
+            .then((data) => {
+              return knex('categories')
+              .insert([
+                { label: 'Category 1', number: 1, user_id: data[0].id },
+                { label: 'Category 2', number: 2, user_id: data[0].id },
+                { label: 'Category 3', number: 3, user_id: data[0].id },
+                { label: 'Category 4', number: 4, user_id: data[0].id },
+                { label: 'Category 5', number: 5, user_id: data[0].id }
+              ])
+              .then(() => {
+                req.session.user_id = uniqueId;
+                res.redirect('/');
+              })
+            })
           })
         }
       })
@@ -182,6 +191,29 @@ module.exports = (knex) => {
           });
         })
       });
+  
+  // router.post("/categorize", (req, res) => {
+  //   const categoryNumber = req.body.category;
+  //   const resourceId = req.body.resourceId;
+  //   const userId = req.session.user_id;
+  //   knex('categories')
+  //   .select('*')
+  //   .where('user_id', '=', userId)
+  //   .andWhere('number', '=', categoryNumber)
+  //   .then((results) => {
+  //     return knex('category_resources')
+  //       .insert({
+  //         resource_id: resourceId,
+  //         category_id: results[0].id,
+  //         user_id: userId
+  //       })
+  //       .then(() => {
+  //         res.status(201);
+  //       })
+  //     })
+  //   })
+
+
 
   // LIKE ROUTE
   // router.post("like", (req, res) => {
