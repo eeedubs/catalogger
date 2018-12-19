@@ -28,6 +28,10 @@ module.exports = (knex) => {
       })
     })
 
+    router.get("/categoryResources", (req, res) => {
+      knex
+    }
+
   // I need to figure out how to pass two different sets of parameters to app.js
   // The resources have been sent successfully, but not the comments
 

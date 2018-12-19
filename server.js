@@ -91,15 +91,15 @@ app.get("/register", (req, res) => {
 
 // Specified Category Page - ATTACHES A HIDDEN ID TAG TO THE CATEGORY
 app.get("/category/:id", (req, res) => {
-  const username = req.cookies.username;
-    if (username) {
-      knex('users')
-      .select('id')
-      .where('name', '=', username)
-      .then((data) => {
-        const templateVars = {
-          id: data[0].id
-        };
+  const userId = req.session.user_id;
+  if (userId) {
+    knex('users')
+    .select('*')
+    .where('cookie_session', '=', userId)
+    .then((data) => {
+      const templateVars = {
+        user_id: data[0].id
+      };
         res.render("category", templateVars);
       });
     } else {
@@ -118,7 +118,7 @@ app.get("/category", (req, res) => {
 
 // User Profile update page
 app.get("/info", (req, res) => {
-  const username = req.cookies.username;
+  const username = req.session.user_id;
     if (username) {
       knex('users')
       .select('id')
@@ -137,7 +137,7 @@ app.get("/info", (req, res) => {
 // Search for resources page
 // app.get("/search", (req, res) => {
 //   let searchQuery = req.query.searchQuery;
-//   const username = req.cookies.username;
+//   const username = req.session.user_id;
 //   if (username) {
 //     knex('users')
 //     .select('id')

@@ -98,8 +98,18 @@ $(document).ready(function(){
       }).done((resources) => {
         renderResources(resources);
       })
-      .fail(() => {
-        alert("Error: resources not rendering properly!");
+      .fail((error) => {
+        alert(`Error: resources not rendering properly: ${error}`);
+      });
+    } else if (document.location.pathname.includes("/category")){
+      $.ajax({
+        method: "GET",
+        url: "api/users/categoryResources"
+      }).done((categoryResources) => {
+        renderResources(categoryResources);
+      })
+      .fail((error) => {
+        alert(`Error: resources not rendering properly: ${error}`);
       });
     }
   });
