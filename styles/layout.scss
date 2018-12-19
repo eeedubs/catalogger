@@ -94,14 +94,25 @@ body {
           width: auto;
           height: auto;
         }
-        .select-category {
+
+        .submitCategory {
+          display: block;
           float: right;
-          width: 120px;
-          height: 30px;
+          .select-category {
+            width: 120px;
+            height: 28px;
+          }
+          .categorizeSubmit {
+            width: 68px;
+            height: 28px;
+            text-align: center;
+            background-color: lightgreen;
+            border-radius: 10px;
+          }
         }
+
 // START OF comment container
         .comment-container {
-          // display: none;
           background-color: #f4ebed;
           padding: 10px 20px;
           width: 100%;
@@ -112,7 +123,6 @@ body {
           //form
           .submitComment {
             display: inline-flex;
-            // display: none;
             justify-content: flex-end;
             margin: 5px auto;
             margin-bottom: 12px;
@@ -124,19 +134,15 @@ body {
               // opacity: .6;  
               font-size: 16px;
               width: 80px;
-              height: 30px;
+              height: 27px;
               background-color: lightgreen;
-              border: .5px solid black;
+              border: 1px solid black;
               border-radius: 15px;
               margin-left: 20px;
               padding-left: 0px auto;
               padding-top: 3px;
               color: black;
             }
-
-            // .commentPost:hover {
-            //   opacity: 1;
-            // }
 
             //input
             .commentInput {

@@ -23,31 +23,31 @@ module.exports = (knex) => {
       })
     })
 
-    router.get("/categoryResources", (req, res) => {
-      knex
-    }
+    // router.get("/categoryResources", (req, res) => {
+    //   knex
+    // }
 
   // I need to figure out how to pass two different sets of parameters to app.js
   // The resources have been sent successfully, but not the comments
 
 
-  router.get("/comments", (req, res) => {
-    knex 
-    .select("*")
-    .from("user_comments")
+  router.get('/comments', (req, res) => {
+    knex
+    .select('*')
+    .from('user_comments')
     .then((comments) => {
       comments.forEach((comment) => {
-        console.log(JSON.stringify(comment) + "\n");
+        console.log(JSON.stringify(comment) + '\n');
       })
       res.json(comments);
     });
   });
 
-  router.get("/user_id", (req, res) => {
+  router.get('/user_id', (req, res) => {
     knex
     .select('*')
     .from('users')
-    .where("cookie_session", "=", req.session.user_id)
+    .where('cookie_session', '=', req.session.user_id)
     .then((user) => {
       res.json(user);
     })
@@ -169,11 +169,12 @@ module.exports = (knex) => {
   // Comment On Resource
   router.post("/comment", (req, res) => {
     const userComment = req.body.commentInput;
-    const userId = req.session.user_id;
+    const sessionId = req.session.user_id;
     const resourceId = req.body.resourceId;
     knex('users')
       .select('*')
-      .where('cookie_session', '=', userId)
+      .where('cookie_session', '=', sessionId)
+      .limit(1)
       .then((result) => {
         let username = result[0].name;
         let userId = results[0].id;
@@ -191,6 +192,29 @@ module.exports = (knex) => {
           });
         })
       });
+
+      router.post("/categorize", (req, res) => {
+        const resourceId = req.body.resourceId;
+        const categoryNum = req.body.value;
+        const sessionId = req.session.user_id;
+        console.log(req.body);
+        knex('users')
+        .select('*')
+        .where('cookie_session', '=', sessionId)
+        .limit(1)
+        .then((result) => {
+          let userId = result[0].id;
+          return knex('category_resources')
+            .insert({
+              resource_id: resourceId,
+              category_number: categoryNum,
+              user_id: userId
+            })
+            .then(() => {
+              res.status(201);
+            })
+        })
+      })
   
   // router.post("/categorize", (req, res) => {
   //   const categoryNumber = req.body.category;

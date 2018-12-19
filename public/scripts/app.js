@@ -17,13 +17,16 @@ $(document).ready(function(){
           var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
           var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
           var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
-          var $selectList = $("<select>").addClass("select-category").appendTo($footer);
-            var $option  = $(`<option>Categorize</option>`).appendTo($selectList);
-            var $select1 = $(`<option value=1>Category 1</option>`).appendTo($selectList);
-            var $select2 = $(`<option value=2>Category 2</option>`).appendTo($selectList);
-            var $select3 = $(`<option value=3>Category 3</option>`).appendTo($selectList);
-            var $select4 = $(`<option value=4>Category 4</option>`).appendTo($selectList);
-            var $select5 = $(`<option value=5>Category 5</option>`).appendTo($selectList);
+          var $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
+            var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($selectForm);        
+            var $selectList = $("<select>").addClass("select-category").appendTo($selectForm);
+              var $option  = $(`<option>Categorize</option>`).appendTo($selectList);
+              var $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
+              var $select2 = $(`<option value="2">Category 2</option>`).appendTo($selectList);
+              var $select3 = $(`<option value="3">Category 3</option>`).appendTo($selectList);
+              var $select4 = $(`<option value="4">Category 4</option>`).appendTo($selectList);
+              var $select5 = $(`<option value="5">Category 5</option>`).appendTo($selectList);
+            var $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectForm);
           // commentContainer contains all of the posted comments
         var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
           var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
@@ -157,6 +160,24 @@ $(document).ready(function(){
       }
     })
   }
+
+  $("body").on("submit", "form.submitCategory", function(event) {
+    event.preventDefault();
+    console.log("clicked!");
+    console.log(this);
+    let formData = $(this).serialize();
+    $.ajax({
+      method: "POST",
+      url: "api/users/categorize",
+      data: formData
+    }).done(() => {
+      alert("Categorization successful!");  
+    }).fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
+  })
+
+
 
   // POST THE COMMENTS and RELOAD
   $("body").on("submit", "form.submitComment", function(event) {

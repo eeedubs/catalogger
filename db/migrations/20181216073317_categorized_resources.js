@@ -2,7 +2,7 @@ exports.up = function(knex, Promise) {
     return knex.schema.createTable('category_resources', function (table) {
         table.increments('id');
         table.integer('resource_id').references('resources.id');
-        table.integer('category_id').references('categories.id');
+        table.integer('category_number');
         table.integer('user_id').references('users.id');
     })
 };
