@@ -92,6 +92,7 @@ app.get("/register", (req, res) => {
 // Specified Category Page - ATTACHES A HIDDEN ID TAG TO THE CATEGORY
 app.get("/category/:id", (req, res) => {
   const userId = req.session.user_id;
+  const urlId = req.params.id;
   if (userId) {
     knex('users')
     .select('*')

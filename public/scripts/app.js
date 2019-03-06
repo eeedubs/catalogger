@@ -105,7 +105,7 @@ $(document).ready(function(){
     if (document.location.pathname.includes("/category")){
       $.ajax({
         method: "GET",
-        url: "api/users/categoryResources"
+        url: "/api/users/categoryResources"
       }).done((categoryResources) => {
         renderResources(categoryResources);
       })
@@ -115,7 +115,7 @@ $(document).ready(function(){
     } else {
       $.ajax({
         method: "GET",
-        url: "api/users/resources"
+        url: "/api/users/resources"
       }).done((resources) => {
         renderResources(resources);
       })

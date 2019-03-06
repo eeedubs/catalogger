@@ -15,7 +15,7 @@ module.exports = (knex) => {
 
 
   // need to get all resources that are associated with a number and a user from category_resources
-  router.get(':id/categoryResources', (req, res) => {
+  router.get('/categoryResources', (req, res) => {
     let categoryNumber = req.params.id;
     console.log(categoryNumber);
     let sessionId = req.session.user_id;
