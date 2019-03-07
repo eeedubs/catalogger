@@ -2,13 +2,13 @@
 // (server-side)
 "use strict";
 
-const express = require('express');
-const router  = express.Router();
-const cookie = require('cookie-parser');
-const bodyParser = require('body-parser');
+const express       = require('express');
+const router        = express.Router();
+const cookie        = require('cookie-parser');
+const bodyParser    = require('body-parser');
 const cookieSession = require('cookie-session');
-const bcrypt      = require ("bcrypt");
-const uuidv1 = require('uuid/v1');
+const bcrypt        = require ("bcrypt");
+const uuidv1        = require('uuid/v1');
 
 
 module.exports = (knex) => {
