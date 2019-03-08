@@ -113,26 +113,26 @@ module.exports = (knex) => {
 
   // Comment On Resource
   router.post("/comment", (req, res) => {
-    let userComment = req.body.commentInput;
-    let sessionID   = req.session.user_id;
-    let resourceID  = req.body.resourceId;
-    let username    = req.body.user.name;
-    let userID      = req.body.user.id;
-    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
-      if (error){
-        console.log('Error getting user by name.', error.message)
-        res.status(500).json({ error: error.message });
-      } else {
-        knexQueries.postComment(userComment, username, userID, resourceID, (error, commentResults) => {
-          if (error){
-            console.log('Error getting user by name.', error.message)
-            res.status(500).json({ error: error.message });
-          } else {
-            res.status(201);
-          }
-        })
-      }
-    })
+    let userComment = req.body.comment;
+    let username    = req.body.user_name;
+    let resourceID  = req.body.resource_id;
+    let userID      = req.body.user_id;
+    if (!userComment){
+      res.status(400).send("400 Bad Request Error: comment input is empty.");
+    } else if (!username || !userID){
+      res.status(400).send("400 Bad Request Error: missing user credentials. Please log in to post comments.");
+    } else if (!resourceID){
+      res.status(500).send("500 Internal Server Error: missing the resource ID number.");
+    } else {
+      knexQueries.postComment(userComment, username, userID, resourceID, (error, commentResults) => {
+        if (error){
+          console.log('Error posting comment to the database.', error.message)
+          res.status(500).json({ error: error.message });
+        } else {
+          res.status(201);
+        }
+      })
+    }
   })
   
   // router.post("/categorize", (req, res) => {

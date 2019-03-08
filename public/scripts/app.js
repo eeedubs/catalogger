@@ -1,39 +1,38 @@
 // App.js handles the functionality of various components within the site, without reloading
 // the web page (jQuery - client side)
 
-$(document).ready(function(){
+$(document).ready(() => {
   //CREATES THE RESOURCE DOM TREE
   function createResource (resource){
-    var $allResources = $("<div>").addClass("all-resources");
-      var $singleResource = $("<div>").addClass("resource").appendTo($allResources);
-        var $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
-        var $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
-        // $resourceId contains the id to each resource
-        var $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
-        // var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($singleResource);
-        var $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
+    let $allResources = $("<div>").addClass("all-resources");
+      let $singleResource = $("<div>").addClass("resource").appendTo($allResources);
+        let $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
+        let $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
+        // $resourceID contains the id to each resource
+        let $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
+        let $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
         // footer contains the social buttons, including the button to toggle comments
-        var $footer = $("<footer>").appendTo($singleResource);
-          var $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
-          var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
-          var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
-          var $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
-            var $resourceId = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($selectForm);        
-            var $selectList = $(`<select id="select-category">`).appendTo($selectForm);
-              var $option  = $(`<option>Categorize</option>`).appendTo($selectList);
-              var $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
-              var $select2 = $(`<option value="2">Category 2</option>`).appendTo($selectList);
-              var $select3 = $(`<option value="3">Category 3</option>`).appendTo($selectList);
-              var $select4 = $(`<option value="4">Category 4</option>`).appendTo($selectList);
-              var $select5 = $(`<option value="5">Category 5</option>`).appendTo($selectList);
-            var $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectForm);
+        let $footer = $("<footer>").appendTo($singleResource);
+          let $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
+          let $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
+          let $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
+          let $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
+            let $categoryFormResourceID = $(`<input type="hidden" id="categoryFormResourceID" name="categoryFormResourceID" value="${resource.id}">`).appendTo($selectForm);        
+            let $selectList = $(`<select id="select-category">`).appendTo($selectForm);
+              let $option  = $(`<option>Categorize</option>`).appendTo($selectList);
+              let $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
+              let $select2 = $(`<option value="2">Category 2</option>`).appendTo($selectList);
+              let $select3 = $(`<option value="3">Category 3</option>`).appendTo($selectList);
+              let $select4 = $(`<option value="4">Category 4</option>`).appendTo($selectList);
+              let $select5 = $(`<option value="5">Category 5</option>`).appendTo($selectList);
+            let $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectForm);
           // commentContainer contains all of the posted comments
-        var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
-          var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
-            var $resourceId = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($commentForm);        
-            var $textArea = $(`<textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>`).appendTo($commentForm);
-            var $postButton = $(`<input class="commentPost" type="submit" value="Post">`).appendTo($commentForm);
-          var $commentSection = $("<div>").addClass("postArea").appendTo($commentContainer);
+        let $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
+          let $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
+            let $commentFormResourceID = $(`<input type="hidden" id="commentFormResourceID" name="commentFormResourceID" value="${resource.id}">`).appendTo($commentForm);        
+            let $textArea = $(`<textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>`).appendTo($commentForm);
+            let $postButton = $(`<input class="commentPost" type="submit" value="Post">`).appendTo($commentForm);
+          let $commentSection = $("<div>").addClass("postArea").appendTo($commentContainer);
     return $allResources;
   }
 
@@ -41,7 +40,7 @@ $(document).ready(function(){
   function createComment (comment) {
     var $eachComment = $("<div>").addClass("comment");
       var $header = $("<header>").appendTo($eachComment);
-        var $commentId = $(`<input type="hidden" id="commentId" name="commentId" value="${comment.id}">`).appendTo($eachComment);
+        var $commentId = $(`<input type="hidden" id="commentID" name="commentID" value="${comment.id}">`).appendTo($eachComment);
         var $userName = $(`<h4 class="username">${comment.user_name}</h4>`).appendTo($header);
       var $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
       var $footer = $("<footer>").appendTo($eachComment);
@@ -83,7 +82,7 @@ $(document).ready(function(){
   function renderComments(commentData){
     commentData.forEach(function(comment) {
       $("div.comment-container").each(function (index, value){
-        let target = $(this).children('form').children("input#resourceId");
+        let target = $(this).children('form').children("input#commentFormResourceID");
         if (target[0].value == comment.resource_id){
           let $comment = createComment(comment);
           $(this).children('div.postArea').prepend($comment);
@@ -123,7 +122,7 @@ $(document).ready(function(){
 
   function appendComment(comment) {
     $("div.comment-container").each(function(){
-      let target = $(this).children('form').children("input#resourceId");
+      let target = $(this).children('form').children("input#commentFormResourceID");
       if (target[0].value == comment.resource_id){
         let $comment = createComment(comment);
         $(this).children('div.postArea').prepend($comment);
@@ -136,7 +135,7 @@ $(document).ready(function(){
   // if the target resource's id equals the comment's resource ID
   function removeComment(comment) {
     $("div.comment-container").each(function(){
-      let target = $(this).children('form').children("input#resourceId");
+      let target = $(this).children('form').children("input#commentFormResourceID");
       if (target[0].value == comment.resource_id){
         $(this).children('div.postArea').children("div.comment")[0].remove();
       }
@@ -146,7 +145,7 @@ $(document).ready(function(){
   $("body").on("submit", "form.submitCategory", function(event) {
     event.preventDefault();
     let selectedValue = $(this).children('#select-category').val();
-    let resourceID = $(this).children('#resourceID').val();
+    let resourceID = $(this).children('#categoryFormResourceID').val();
     $.ajax({
       method: "POST",
       url: "/api/resources/categorize",
@@ -165,28 +164,28 @@ $(document).ready(function(){
   // POST THE COMMENTS and RELOAD
   $("body").on("submit", "form.submitComment", function(event) {
     event.preventDefault();
-    let comment = event.target.commentInput.value;
-    let resourceID = event.target.resourceID.value;
-    let username = JSON.parse($("input#user")[0].value).name;
-    console.log(username);
-    let newComment = {
-      comment: comment,
+    let userComment = event.target.commentInput.value;
+    let resourceID  = event.target.commentFormResourceID.value;
+    let username    = JSON.parse($("input#user")[0].value).name;
+    let userID      = JSON.parse($("input#user")[0].value).id;
+    let newCommentData = {
+      comment: userComment,
       user_name: username,
+      user_id: userID,
       time_created: Date.now(),
-      resouce_id: resourceID
+      resource_id: resourceID
     }
-    appendComment(newComment);
-    let formData = $(this).serialize();
+    appendComment(newCommentData);
     $.ajax({
       method: "POST",
       url: "api/users/comment",
-      data: formData,
+      data: newCommentData,
       success: () => {
         $("form.submitComment")[0].reset();
       }
     })
     .fail((error) => {
-      removeComment(newComment);
+      removeComment(newCommentData);
       alert(`${error.status}: ${error.statusText}`);
     });
   })
