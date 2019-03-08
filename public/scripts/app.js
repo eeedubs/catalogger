@@ -145,14 +145,14 @@ $(document).ready(function(){
 
   $("body").on("submit", "form.submitCategory", function(event) {
     event.preventDefault();
-    let selectValue = $(this).children('#select-category').val();
-    let resourceId = $(this).children('#resourceID').val();
+    let selectedValue = $(this).children('#select-category').val();
+    let resourceID = $(this).children('#resourceID').val();
     $.ajax({
       method: "POST",
       url: "/api/resources/categorize",
       data: {
-        resourceId: resourceId,
-        categoryId: selectValue
+        resourceID: resourceID,
+        categoryID: selectedValue
       },
       success: () => {
         alert("The categorization was successful!");
@@ -166,8 +166,9 @@ $(document).ready(function(){
   $("body").on("submit", "form.submitComment", function(event) {
     event.preventDefault();
     let comment = event.target.commentInput.value;
-    let resourceID = event.target.resourceID.value
-    let username = req.body.user.name;
+    let resourceID = event.target.resourceID.value;
+    let username = JSON.parse($("input#user")[0].value).name;
+    console.log(username);
     let newComment = {
       comment: comment,
       user_name: username,

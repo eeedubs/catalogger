@@ -9,9 +9,10 @@ const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
 const app           = express();
-const bcrypt        = require ("bcrypt");
+const bcrypt        = require("bcrypt");
 const uuidv1        = require('uuid/v1');
 const cookieParser  = require('cookie-parser');
+
 app.use(cookieParser());
 
 // Cookies only last for 30 minutes
@@ -27,12 +28,14 @@ app.use(cookieSession({
 // knexQueries contains all of the Knex queries to the PSQL database
 const knexConfig  = require('./knexfile');
 const knex        = require('knex')(knexConfig[ENV]);
-const knexQueries = require('./lib/knexqueries')(knex);
+const knexQueries = require('./lib/knex-queries')(knex);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
-// Seperated Routes for each Resource
-const usersRoutes = require("./routes/users");
+// Seperated Routes
+const userRoutes      = require("./routes/users");
+const resourceRoutes  = require("./routes/resources");
+const categoryRoutes  = require("./routes/categories");
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -44,6 +47,7 @@ app.use(knexLogger(knex));
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // renders the ./styles/.scss files to the /public/styles/layout.css file
 app.use("/styles", sass({
   src: __dirname + "/styles",
@@ -130,7 +134,7 @@ app.get("/info", (req, res) => {
         res.status(500).json({ error: error.message });
       } else {
         let templateVars = {
-          user: results[0].id
+          user: results[0]
         }
         res.render("info", templateVars);
       }
