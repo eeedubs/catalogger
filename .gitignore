@@ -6,3 +6,4 @@ public/styles
 public/.DS_STORE
 .DS_STORE
 reset_db.txt
+./reset_db.txt

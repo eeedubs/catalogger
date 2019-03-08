@@ -1,9 +1,9 @@
 <nav class="nav">
-  <h2>Fil'r</h2>
+  <h2>Catalogger</h2>
   <div class="input-bar">
     <form id="search-form" action="/search" method="GET">
       <input class="search-field" type="text" name="searchQuery" placeholder="Search for articles...">
-      <input type="hidden" id="user" name="user" value="<%= user_id %>">
+      <input type="hidden" name="user" value="<%= user %>">
       <input class="search-button" type="submit" value="Search">
     </form>
     <form id="logout-form" action="/api/users/logout" method="POST">

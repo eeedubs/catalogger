@@ -18,7 +18,7 @@ $(document).ready(function(){
           var $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
           var $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
           var $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
-            var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($selectForm);        
+            var $resourceId = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($selectForm);        
             var $selectList = $(`<select id="select-category">`).appendTo($selectForm);
               var $option  = $(`<option>Categorize</option>`).appendTo($selectList);
               var $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
@@ -30,7 +30,7 @@ $(document).ready(function(){
           // commentContainer contains all of the posted comments
         var $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
           var $commentForm = $(`<form class="submitComment" method="POST" action="/api/users/comment">`).appendTo($commentContainer);
-            var $resourceId = $(`<input type="hidden" id="resourceId" name="resourceId" value="${resource.id}">`).appendTo($commentForm);        
+            var $resourceId = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($commentForm);        
             var $textArea = $(`<textarea class="commentInput" type="text" name="commentInput" placeholder="Type your comment..."></textarea>`).appendTo($commentForm);
             var $postButton = $(`<input class="commentPost" type="submit" value="Post">`).appendTo($commentForm);
           var $commentSection = $("<div>").addClass("postArea").appendTo($commentContainer);
@@ -69,8 +69,7 @@ $(document).ready(function(){
     $(event.target).parent("footer").siblings("div.comment-container").slideToggle("slow");
   });
 
-  //RENDERS (appends) THE RESOURCES
-  // 
+  // APPENDS THE RESOURCES
   function renderResources(resourceData){
     resourceData.forEach(function(resource) {
       // console.log("Rendering resources: ", resource);
@@ -80,13 +79,7 @@ $(document).ready(function(){
   };
 
 
-  //RENDERS (appends) THE COMMENTS
-
-  // for each comment
-    // for each div.comment-container
-      // let target equal the hidden resourceId
-      // if the target value equals the comment's resouce id
-        // build the comment and prepend it to the resource's post area
+  // APPENDS THE COMMENTS
   function renderComments(commentData){
     commentData.forEach(function(comment) {
       $("div.comment-container").each(function (index, value){
@@ -102,27 +95,15 @@ $(document).ready(function(){
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
     // if (document.location.pathname === '/'){
-    if (document.location.pathname.includes("/category")){
-      $.ajax({
-        method: "GET",
-        url: "/api/users/categoryResources"
-      }).done((categoryResources) => {
-        renderResources(categoryResources);
-      })
-      .fail((error) => {
-        alert(`Error: resources not rendering properly: ${error}`);
-      });
-    } else {
-      $.ajax({
-        method: "GET",
-        url: "/api/users/resources"
-      }).done((resources) => {
-        renderResources(resources);
-      })
-      .fail((error) => {
-        alert(`Error: resources not rendering properly: ${error}`);
-      });
-    }
+    $.ajax({
+      method: "GET",
+      url: "/api/resources/"
+    }).done((resources) => {
+      renderResources(resources);
+    })
+    .fail((error) => {
+      alert(`Error: resources not rendering properly: ${error}`);
+    });
   });
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
@@ -165,15 +146,15 @@ $(document).ready(function(){
   $("body").on("submit", "form.submitCategory", function(event) {
     event.preventDefault();
     let selectValue = $(this).children('#select-category').val();
-    let resourceId = $(this).children('#resourceId').val();
+    let resourceId = $(this).children('#resourceID').val();
     $.ajax({
       method: "POST",
-      url: "api/users/categorize",
+      url: "/api/resources/categorize",
       data: {
         resourceId: resourceId,
         categoryId: selectValue
       },
-      success: function(){
+      success: () => {
         alert("The categorization was successful!");
       }
     }).fail((error) => {
@@ -181,40 +162,32 @@ $(document).ready(function(){
     })
   })
 
-
-
   // POST THE COMMENTS and RELOAD
   $("body").on("submit", "form.submitComment", function(event) {
     event.preventDefault();
+    let comment = event.target.commentInput.value;
+    let resourceID = event.target.resourceID.value
+    let username = req.body.user.name;
+    let newComment = {
+      comment: comment,
+      user_name: username,
+      time_created: Date.now(),
+      resouce_id: resourceID
+    }
+    appendComment(newComment);
+    let formData = $(this).serialize();
     $.ajax({
-      method: "GET",
-      url: "api/users/user_id",
-      success: function(data){
-        let newComment = {
-          comment: event.target.commentInput.value,
-          user_name: data[0].name,
-          time_created: Date.now(),
-          resource_id: event.target.resourceId.value
-        }
-        appendComment(newComment);
-        let formData = $(this).serialize();
-        $.ajax({
-          method: "POST",
-          url: "api/users/comment",
-          data: formData,
-          success: function(){
-            $("form.submitComment")[0].reset();
-          }
-        })
-        .fail((error) => {
-          removeComment(newComment);
-          alert(`${error.status}: ${error.statusText}`);
-        });
+      method: "POST",
+      url: "api/users/comment",
+      data: formData,
+      success: () => {
+        $("form.submitComment")[0].reset();
       }
     })
     .fail((error) => {
+      removeComment(newComment);
       alert(`${error.status}: ${error.statusText}`);
-    })
+    });
   })
 
     // Handles the naming of the category titles

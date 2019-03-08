@@ -1,3 +1,5 @@
+'use strict'
+
 require('dotenv').config();
 
 module.exports = {
@@ -10,7 +12,7 @@ module.exports = {
       password : process.env.DB_PASS,
       database : process.env.DB_NAME,
       port     : process.env.DB_PORT,
-      ssl      : process.env.DB_SSL
+      ssl      : false
     },
     migrations: {
       directory: './db/migrations',
@@ -32,5 +34,4 @@ module.exports = {
       tableName: 'migrations'
     }
   }
-
 };

@@ -3,14 +3,15 @@
 
 require('dotenv').config();
 
-const PORT        = process.env.PORT || 8080;
-const ENV         = process.env.ENV || "development";
-const express     = require("express");
-const bodyParser  = require("body-parser");
-const sass        = require("node-sass-middleware");
-const app         = express();
-const bcrypt      = require ("bcrypt");
-const cookieParser = require('cookie-parser');
+const PORT          = process.env.PORT || 8080;
+const ENV           = process.env.ENV || "development";
+const express       = require("express");
+const bodyParser    = require("body-parser");
+const sass          = require("node-sass-middleware");
+const app           = express();
+const bcrypt        = require ("bcrypt");
+const uuidv1        = require('uuid/v1');
+const cookieParser  = require('cookie-parser');
 app.use(cookieParser());
 
 // Cookies only last for 30 minutes
@@ -21,10 +22,12 @@ app.use(cookieSession({
   maxAge: 30 * 60 * 1000
 }));
 
-const uuidv1 = require('uuid/v1');
-
-const knexConfig  = require("./knexfile");
-const knex        = require("knex")(knexConfig[ENV]);
+// Setting up Knex with PostgreSQL
+// knexConfig[ENV] is set to use the production environment (const ENV = 'Production')
+// knexQueries contains all of the Knex queries to the PSQL database
+const knexConfig  = require('./knexfile');
+const knex        = require('knex')(knexConfig[ENV]);
+const knexQueries = require('./lib/knexqueries')(knex);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
 
@@ -50,25 +53,10 @@ app.use("/styles", sass({
 }));
 app.use(express.static("public"));
 
-// Mount all resource routes
-app.use("/api/users", usersRoutes(knex));
-
-
-function getCookie(userId){
-  knex('users')
-  .select('*')
-  .where('id', '=', userId)
-  .then((exists) => {
-    return exists[0];
-  })
-}
-
-
-// Register Page
-app.get("/register", (req, res) => {
-  res.render("register");
-});
-
+// Mount all routes
+app.use("/api/users", userRoutes(knex));
+app.use("/api/resources", resourceRoutes(knex));
+app.use("/api/categories", categoryRoutes(knex));
 
 // // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 // app.get("/resources", (req, res) => {
@@ -88,52 +76,69 @@ app.get("/register", (req, res) => {
 //   }
 // });
 
-
-// Specified Category Page - ATTACHES A HIDDEN ID TAG TO THE CATEGORY
-app.get("/category/:id", (req, res) => {
-  const userId = req.session.user_id;
-  const urlId = req.params.id;
-  if (userId) {
-    knex('users')
-    .select('*')
-    .where('cookie_session', '=', userId)
-    .then((data) => {
-      const templateVars = {
-        user_id: data[0].id
-      };
-        res.render("category", templateVars);
-      });
+app.get('/categories/:number', (req, res) => {
+  let sessionID = req.session.user_id;
+  let categoryNumber = req.params.number;
+  console.log(categoryNumber);
+  knexQueries.getUserBySessionID(sessionID, (error, resultingID) => {
+    if (error) {
+      console.log('error', error.message)
+      res.status(500).json({ error: error.message });
     } else {
-      res.redirect("/register");
+      let userID = resultingID[0].id;
+      knexQueries.getArrayOfResourceIDsFromCategory(userID, categoryNumber, (error, resultingArray) => {
+        if (error) {
+          console.log('error', error.message)
+          res.status(500).json({ error: error.message });
+        } else {
+          knexQueries.getAllResourcesFromArrayOfResourceIDs(resultingArray, (error, resultingResources) => {
+            if (error) {
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
+            } else {
+              res.json(resultingResources)
+            }
+          })
+        }
+      })
     }
-});
+  })
+})
 
 // Categories Redirect
-app.get("/category", (req, res) => {
-  if (req.cookies['username']){
+app.get("/categories", (req, res) => {
+  const sessionID = req.session.user_id;
+  if (sessionID){
     res.redirect("/");
   } else {
     res.redirect("/register");
   }
 });
 
+// Register Page
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
 // User Profile update page
 app.get("/info", (req, res) => {
-  const username = req.session.user_id;
-    if (username) {
-      knex('users')
-      .select('id')
-      .where('name', '=', username)
-      .then((data) => {
-        const templateVars = {
-          id: data[0].id
-        };
+  const sessionID = req.session.user_id;
+  if (sessionID){
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let templateVars = {
+          user: results[0].id
+        }
         res.render("info", templateVars);
+      }
     })
   } else {
     res.redirect("/register");
   }
-});
+})
 
 // Search for resources page
 // app.get("/search", (req, res) => {
@@ -161,19 +166,21 @@ app.get("/info", (req, res) => {
 
 // Home page
 app.get("/", (req, res) => {
-  const userId = req.session.user_id;
-  if (userId) {
-    knex('users')
-    .select('id')
-    .where('cookie_session', '=', userId)
-    .then((data) => {
-      const templateVars = {
-        user_id: data[0].id
-      };
-      res.render("index", templateVars);
-    });
+  const sessionID = req.session.user_id;
+  if (sessionID) {
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        const templateVars = {
+          user: results[0]
+        }
+        res.render('index', templateVars);
+      }
+    })
   } else {
-    res.redirect("/register");
+    res.redirect('/register');
   }
 });
 
@@ -182,35 +189,6 @@ app.get("/", (req, res) => {
 /////////////////
 
 
-// FOR ADDING NEW RESOURCES - WORKS √
-app.post("/submit", (req, res) => {
-  // console.log('body', req.body);
-  const title = req.body.title;
-  const description = req.body.description;
-  const resourceURL = req.body.resourceURL;
-  const imageURL = req.body.imageURL;
-  const user_id = req.body.user_id;
-  console.log("user_id = ", user_id);
-  knex('resources')
-    .insert({
-      resourceURL: resourceURL,
-      title: title,
-      imageURL: imageURL,
-      description: description,
-      created_by: user_id
-    })
-    .then((results) => {
-      res.redirect("/");
-    });
-})
-
-// function getAllResources(userId){
-  //   return Promise.resolve([]);
-  // }
-  
-  // function searchResources(userId, term){
-    //   return Promise.resolve([]);
-    // }
     
     // app.get("/search", (req, res) => {
       //   if (req.cookies['username']){
