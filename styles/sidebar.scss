@@ -16,6 +16,15 @@ button.list-group-item:hover {
     background-color: lightblue;
 }
 
+div.category {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    input {
+        width: 100%;
+    }
+}
+
 // .lead {
 //     margin:auto;
 //     left:0;

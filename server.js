@@ -47,6 +47,7 @@ app.use(knexLogger(knex));
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 // renders the ./styles/.scss files to the /public/styles/layout.css file
 app.use("/styles", sass({
@@ -80,49 +81,41 @@ app.use("/api/categories", categoryRoutes(knex));
 //   }
 // });
 
-app.get('/categories/:number', (req, res) => {
-  let sessionID = req.session.user_id;
-  let categoryNumber = req.params.number;
-  console.log(categoryNumber);
-  knexQueries.getUserBySessionID(sessionID, (error, resultingID) => {
-    if (error) {
-      console.log('error', error.message)
-      res.status(500).json({ error: error.message });
-    } else {
-      let userID = resultingID[0].id;
-      knexQueries.getArrayOfResourceIDsFromCategory(userID, categoryNumber, (error, resultingArray) => {
-        if (error) {
-          console.log('error', error.message)
-          res.status(500).json({ error: error.message });
-        } else {
-          knexQueries.getAllResourcesFromArrayOfResourceIDs(resultingArray, (error, resultingResources) => {
-            if (error) {
-              console.log('error', error.message)
-              res.status(500).json({ error: error.message });
-            } else {
-              res.json(resultingResources)
-            }
-          })
-        }
-      })
-    }
-  })
-})
-
-// Categories Redirect
-app.get("/categories", (req, res) => {
-  const sessionID = req.session.user_id;
-  if (sessionID){
-    res.redirect("/");
-  } else {
-    res.redirect("/register");
-  }
-});
-
 // Register Page
 app.get("/register", (req, res) => {
   res.render("register");
 });
+
+app.get('/categories/:name', (req, res) => {
+  let sessionID = req.session.user_id;
+  let categoryName = req.params.name;
+  if (sessionID){
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let templateVars = { 
+          user: results[0],
+          catname: categoryName
+        }
+        res.render("category", templateVars);
+      }
+    })
+  } else {
+    res.redirect("/register");
+  }
+})
+
+// Categories Redirect
+// app.get("/categories", (req, res) => {
+//   const sessionID = req.session.user_id;
+//   if (sessionID){
+//     res.redirect("/");
+//   } else {
+//     res.redirect("/register");
+//   }
+// });
 
 // User Profile update page
 app.get("/info", (req, res) => {
@@ -187,11 +180,6 @@ app.get("/", (req, res) => {
     res.redirect('/register');
   }
 });
-
-/////////////////
-///POST ROUTES///
-/////////////////
-
 
     
     // app.get("/search", (req, res) => {
