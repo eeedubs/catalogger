@@ -93,16 +93,28 @@ $(document).ready(() => {
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
-    // if (document.location.pathname === '/'){
-    $.ajax({
-      method: "GET",
-      url: "/api/resources/"
-    }).done((resources) => {
-      renderResources(resources);
-    })
-    .fail((error) => {
-      alert(`Error: resources not rendering properly: ${error}`);
-    });
+    if (document.location.pathname === "/categories"){
+      console.log(document.location);
+      // $.ajax({
+      //   method: "GET",
+      //   url: "/api/categories"
+      // }).done((resources) => {
+      //   renderResources(resources);
+      // })
+      // .fail((error) => {
+      //   alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+      // });
+    } else if (document.location.pathname === '/'){
+      $.ajax({
+        method: "GET",
+        url: "/api/resources/"
+      }).done((resources) => {
+        renderResources(resources);
+      })
+      .fail((error) => {
+        alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+      });
+    }
   });
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
@@ -190,26 +202,15 @@ $(document).ready(() => {
     });
   })
 
-    // Handles the naming of the category titles
-  function renameCategory() {
-    let extension = window.location.pathname.split('/');
-    for (let i in extension){
-      extension[i] = extension[i].charAt(0).toUpperCase() + extension[i].slice(1);
-    }
-    $('.display-4').text(extension.join(" "));
-  };
-
-    // Highlights the selected page as blue on the sidebar
-    // Changes the header for each category by calling on renameCategory
-  $(function changePageName() {
-    var url = document.location.href;
-    $('.list-group form').each(function() {
-      if (url === this.action + "?") {
-        $(this).children('button.list-group-item').addClass("active");
-        renameCategory();
-        $(this).children('button.list-group-item').addClass("active");
-      }
-    });
-  });
+  // $(function makeActive() {
+  //   var url = document.location.href;
+  //   $('.list-group form').each(function() {
+  //     if (url === this.action + "?") {
+  //       $(this).children('button.list-group-item').addClass("active");
+  //       //  renameCategory();
+  //       //  $(this).children('button.list-group-item').addClass("active");
+  //     }
+  //   })
+  // })
 })
 
