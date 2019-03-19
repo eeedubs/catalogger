@@ -18,25 +18,26 @@ module.exports = (knex) => {
 
   router.get("/", (req, res) => {
     let sessionID = req.session.user_id;
-    let categoryNumber = req.query.number;
-    console.log(categoryNumber);
+    let catName = req.query.catName;
+    console.log(catName);
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error) {
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
         let userID = results[0].id;
-        knexQueries.getArrayOfResourceIDsFromCategory(userID, categoryNumber, (error, resultingArray) => {
+        knexQueries.getCategoryIDByName(catName, userID, (error, results) => {
           if (error) {
-            console.log('error', error.message)
+            console.log('error', error.message);
             res.status(500).json({ error: error.message });
           } else {
-            knexQueries.getAllResourcesFromArrayOfResourceIDs(resultingArray, (error, resultingResources) => {
+            let catID = results[0].id;
+            knexQueries.getAllResourcesMatchingCategoryID(catID, userID, (error, results) => {
               if (error) {
-                console.log('error', error.message)
+                console.log('error', error.message);
                 res.status(500).json({ error: error.message });
               } else {
-                res.json(resultingResources)
+                res.json(results)
               }
             })
           }

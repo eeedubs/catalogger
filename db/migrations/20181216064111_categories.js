@@ -5,7 +5,6 @@ exports.up = function(knex, Promise) {
         table.string('label');
         table.integer('number');
         table.integer('user_id').references('users.id')
-        table.specificType('resources', 'integer ARRAY');
       })
   };
   

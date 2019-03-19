@@ -7,46 +7,46 @@
     <form action="/" method="GET"> 
         <button class="list-group-item"><i class="fa fa-archive"></i> <span>Home</span></button>
     </form>
-    <form>
-        <button type="submit" formmethod="GET" formaction="/categories/Category 1" class="list-group-item">
+    <form action='/<%= user.name %>/categories' formmethod="GET">
+        <button type="submit" class="list-group-item" name="name" value="Category 1">
             <i class="fa fa-archive"></i>
             <span>Category 1</span>
         </button>
     </form>
-    <form>
-        <button type="submit" formmethod="GET" formaction="/categories/Category 2" class="list-group-item">
+    <form action='/<%= user.name %>/categories' formmethod="GET">
+        <button type="submit" class="list-group-item" name="name" value="Category 2">
             <i class="fa fa-archive"></i>
             <span>Category 2</span>
         </button>
     </form>
-    <form>
-        <button type="submit" formmethod="GET" formaction="/categories/Category 3" class="list-group-item">
+    <form action='/<%= user.name %>/categories' formmethod="GET">
+        <button type="submit" class="list-group-item" name="name" value="Category 3">
             <i class="fa fa-archive"></i>
             <span>Category 3</span>
         </button>
     </form>
-    <form>
-        <button type="submit" formmethod="GET" formaction="/categories/Category 4" class="list-group-item">
+    <form action='/<%= user.name %>/categories' formmethod="GET">
+        <button type="submit" class="list-group-item" name="name" value="Category 4">
             <i class="fa fa-archive"></i>
             <span>Category 4</span>
         </button>
     </form>
-    <form>
-        <button type="submit" formmethod="GET" formaction="/categories/Category 5" class="list-group-item">
+    <form action='/<%= user.name %>/categories' formmethod="GET">
+        <button type="submit" class="list-group-item" name="name" value="Category 5">
             <i class="fa fa-archive"></i>
             <span>Category 5</span>
         </button>
     </form>
-    <form action="/resources" method="GET"> 
+    <form action='/<%= user.name %>/resources' method="GET"> 
         <button class="list-group-item">
             <i class="fa fa-bookmark-o"></i>
             <span>Saved</span>
         </button>
     </form>
-    <!-- <form action="/liked" method="GET">  -->
+    <form action='/<%= user.name %>/liked' method="GET"> 
         <button class="list-group-item">
             <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
             <span>Liked</span>
         </button>
-    <!-- </form> -->
+    </form>
 </aside>

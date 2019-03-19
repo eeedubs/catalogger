@@ -9,7 +9,6 @@ const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
 const app           = express();
-const bcrypt        = require("bcrypt");
 const uuidv1        = require('uuid/v1');
 const cookieParser  = require('cookie-parser');
 
@@ -86,9 +85,12 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.get('/categories/:name', (req, res) => {
+
+app.get('/:userid/categories', (req, res) => {
   let sessionID = req.session.user_id;
-  let categoryName = req.params.name;
+  // let categoryName = req.params.name;
+  let categoryName = req.query['name'];
+  console.log(categoryName);
   if (sessionID){
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error) {
@@ -108,7 +110,7 @@ app.get('/categories/:name', (req, res) => {
 })
 
 // Categories Redirect
-// app.get("/categories", (req, res) => {
+// app.get("/:userid/categories/", (req, res) => {
 //   const sessionID = req.session.user_id;
 //   if (sessionID){
 //     res.redirect("/");
@@ -118,7 +120,7 @@ app.get('/categories/:name', (req, res) => {
 // });
 
 // User Profile update page
-app.get("/info", (req, res) => {
+app.get("/:userid", (req, res) => {
   const sessionID = req.session.user_id;
   if (sessionID){
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
@@ -180,28 +182,6 @@ app.get("/", (req, res) => {
     res.redirect('/register');
   }
 });
-
-    
-    // app.get("/search", (req, res) => {
-      //   if (req.cookies['username']){
-        //     // if we don't have params, do a regular get and render everything
-        //     // if we do, perform a search and render the results
-        //     let query;
-        //     if(!req.query.q){
-          //       // if no query, load all resources
-          //       query = getAllResources(req.cookies['username']);
-          //     } else {
-            //       // else, load the resources for the user
-            //       query = searchResources(req.cookies['username'], req.query.q)
-            //     }
-            //     query
-            //     .then((results) => {
-              //       res.render("search", {results });
-              //     });
-              // } else {
-                //     res.redirect("/register");
-                //   }
-                // });
                 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);

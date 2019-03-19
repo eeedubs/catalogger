@@ -2,8 +2,11 @@
 // the web page (jQuery - client side)
 
 $(document).ready(() => {
+  const username    = JSON.parse($("input#user")[0].value).name;
+  const userID      = JSON.parse($("input#user")[0].value).id;
+
   //CREATES THE RESOURCE DOM TREE
-  function createResource (resource){
+  function createResource (resource, categories){
     let $allResources = $("<div>").addClass("all-resources");
       let $singleResource = $("<div>").addClass("resource").appendTo($allResources);
         let $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
@@ -16,15 +19,13 @@ $(document).ready(() => {
           let $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
           let $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
           let $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
-          let $selectForm = $(`<form class="submitCategory" method="POST" action="/api/users/categorize">`).appendTo($footer);
+          let $selectForm = $(`<form class="submitCategory" method="POST" action="/api/resources/categorize">`).appendTo($footer);
             let $categoryFormResourceID = $(`<input type="hidden" id="categoryFormResourceID" name="categoryFormResourceID" value="${resource.id}">`).appendTo($selectForm);        
             let $selectList = $(`<select id="select-category">`).appendTo($selectForm);
-              let $option  = $(`<option>Categorize</option>`).appendTo($selectList);
-              let $select1 = $(`<option value="1">Category 1</option>`).appendTo($selectList);
-              let $select2 = $(`<option value="2">Category 2</option>`).appendTo($selectList);
-              let $select3 = $(`<option value="3">Category 3</option>`).appendTo($selectList);
-              let $select4 = $(`<option value="4">Category 4</option>`).appendTo($selectList);
-              let $select5 = $(`<option value="5">Category 5</option>`).appendTo($selectList);
+              let $option  = $(`<option value="" selected disabled hidden>Categorize</option>`).appendTo($selectList);
+              for (let eachCategory of categories){
+                let $selectValue = $(`<option value="${eachCategory.id}">${eachCategory.label}</option>`).appendTo($selectList);
+              }
             let $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectForm);
           // commentContainer contains all of the posted comments
         let $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
@@ -69,10 +70,9 @@ $(document).ready(() => {
   });
 
   // APPENDS THE RESOURCES
-  function renderResources(resourceData){
+  function renderResources(resourceData, userCategories){
     resourceData.forEach(function(resource) {
-      // console.log("Rendering resources: ", resource);
-      var $resource = createResource(resource);
+      var $resource = createResource(resource, userCategories);
       $("section.feed").prepend($resource);
     });
   };
@@ -93,28 +93,38 @@ $(document).ready(() => {
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   $(function loadResources() {
-    if (document.location.pathname === "/categories"){
-      console.log(document.location);
-      // $.ajax({
-      //   method: "GET",
-      //   url: "/api/categories"
-      // }).done((resources) => {
-      //   renderResources(resources);
-      // })
-      // .fail((error) => {
-      //   alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
-      // });
-    } else if (document.location.pathname === '/'){
-      $.ajax({
+      let getCategories = $.ajax({
         method: "GET",
-        url: "/api/resources/"
-      }).done((resources) => {
-        renderResources(resources);
-      })
-      .fail((error) => {
-        alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+        url: "/api/users/categories",
+        data: userID
       });
-    }
+      getCategories.done((returnedCategories) => {
+        let userCategories = returnedCategories;
+        if (document.location.pathname === `/${username}/categories`){
+          let urlParams = new URLSearchParams(document.location.search);
+          let catName = urlParams.get('name');
+          console.log(catName);
+          $.ajax({
+            method: "GET",
+            url: `/api/categories?catName=${catName}`
+          }).done((resources) => {
+            renderResources(resources, userCategories);
+          })
+          .fail((error) => {
+            alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+          });
+        } else if (document.location.pathname === '/'){
+          $.ajax({
+            method: "GET",
+            url: "/api/resources/"
+          }).done((resources) => {
+            renderResources(resources, userCategories);
+          })
+          .fail((error) => {
+            alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+          });
+        }
+      })
   });
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
@@ -156,17 +166,17 @@ $(document).ready(() => {
 
   $("body").on("submit", "form.submitCategory", function(event) {
     event.preventDefault();
-    let selectedValue = $(this).children('#select-category').val();
+    let selectedCategoryID = $(this).children('#select-category').val();
     let resourceID = $(this).children('#categoryFormResourceID').val();
     $.ajax({
       method: "POST",
       url: "/api/resources/categorize",
       data: {
         resourceID: resourceID,
-        categoryID: selectedValue
+        categoryID: selectedCategoryID
       },
-      success: () => {
-        alert("The categorization was successful!");
+      success: (results) => {
+        results.success ? alert("The categorization was successful!") : alert(`Error: ${results.error}`);
       }
     }).fail((error) => {
       alert(`${error.status}: ${error.statusText}`);
@@ -178,8 +188,6 @@ $(document).ready(() => {
     event.preventDefault();
     let userComment = event.target.commentInput.value;
     let resourceID  = event.target.commentFormResourceID.value;
-    let username    = JSON.parse($("input#user")[0].value).name;
-    let userID      = JSON.parse($("input#user")[0].value).id;
     let newCommentData = {
       comment: userComment,
       user_name: username,

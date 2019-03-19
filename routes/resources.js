@@ -27,16 +27,46 @@ module.exports = (knex) => {
     })
   })
 
-  // router.post("/categorize", (req, res) => {
-  //   const resourceId = req.body.resourceID;
-  //   const categoryNum = req.body.categoryID;
-  //   const sessionId = req.session.user_id;
-  //   knex.getUserBySessionID(sessionID, (error, results) => {
-  //     if (error){
-  //       console.log('error', error.message)
-  //       res.status(500).json({ error: error.message });
-  //     } else {
-  //       let userID = results[0].id;
+  router.post("/categorize", (req, res) => {
+    const resourceID = Number(req.body.resourceID);
+    const categoryID = Number(req.body.categoryID);
+    const sessionID = req.session.user_id;
+    console.log(resourceID)
+    console.log(categoryID)
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let userID = results[0].id;
+        knexQueries.checkCategorization(userID, resourceID, categoryID, (error, results) => {
+          if (error){
+            console.log('error', error.message)
+            res.status(500).json({ error: error.message });
+          } else {
+            if (results[0]){
+              res.json({
+                success: false,
+                error: "The selected resource already belongs to that category."
+              })
+            } else {
+              knexQueries.categorizeResource(userID, resourceID, categoryID, (error, results) => {
+                if (error){
+                  console.log('error', error.message)
+                  res.status(500).json({ error: error.message });
+                } else {
+                  res.status(200).json({
+                    success: true,
+                    error: null
+                  })
+                }
+              })
+            }
+          }
+        })
+      }
+    })
+  })
 
 
   // FOR ADDING NEW RESOURCES - WORKS √

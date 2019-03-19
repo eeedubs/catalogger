@@ -18,6 +18,28 @@ module.exports = (knex) => {
   
   const knexQueries = require('../lib/knex-queries')(knex);
 
+  router.get("/categories", (req, res) => {
+    let sessionID = req.session.user_id;
+    if (sessionID){
+      knexQueries.getUserBySessionID(sessionID, (error, results) => {
+        if (error) {
+          console.log('error', error.message)
+          res.status(500).json({ error: error.message });
+        } else {
+          let userID = results[0].id;
+          knexQueries.getCategoriesByUserID(userID, (error, results) => {
+            if (error){
+              console.log('Error getting user by name.', error.message)
+              res.status(500).json({ error: error.message })
+            } else {
+              res.json(results);
+            }
+          })
+        }
+      })
+    }
+  })
+
   router.get('/comments', (req, res) => {
     knexQueries.getAllComments((error, results) => {
       if (error){
