@@ -34,7 +34,7 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes
 const userRoutes      = require("./routes/users");
 const resourceRoutes  = require("./routes/resources");
-const categoryRoutes  = require("./routes/categories");
+// const categoryRoutes  = require("./routes/categories");
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -60,7 +60,7 @@ app.use(express.static("public"));
 // Mount all routes
 app.use("/api/users", userRoutes(knex));
 app.use("/api/resources", resourceRoutes(knex));
-app.use("/api/categories", categoryRoutes(knex));
+// app.use("/api/categories", categoryRoutes(knex));
 
 // // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 // app.get("/resources", (req, res) => {
@@ -86,9 +86,8 @@ app.get("/register", (req, res) => {
 });
 
 
-app.get('/:userid/categories', (req, res) => {
+app.get('/:username/categories', (req, res) => {
   let sessionID = req.session.user_id;
-  // let categoryName = req.params.name;
   let categoryName = req.query['name'];
   console.log(categoryName);
   if (sessionID){

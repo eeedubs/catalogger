@@ -12,32 +12,32 @@ const uuidv1        = require('uuid/v1');
 
 router.use(cookieParser());
 router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
 
 module.exports = (knex) => {
   
   const knexQueries = require('../lib/knex-queries')(knex);
 
+  // gets all the categories (NOT THE RESOURCES) for a given user
   router.get("/categories", (req, res) => {
     let sessionID = req.session.user_id;
-    if (sessionID){
-      knexQueries.getUserBySessionID(sessionID, (error, results) => {
-        if (error) {
-          console.log('error', error.message)
-          res.status(500).json({ error: error.message });
-        } else {
-          let userID = results[0].id;
-          knexQueries.getCategoriesByUserID(userID, (error, results) => {
-            if (error){
-              console.log('Error getting user by name.', error.message)
-              res.status(500).json({ error: error.message })
-            } else {
-              res.json(results);
-            }
-          })
-        }
-      })
-    }
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let userID = results[0].id;
+        knexQueries.getCategoriesByUserID(userID, (error, results) => {
+          if (error){
+            console.log('Error getting user by name.', error.message)
+            res.status(500).json({ error: error.message })
+          } else {
+            res.json(results);
+          }
+        })
+      }
+    })
   })
 
   router.get('/comments', (req, res) => {
@@ -137,8 +137,8 @@ module.exports = (knex) => {
   router.post("/comment", (req, res) => {
     let userComment = req.body.comment;
     let username    = req.body.user_name;
-    let resourceID  = req.body.resource_id;
-    let userID      = req.body.user_id;
+    let userID      = JSON.parse(req.body.user_id);
+    let resourceID  = JSON.parse(req.body.resource_id);
     if (!userComment){
       res.status(400).send("400 Bad Request Error: comment input is empty.");
     } else if (!username || !userID){
@@ -151,7 +151,7 @@ module.exports = (knex) => {
           console.log('Error posting comment to the database.', error.message)
           res.status(500).json({ error: error.message });
         } else {
-          res.status(201);
+          res.status(200);
         }
       })
     }
