@@ -151,7 +151,9 @@ module.exports = (knex) => {
           console.log('Error posting comment to the database.', error.message)
           res.status(500).json({ error: error.message });
         } else {
-          res.status(200);
+          res.status(200).json({
+            success: true
+          })
         }
       })
     }

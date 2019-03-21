@@ -57,40 +57,33 @@ module.exports = (knex) => {
   })
 
   router.post("/categorize", (req, res) => {
-    let resourceID = Number(req.body.resourceID);
-    let categoryID = Number(req.body.categoryID);
-    let sessionID = req.session.user_id;
-    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+    let userID      = Number(req.body.user_id);
+    let resourceID  = Number(req.body.resource_id);
+    let categoryID  = Number(req.body.category_id);
+    // console.log("resourceID: ", resourceID, ". categoryID: ", categoryID, ". userID: ", userID);
+    knexQueries.checkCategorization(userID, resourceID, categoryID, (error, results) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        let userID = results[0].id;
-        knexQueries.checkCategorization(userID, resourceID, categoryID, (error, results) => {
-          if (error){
-            console.log('error', error.message)
-            res.status(500).json({ error: error.message });
-          } else {
-            if (results[0]){
-              res.json({
-                success: false,
-                error: "The selected resource already belongs to that category."
-              })
+        if (results[0]){
+          res.json({
+            success: false,
+            error: "The selected resource already belongs to that category."
+          })
+        } else {
+          knexQueries.categorizeResource(userID, resourceID, categoryID, (error, results) => {
+            if (error){
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
             } else {
-              knexQueries.categorizeResource(userID, resourceID, categoryID, (error, results) => {
-                if (error){
-                  console.log('error', error.message)
-                  res.status(500).json({ error: error.message });
-                } else {
-                  res.status(200).json({
-                    success: true,
-                    error: null
-                  })
-                }
+              res.status(200).json({
+                success: true,
+                error: null
               })
             }
-          }
-        })
+          })
+        }
       }
     })
   })

@@ -172,17 +172,21 @@ $(document).ready(() => {
 
   $("body").on("submit", "form.submitCategory", (event) => {
     event.preventDefault();
-    let selectedCategoryID  = Number($("#select-list option:selected").val());
+    let selectedCategoryID  = Number($(event.target).find("#select-list option:selected").val());
     let resourceID          = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    console.log(selectedCategoryID, resourceID);
     $.ajax({
       method: "POST",
       url: `${baseURL}/api/resources/categorize`,
       data: {
-        "resourceID": resourceID,
-        "categoryID": selectedCategoryID
+        "user_id": userID,
+        "resource_id": resourceID,
+        "category_id": selectedCategoryID
       },
       success: (results) => {
+        $(event.target).find("#select-list option:selected").removeAttr("selected");
         results.success ? alert("The categorization was successful!") : alert(`Error: ${results.error}`);
+        // $("#select-list option:selected").removeAttr("selected");
       }
     }).fail((error) => {
       alert(`${error.status}: ${error.statusText}`);
@@ -207,8 +211,7 @@ $(document).ready(() => {
       url: `${baseURL}/api/users/comment`,
       data: newCommentData,
       success: () => {
-        console.log("SUCCESS!");
-        $("form.submitComment").reset();
+        $(event.target)[0].reset();
       }
     })
     .fail((error) => {
