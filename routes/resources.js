@@ -15,6 +15,18 @@ module.exports = (knex) => {
   
   const knexQueries = require('../lib/knex-queries')(knex);
 
+
+  router.get("/likes", (req, res) => {
+    knexQueries.getLikes((error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
+    })
+  })
+
   router.get('/:categoryName', (req, res) => {
     let catName   = req.params.categoryName;
     let sessionID = req.session.user_id;
@@ -56,11 +68,41 @@ module.exports = (knex) => {
     })
   })
 
+  router.post("/like", (req, res) => {
+    let userID      = Number(req.body.user_id);
+    let resourceID  = Number(req.body.resource_id);
+    knexQueries.checkIfLiked(userID, resourceID, (error, checkedLikeResults) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        if (checkedLikeResults[0]){
+          knexQueries.deleteLike(userID, resourceID, (error, deleteLikeResults) => {
+            if (error){
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
+            } else {
+              res.json(deleteLikeResults);
+            }
+          })
+        } else {
+          knexQueries.postLike(userID, resourceID, (error, postLikeResults) => {
+            if (error){
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
+            } else {
+              res.json(postLikeResults);
+            }
+          })
+        }
+      }
+    })
+  })
+
   router.post("/categorize", (req, res) => {
     let userID      = Number(req.body.user_id);
     let resourceID  = Number(req.body.resource_id);
     let categoryID  = Number(req.body.category_id);
-    // console.log("resourceID: ", resourceID, ". categoryID: ", categoryID, ". userID: ", userID);
     knexQueries.checkCategorization(userID, resourceID, categoryID, (error, results) => {
       if (error){
         console.log('error', error.message)

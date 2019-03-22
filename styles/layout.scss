@@ -29,13 +29,6 @@ body {
     form.needs-validation {
       padding-top: 100px;
       padding-left: 100px;
-
-      //Rate, Like and Comment buttons
-      .social-buttons {
-        margin-left: 95px;
-        margin: 0 5px;
-        color: white;
-      }
     }
     .registration {
       display: inline-block;
@@ -94,20 +87,51 @@ body {
           width: auto;
           height: auto;
         }
+        footer {
+          //Rate, Like and Comment buttons
+          %social-buttons{
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 5px;
+            height: 1.5em;
+          }
+          .rate-button {
+            @extend %social-buttons;
+          }
+          .like-count {
+            @extend %social-buttons;
+            max-width: 1em;
+            font-size: 1em;
+            margin: 0;
+          }
+          // like button
+          .fas.fa-thumbs-up {
+            color: darkslateblue;
+            @extend %social-buttons;
+          }
+          .comment-button {
+            @extend %social-buttons;
+            background-color: lightgreen;
+            border-radius: 15px;
+          }
+          .comment-button:focus {
+            outline: none;
+          }
+        }
 
         .submitCategory {
           display: block;
           float: right;
-          #select-category {
-            width: 120px;
-            height: 28px;
+          height: 1.5em;
+          #selectCategoryList{
+            height: 1.5em;
           }
           .categorizeSubmit {
-            width: 68px;
-            height: 28px;
             text-align: center;
             background-color: lightgreen;
             border-radius: 10px;
+            margin-left: 5px;
           }
         }
 
@@ -131,7 +155,9 @@ body {
 
             //input
             .commentPost {
-              // opacity: .6;  
+              display: flex;
+              justify-content: center;
+              align-items: center;
               font-size: 16px;
               width: 80px;
               height: 27px;
@@ -139,8 +165,6 @@ body {
               border: 1px solid black;
               border-radius: 15px;
               margin-left: 20px;
-              padding-left: 0px auto;
-              padding-top: 3px;
               color: black;
             }
 

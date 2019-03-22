@@ -34,7 +34,6 @@ const knexLogger  = require('knex-logger');
 // Seperated Routes
 const userRoutes      = require("./routes/users");
 const resourceRoutes  = require("./routes/resources");
-// const categoryRoutes  = require("./routes/categories");
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -60,7 +59,6 @@ app.use(express.static("public"));
 // Mount all routes
 app.use("/api/users", userRoutes(knex));
 app.use("/api/resources", resourceRoutes(knex));
-// app.use("/api/categories", categoryRoutes(knex));
 
 // // Resources Page - ATTACHES A HIDDEN ID TAG TO THE RESOURCE
 // app.get("/resources", (req, res) => {
@@ -98,9 +96,9 @@ app.get('/:username/categories', (req, res) => {
       } else {
         let templateVars = { 
           user: results[0],
-          catname: categoryName
+          pagename: categoryName
         }
-        res.render("category", templateVars);
+        res.render("resource-page", templateVars);
       }
     })
   } else {

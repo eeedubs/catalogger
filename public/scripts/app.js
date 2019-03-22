@@ -12,21 +12,28 @@ $(document).ready(() => {
     let $singleResource = $("<div>").addClass("resource").appendTo($allResources);
       let $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
       let $resourceID = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($singleResource);        
-      let $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
       let $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
+      let $title = $(`<h3> ${resource.title} - <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
       let $description = $(`<p> ${resource.description}</p>`).appendTo($singleResource);
         // footer contains the social buttons, including the button to toggle comments
       let $footer = $("<footer>").appendTo($singleResource);
-        let $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
-        let $likeButton = $("<button>").addClass("social-buttons like").text("Like").appendTo($footer);
-        let $commentButton = $("<button>").addClass("social-buttons comment").text("Comment").appendTo($footer);
-        let $selectForm = $(`<form class="submitCategory" method="POST" action="${baseURL}/api/resources/categorize">`).appendTo($footer);
-          let $selectList = $(`<select id="select-list">`).appendTo($selectForm);
-            let $option  = $(`<option value="" selected disabled hidden>Categorize</option>`).appendTo($selectList);
-            for (let eachCategory of categories){
-              let $selectValue = $(`<option id="select-category" value="${eachCategory.id}">${eachCategory.label}</option>`).appendTo($selectList);
+        // let $rateButton = $("<button>").addClass("social-buttons rate").text("Rate").appendTo($footer);
+        let $selectRatingForm = $(`<form id="submitRating" class="rate-button" method="POST" action="${baseURL}/api/resources/rate">`).appendTo($footer);
+          let $selectRatingList = $(`<select id="selectRatingList">`).appendTo($selectRatingForm);
+            let $selectRatingOption = $(`<option value="" selected disabled hidden>Rate Article</option>`).appendTo($selectRatingList);
+            for (let ratingValue = 1; ratingValue <= 5; ratingValue++){
+              let $selectRatingValue = $(`<option id="select-rating" value="${ratingValue}">${ratingValue} Stars</option>`).appendTo($selectRatingList);
             }
-          let $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectForm);
+            let $commentButton = $("<button>").addClass("comment-button").text("Comment").appendTo($footer);
+        let $likeCount = $(`<p class="like-count">0</p>`).appendTo($footer);
+        let $likeButton = $(`<i id="like-button" class="fas fa-thumbs-up">`).appendTo($footer);
+        let $selectCategoryForm = $(`<form class="submitCategory" method="POST" action="${baseURL}/api/resources/categorize">`).appendTo($footer);
+          let $selectCategoryList = $(`<select id="selectCategoryList">`).appendTo($selectCategoryForm);
+            let $selectCategoryOption  = $(`<option value="" selected disabled hidden>Categorize</option>`).appendTo($selectCategoryList);
+            for (let eachCategory of categories){
+              let $selectCategoryValue = $(`<option id="select-category" value="${eachCategory.id}">${eachCategory.label}</option>`).appendTo($selectCategoryList);
+            }
+          let $selectInput = $(`<input class="categorizeSubmit" type="submit" value="Submit">`).appendTo($selectCategoryForm);
           // commentContainer contains all of the posted comments
         let $commentContainer = $("<div>").addClass("comment-container").appendTo($singleResource);
           let $commentForm = $(`<form class="submitComment" method="POST" action="${baseURL}/api/users/comment">`).appendTo($commentContainer);
@@ -64,7 +71,7 @@ $(document).ready(() => {
   }
 
   // COMMENT BOX TOGGLER
-  $("body").on("click", "button.comment", (event) => {
+  $("body").on("click", "button.comment-button", (event) => {
     $(event.target).parent("footer").siblings("div.comment-container").slideToggle("slow");
   });
 
@@ -83,7 +90,6 @@ $(document).ready(() => {
     commentData.forEach((comment) => {
       $("div.comment-container").each((index, element) => {
         let targetResourceIDValue = Number($(element).closest('div.resource').find('input#resourceID')[0].value);    
-        // console.log(comment.resource_id, targetResourceIDValue);
         if (targetResourceIDValue === comment.resource_id){
           let $comment = createComment(comment);
           $(element).children('div.postArea').prepend($comment);
@@ -91,6 +97,18 @@ $(document).ready(() => {
       })
     });
   };
+
+  function renderLikes(likeData){
+    likeData.forEach((like) => {
+      $("div.resource").each((index, element) => {
+        let targetResourceIDValue = Number($(element).find('input#resourceID')[0].value); 
+        if (targetResourceIDValue === like.resource_id){
+          let oldLikeCount = Number($(element).find("p.like-count").text());
+          $(element).find("p.like-count").text(oldLikeCount + 1);
+        }
+      })
+    })
+  } 
 
   //LOADS THE RESOURCES ON PAGE LOAD - this works
   // getCategories obtains the different categories that the user has created
@@ -100,11 +118,11 @@ $(document).ready(() => {
       method: "GET",
       url: `${baseURL}/api/users/categories`
     }).done((categories) => {
-      loadResources(categories);
+      getResources(categories);
     })
   })
 
-  function loadResources(userCategories) {
+  function getResources(userCategories) {
     if (document.location.pathname === `/${username}/categories`){
       let urlParams = new URLSearchParams(document.location.search);
       let catName = urlParams.get('name');
@@ -112,9 +130,9 @@ $(document).ready(() => {
         method: "GET",
         url: `${baseURL}/api/resources/${catName}`,
       }).done((resources) => {
-        console.log(resources);
         renderResources(resources, userCategories, () => {
-          loadComments();
+          getComments();
+          getLikes();
         })
       })
       .fail((error) => {
@@ -126,7 +144,8 @@ $(document).ready(() => {
         url: `${baseURL}/api/resources/`
       }).done((resources) => {
         renderResources(resources, userCategories, () => {
-          loadComments();
+          getComments();
+          getLikes();
         })
       })
       .fail((error) => {
@@ -136,15 +155,27 @@ $(document).ready(() => {
   };
 
   // LOADS THE COMMENTS ON PAGE LOAD - this works
-  function loadComments() {
+  function getComments() {
     $.ajax({
       method: "GET",
       url: `${baseURL}/api/users/comments`
-    }).done((comments) => {
-      renderComments(comments);
+    }).done((commentData) => {
+      renderComments(commentData);
     })
     .fail(() => {
       alert("Error: comments not rendering properly!");
+    })
+  };
+
+  function getLikes() {
+    $.ajax({
+      method: "GET",
+      url: `${baseURL}/api/resources/likes`
+    }).done((likeData) => {
+      renderLikes(likeData);
+    })
+    .fail(() => {
+      alert("Error: likes not rendering properly!");
     })
   };
 
@@ -172,9 +203,8 @@ $(document).ready(() => {
 
   $("body").on("submit", "form.submitCategory", (event) => {
     event.preventDefault();
-    let selectedCategoryID  = Number($(event.target).find("#select-list option:selected").val());
+    let selectedCategoryID  = Number($(event.target).find("#selectCategoryList option:selected").val());
     let resourceID          = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
-    console.log(selectedCategoryID, resourceID);
     $.ajax({
       method: "POST",
       url: `${baseURL}/api/resources/categorize`,
@@ -184,9 +214,8 @@ $(document).ready(() => {
         "category_id": selectedCategoryID
       },
       success: (results) => {
-        $(event.target).find("#select-list option:selected").removeAttr("selected");
+        $(event.target).find("#selectCategoryList option:selected").removeAttr("selected");
         results.success ? alert("The categorization was successful!") : alert(`Error: ${results.error}`);
-        // $("#select-list option:selected").removeAttr("selected");
       }
     }).fail((error) => {
       alert(`${error.status}: ${error.statusText}`);
@@ -215,10 +244,39 @@ $(document).ready(() => {
       }
     })
     .fail((error) => {
-      console.log("fail");
       removeComment(newCommentData);
       alert(`${error.status}: ${error.statusText}`);
     });
+  })
+
+  $("body").on("click", "#like-button", (event) => {
+    event.preventDefault();
+    let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    let createdByID = Number($(event.target).closest('div.resource').find('input#createdBy')[0].value);
+    if (userID === createdByID){
+      alert('You cannot like your own articles!');
+      return;
+    }
+    let likeData = {
+      user_id: userID,
+      resource_id: resourceID
+    };
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/resources/like`,
+      data: likeData,
+      success: (newLikeData) => {
+        console.log(newLikeData);
+        let newLikeCount = 0;
+        for (let item in newLikeData){
+          newLikeCount++;
+        }
+        $(event.target).closest('div.resource').find("p.like-count").text(newLikeCount);
+      }
+    })
+    .fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
   })
 
   // $(function makeActive() {
