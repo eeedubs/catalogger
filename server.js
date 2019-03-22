@@ -83,6 +83,45 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+app.get("/:username/resources", (req, res) => {
+  let sessionID = req.session.user_id;
+  if (sessionID) {
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let templateVars = {
+          user: results[0],
+          pagename: "Your Resources"
+        }
+        res.render('resource-page', templateVars);
+      }
+    })
+  } else {
+    res.redirect('/register');
+  }
+});
+
+app.get("/:username/liked", (req, res) => {
+  let sessionID = req.session.user_id;
+  if (sessionID) {
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let templateVars = {
+          user: results[0],
+          pagename: "Resources You've Liked"
+        }
+        res.render('resource-page', templateVars);
+      }
+    })
+  } else {
+    res.redirect('/register');
+  }
+});
 
 app.get('/:username/categories', (req, res) => {
   let sessionID = req.session.user_id;
@@ -106,18 +145,8 @@ app.get('/:username/categories', (req, res) => {
   }
 })
 
-// Categories Redirect
-// app.get("/:userid/categories/", (req, res) => {
-//   const sessionID = req.session.user_id;
-//   if (sessionID){
-//     res.redirect("/");
-//   } else {
-//     res.redirect("/register");
-//   }
-// });
-
 // User Profile update page
-app.get("/:userid", (req, res) => {
+app.get("/:username", (req, res) => {
   const sessionID = req.session.user_id;
   if (sessionID){
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
@@ -126,7 +155,8 @@ app.get("/:userid", (req, res) => {
         res.status(500).json({ error: error.message });
       } else {
         let templateVars = {
-          user: results[0]
+          user: results[0],
+          pagename: "Home"
         }
         res.render("info", templateVars);
       }
@@ -162,14 +192,14 @@ app.get("/:userid", (req, res) => {
 
 // Home page
 app.get("/", (req, res) => {
-  const sessionID = req.session.user_id;
+  let sessionID = req.session.user_id;
   if (sessionID) {
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error) {
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        const templateVars = {
+        let templateVars = {
           user: results[0]
         }
         res.render('index', templateVars);
