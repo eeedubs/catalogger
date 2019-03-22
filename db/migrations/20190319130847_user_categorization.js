@@ -9,5 +9,5 @@ exports.up = function(knex, Promise) {
 };
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTable('categorization');
+  return knex.schema.dropTable('resource_categorization');
 };

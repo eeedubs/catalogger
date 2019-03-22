@@ -31,7 +31,14 @@ exports.seed = function(knex, Promise) {
           resourceURL: "http://dailyhive.com/vancouver/bc-rideshare-announcement-november-2018", 
           imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcToI9Dudri-p3KECequwG2jiBlYqM5DedQxRE-qNZ22Lo9eC4RY", 
           created_by: 1
-        })
+        }),
+        knex('resources').insert({
+          title: 'FBI joining DoT investigation into the Boeing 737 Max plane',
+          description: "The FBI is joining the Department of Transportation's investigation into the Boeing 737 Max plane, the Seattle Times reported Wednesday.  People familiar with the matter told reporter Steve Miletich that the investigation is focused on how the plane, which has crashed twice in the past five months, was certified to fly. Department of Transportation Secretary Elaine Chao formally requested an audit of the FAA's certification for the process in a letter sent to the agency on Tuesday.  The FBI did not immediately respond to a request for comment.",
+          resourceURL: "https://www.businessinsider.com/boeing-737-max-fbi-joins-investigation-into-plane-certification-report-2019-3",
+          imageURL: "https://amp.businessinsider.com/images/5c92a91d69e11c721269ddb4-2560-1280.jpg",
+          created_by: 4
+        }),
       ]);
     });
 };

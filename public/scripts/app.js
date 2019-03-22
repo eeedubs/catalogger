@@ -266,12 +266,7 @@ $(document).ready(() => {
       url: `${baseURL}/api/resources/like`,
       data: likeData,
       success: (newLikeData) => {
-        console.log(newLikeData);
-        let newLikeCount = 0;
-        for (let item in newLikeData){
-          newLikeCount++;
-        }
-        $(event.target).closest('div.resource').find("p.like-count").text(newLikeCount);
+        $(event.target).closest('div.resource').find("p.like-count").text(newLikeData.length);
       }
     })
     .fail((error) => {
