@@ -48,9 +48,22 @@ module.exports = (knex) => {
     })
   })
 
-  router.get('/:categoryName', (req, res) => {
-    let catName   = req.params.categoryName;
+  router.get('/search', (req, res) => {
     let sessionID = req.session.user_id;
+    let searchQuery = req.query['query'].toLowerCase();
+    knexQueries.getResourcesBySearchQuery(searchQuery, (error, results) => {
+      if (error) {
+        console.log('error', error.message);
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
+    })
+  })
+
+  router.get('/categories', (req, res) => {
+    let sessionID = req.session.user_id;
+    let catName = req.query['catName'];
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error){
         console.log('error', error.message)

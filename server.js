@@ -85,7 +85,7 @@ app.get("/register", (req, res) => {
 
 // Search for resources page
 app.get("/search", (req, res) => {
-  let searchQuery = req.query["searchQuery"];
+  let searchQuery = req.query["query"];
   let sessionID = req.session.user_id;
   if (sessionID) {
     knexQueries.getUserBySessionID(sessionID, (error, results) => {

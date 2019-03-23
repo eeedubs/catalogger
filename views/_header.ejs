@@ -1,9 +1,9 @@
 <nav class="nav">
   <h2>Catalogger</h2>
   <div class="input-bar">
+    <input type="hidden" id="user" name="user" value="<%= JSON.stringify(user) %>">
     <form id="search-form" action="/search" method="GET">
-      <input class="search-field" type="text" name="searchQuery" placeholder="Search for articles...">
-      <input type="hidden" id="user" name="user" value="<%= JSON.stringify(user) %>">
+      <input class="search-field" type="text" name="query" placeholder="Search for articles...">
     </form>
     <input form="search-form" class="search-button" type="submit" value="Search">
     <form id="info-form" action="/<%= user.name %>" method="GET">
