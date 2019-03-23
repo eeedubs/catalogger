@@ -40,17 +40,6 @@ module.exports = (knex) => {
     })
   })
 
-  router.get('/comments', (req, res) => {
-    knexQueries.getAllComments((error, results) => {
-      if (error){
-        console.log('error', error.message)
-        res.status(500).json({ error: error.message });
-      } else {
-        res.json(results);
-      }
-    })
-  })
-
   // LOGIN USER ROUTE
   router.post("/login", (req, res) => {
     let username = req.body.loginUsername;

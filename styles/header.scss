@@ -1,75 +1,56 @@
 // renders to server.js and passes it on to layout.css
 
 $nav-font-stack: American Typewriter, sans;
+$nav-background: hsl(0, 10%, 39%);
 
 .nav {
-    background-color: hsl(0, 10%, 39%);
+    display: flex;
+    background-color: $nav-background;
     width: 100%;
-    height: 45px;
-    margin-bottom: 10px;
+    height: 3.5em;
     font: 100% $nav-font-stack;
-}
-.nav h2 {
-    display: flex;
-    color: black;
-    font-size: 30px;
-    -webkit-text-stroke: 1px;
-    -webkit-text-stroke-color: white;
-    position: relative;
-    bottom: 15px;
-    font-weight: bold;
-    height: 30px;
-    margin-left: 40px;
-}
-.nav .input-bar {
-    font: 100% Times;
-    display: flex;
-    border: none;
-    margin-left: auto;
-    margin-right: 52px;
-    position: relative;
-    top: 10px;
-}
+    
+    h2 {
+        display: flex;
+        align-items: center;
+        color: black;
+        -webkit-text-stroke: 1px;
+        -webkit-text-stroke-color: white;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: 1.5em;
+    }
+    .input-bar {
+        font: 100% Times;
+        display: flex;
+        border: none;
+        margin-left: auto;
+        margin-right: 52px;
 
-.nav .input-bar form {
-    justify-content: flex-end;
-    position: relative;
-    top: 5px;
-}
-.nav .input-bar form .search-field {
-    width: 350px;
-    padding-left: 8px;
-}
-.nav .input-bar .search-button {
-    background-color: #549b36;
-    color: white;
-    opacity: 0.6;
-    border-color: transparent;
-    border-radius: 5px;
-    width: 60px;
-    height: 22px;
-    margin-left: 3px;
-}
+        form#search-form, form#info-form, form#logout-form {
+            display: flex;
+            align-self: center;
+            height: 2em;
+            .search-field {
+                width: 450px;
+                padding-left: 8px;
+            }
+        }
 
-.nav .input-bar .search-button:hover {
-    opacity: 1;
-    border: 1px solid black;
-}
+        .search-button, .info-button, .logout-button {
+            display: flex;
+            align-self: center;
+            background-color: $nav-background;
+            color: white;
+            opacity: 0.6;
+            border-color: transparent;
+            border-radius: 5px;
+            margin-left: 3px;
+        }
 
-.nav .input-bar .logout-button {
-    background-color: #007bff;
-    color: white;
-    opacity: 0.6;
-    border-color: transparent;
-    border-radius: 5px;
-    width: 60px;
-    height: 22px;
-    margin-left: 3px;
-    position: relative;
-    top: 1px;
-}
-
-.nav .input-bar .logout-button:hover {
-    opacity: 1;
-    border: 1px solid black;
+        .search-button:hover, .info-button:hover, .logout-button:hover {
+            opacity: 1;
+        }
+    }
 }

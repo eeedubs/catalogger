@@ -15,9 +15,30 @@ module.exports = (knex) => {
   
   const knexQueries = require('../lib/knex-queries')(knex);
 
+  router.get('/comments', (req, res) => {
+    knexQueries.getAllComments((error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
+    })
+  })
 
   router.get("/likes", (req, res) => {
     knexQueries.getLikes((error, results) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.json(results);
+      }
+    })
+  })
+
+  router.get("/ratings", (req, res) => {
+    knexQueries.getRatings((error, results) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });

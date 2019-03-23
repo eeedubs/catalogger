@@ -58,7 +58,6 @@ body {
       background-color: rgb(236, 236, 236);
 
       .resource {
-        // opacity: 0.3;
         display: block;
         position: relative;
         border: 1px black solid;
@@ -70,7 +69,8 @@ body {
         padding-bottom: 20px;
         padding-right: 5px;
         background-color: lightblue;
-        p {
+
+        p.resourceDescription {
           width: 78%;
           text-align: justify;
           padding: 30px auto;
@@ -88,55 +88,99 @@ body {
           height: auto;
         }
         footer {
-          //Rate, Like and Comment buttons
-          %social-buttons{
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
+          display: inline-flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 95%;
+
+          %social-features {
             margin: 0 5px;
             height: 1.5em;
           }
-          .rate-button {
-            @extend %social-buttons;
-          }
-          .like-count {
-            @extend %social-buttons;
-            max-width: 1em;
-            font-size: 1em;
-            margin: 0;
-          }
-          // like button
-          .fas.fa-thumbs-up {
-            color: darkslateblue;
-            @extend %social-buttons;
-          }
-          .comment-button {
-            @extend %social-buttons;
-            background-color: lightgreen;
-            border-radius: 15px;
-          }
-          .comment-button:focus {
-            outline: none;
-          }
-        }
 
-        .submitCategory {
-          display: block;
-          float: right;
-          height: 1.5em;
-          #selectCategoryList{
-            height: 1.5em;
+          div.left-side-divs {
+            display: inline-flex;
+            justify-self: flex-start;
+            align-items: center;
+            margin: 0;
+            .comment-button {
+              @extend %social-features;
+              background-color: lightgreen;
+              border-radius: 10px;
+              width: 6.5em;
+            }
+
+            .comment-button:focus {
+              outline: none;
+            }
+
+            .like-div {
+              display: inline-flex;
+              align-items: center;
+              margin-left: 1em;
+
+              .like-count {
+                @extend %social-features;
+                max-width: 1em;
+                font-size: 1em;
+                margin: 0;
+              }
+
+              // like button
+              .fas.fa-thumbs-up {
+                @extend %social-features;
+                color: darkslateblue;
+              }
+              i {
+                position: relative;
+                top: 0.15em;
+              }
+            }
+
+            .average-rating-declaration {
+              @extend %social-features;
+              font-weight: bold;
+              margin: 0 0 0 1em;
+            }
+            .average-rating {
+              @extend %social-features;
+              margin: 0 0 0 0.5em;
+            }
           }
-          .categorizeSubmit {
-            text-align: center;
-            background-color: lightgreen;
-            border-radius: 10px;
-            margin-left: 5px;
+
+          div.right-side-divs {
+            display: block;
+            justify-self: flex-end;
+            align-self: center;
+
+            #selectRatingList {
+              width: 7em;
+              margin-bottom: 0.2em;
+            }
+            #selectCategoryList {
+              width: 7em;
+            }
+
+            %submit-buttons {
+              @extend %social-features;
+              border: none;
+              background-color: lightgreen;
+              border-radius: 10px;
+            }
+            .ratingSubmit {
+              @extend %submit-buttons; 
+              margin-bottom: 0.2em;
+            }
+            
+            .categorySubmit {
+              @extend %submit-buttons;
+            }
           }
         }
 
 // START OF comment container
         .comment-container {
+          display: none;
           background-color: #f4ebed;
           padding: 10px 20px;
           width: 100%;
@@ -213,15 +257,8 @@ body {
               }
             }
           }
-
-          // div.comment:hover {
-          //   opacity: 1;
-          // }
         }
       }
-      // .resource:hover {
-      //   opacity: 1;
-      // }
     }
   }
 }

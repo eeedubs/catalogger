@@ -83,6 +83,28 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
+// Search for resources page
+app.get("/search", (req, res) => {
+  let searchQuery = req.query["searchQuery"];
+  let sessionID = req.session.user_id;
+  if (sessionID) {
+    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let templateVars = {
+          user: results[0],
+          pagename: `Search Results For "${searchQuery}"`
+        }
+        res.render('resource-page', templateVars);
+      }
+    })
+  } else {
+    res.redirect('/register');
+  }
+});
+
 app.get("/:username/resources", (req, res) => {
   let sessionID = req.session.user_id;
   if (sessionID) {
@@ -156,7 +178,7 @@ app.get("/:username", (req, res) => {
       } else {
         let templateVars = {
           user: results[0],
-          pagename: "Home"
+          pagename: "Info"
         }
         res.render("info", templateVars);
       }
@@ -165,30 +187,6 @@ app.get("/:username", (req, res) => {
     res.redirect("/register");
   }
 })
-
-// Search for resources page
-// app.get("/search", (req, res) => {
-//   let searchQuery = req.query.searchQuery;
-//   const username = req.session.user_id;
-//   if (username) {
-//     knex('users')
-//     .select('id')
-//     .where('name', username)
-//     .then((data) => {
-//       console.log(searchQuery);
-//       knex
-//         .select().from('resources')
-//         .where('title', 'LIKE', `%${searchQuery}%`)
-//         .orWhere('description', 'LIKE', `%${searchQuery}%`)
-//         .then ((results) => {
-//           res.render("search", results);
-//           console.log(results);
-//         });
-//       });
-//     } else {
-//       res.redirect("/register");
-//     }
-//   });
 
 // Home page
 app.get("/", (req, res) => {

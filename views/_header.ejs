@@ -4,7 +4,10 @@
     <form id="search-form" action="/search" method="GET">
       <input class="search-field" type="text" name="searchQuery" placeholder="Search for articles...">
       <input type="hidden" id="user" name="user" value="<%= JSON.stringify(user) %>">
-      <input class="search-button" type="submit" value="Search">
+    </form>
+    <input form="search-form" class="search-button" type="submit" value="Search">
+    <form id="info-form" action="/<%= user.name %>" method="GET">
+      <input class="info-button" type="submit" value="Account">
     </form>
     <form id="logout-form" action="/api/users/logout" method="POST">
       <input class="logout-button" type="submit" value="Logout">
