@@ -95,7 +95,7 @@ app.get("/search", (req, res) => {
       } else {
         let templateVars = {
           user: results[0],
-          pagename: `Search Results For "${searchQuery}"`
+          pagename: `Search results for "${searchQuery}":`
         }
         res.render('resource-page', templateVars);
       }
@@ -115,7 +115,7 @@ app.get("/:username/resources", (req, res) => {
       } else {
         let templateVars = {
           user: results[0],
-          pagename: "Your Resources"
+          pagename: "Resources you've liked or posted:"
         }
         res.render('resource-page', templateVars);
       }
@@ -135,7 +135,7 @@ app.get("/:username/liked-resources", (req, res) => {
       } else {
         let templateVars = {
           user: results[0],
-          pagename: "Resources You've Liked"
+          pagename: "Resources you've liked:"
         }
         res.render('resource-page', templateVars);
       }
@@ -178,7 +178,7 @@ app.get("/:username", (req, res) => {
       } else {
         let templateVars = {
           user: results[0],
-          pagename: "Info"
+          pagename: "Info:"
         }
         res.render("info", templateVars);
       }
