@@ -125,7 +125,7 @@ app.get("/:username/resources", (req, res) => {
   }
 });
 
-app.get("/:username/liked", (req, res) => {
+app.get("/:username/liked-resources", (req, res) => {
   let sessionID = req.session.user_id;
   if (sessionID) {
     knexQueries.getUserBySessionID(sessionID, (error, results) => {

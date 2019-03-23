@@ -152,8 +152,13 @@ $(document).ready(() => {
     })
   })
 
+  // URLSearchParams acquires the query parameters from the URL link
   function getResources(userCategories) {
-    let categoriesPath = `/${username}/categories`;
+    let categoriesPath  = `/${username}/categories`;
+    let resourcesPath   = `/${username}/resources`;
+    let likedPath       = `/${username}/liked-resources`;
+
+    // /steven/categories
     if (document.location.pathname === categoriesPath){
       let urlParams = new URLSearchParams(document.location.search);
       let catName = urlParams.get('name');
@@ -161,6 +166,10 @@ $(document).ready(() => {
         method: "GET",
         url: `${baseURL}/api/resources/${catName}`,
       }).done((resources) => {
+        if (!resources[0]){
+          alert("No resources were found under this category.");
+          return;
+        }
         renderResources(resources, userCategories, () => {
           getComments();
           getLikes();
@@ -170,15 +179,60 @@ $(document).ready(() => {
       .fail((error) => {
         alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
       });
+
+      // /steven/resources
+    } else if (document.location.pathname === resourcesPath){
+      $.ajax({
+        method: "GET",
+        url: `${baseURL}/api/users/${username}/resources`,
+      }).done((resources) => {
+        if (!resources[0]){
+          alert('No resources were found.');
+          return;
+        }
+        renderResources(resources, userCategories, () => {
+          getComments();
+          getLikes();
+          getRatings();
+        })
+      })
+      .fail((error) => {
+        alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+      });
+
+      // /steven/resources/liked
+    } else if (document.location.pathname === likedPath){
+      $.ajax({
+        method: "GET",
+        url: `${baseURL}/api/users/${username}/resources/liked`,
+      }).done((resources) => {
+        if (!resources[0]){
+          alert("You haven't liked any resources yet.");
+          return;
+        }
+        renderResources(resources, userCategories, () => {
+          getComments();
+          getLikes();
+          getRatings();
+        })
+      })
+      .fail((error) => {
+        alert(`Error: ${JSON.stringify(error.responseJSON.error)}`);
+      });
+      // /
     } else if (document.location.pathname === '/'){
       $.ajax({
         method: "GET",
         url: `${baseURL}/api/resources/`
       }).done((resources) => {
+        if (!resources[0]){
+          alert("No resources were found.");
+          return;
+        }
         renderResources(resources, userCategories, () => {
           getComments();
           getLikes();
-          getRatings()
+          getRatings();
         })
       })
       .fail((error) => {
@@ -234,9 +288,6 @@ $(document).ready(() => {
     })
   }
 
-  // For each div.comment container
-  // let the target equal the resource ID
-  // if the target resource's id equals the comment's resource ID
   function removeComment(comment) {
     $("div.comment-container").each((index, container) => {
       let targetID = Number($(container).closest('div.resource').find('input#resourceID')[0].value);
@@ -311,7 +362,6 @@ $(document).ready(() => {
     })
   })
 
-
   // POST THE COMMENTS and RELOAD
   $("body").on("submit", "form.submitComment", (event) => {
     event.preventDefault();
@@ -363,16 +413,5 @@ $(document).ready(() => {
       alert(`${error.status}: ${error.statusText}`);
     })
   })
-
-  // $(function makeActive() {
-  //   var url = document.location.href;
-  //   $('.list-group form').each(function() {
-  //     if (url === this.action + "?") {
-  //       $(this).children('button.list-group-item').addClass("active");
-  //       //  renameCategory();
-  //       //  $(this).children('button.list-group-item').addClass("active");
-  //     }
-  //   })
-  // })
 })
 
