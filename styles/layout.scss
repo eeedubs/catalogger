@@ -129,12 +129,16 @@ body {
               // like button
               .fas.fa-thumbs-up {
                 @extend %social-features;
-                color: darkslateblue;
+                color: #3C5A99;
+              }
+              .fas.fa-thumbs-up:hover {
+                color: darkslateblue
               }
               i {
                 position: relative;
                 top: 0.15em;
               }
+    
             }
 
             .average-rating-declaration {
@@ -149,7 +153,7 @@ body {
           }
 
           div.right-side-divs {
-            display: block;
+            display: inline-flex;
             justify-self: flex-end;
             align-self: center;
 
@@ -161,19 +165,16 @@ body {
               width: 7em;
             }
 
-            %submit-buttons {
+            .ratingSubmit, .categorySubmit {
               @extend %social-features;
               border: none;
-              background-color: lightgreen;
+              background-color: lightblue;
               border-radius: 10px;
+              width: 4em;
+              margin-left: 0;
             }
-            .ratingSubmit {
-              @extend %submit-buttons; 
-              margin-bottom: 0.2em;
-            }
-            
-            .categorySubmit {
-              @extend %submit-buttons;
+            .ratingSubmit:hover, .categorySubmit:hover {
+              font-weight: bold
             }
           }
         }
