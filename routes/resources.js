@@ -120,6 +120,44 @@ module.exports = (knex) => {
     })
   })
 
+  router.post("/rate", (req, res) => {
+    let resourceRating  = Number(req.body.rating); 
+    let userID          = Number(req.body.user_id);
+    let resourceID      = Number(req.body.resource_id);
+    knexQueries.checkIfRated(userID, resourceID, (error, checkRateResults) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        if (checkRateResults[0]){
+          knexQueries.updateRating(resourceRating, userID, resourceID, (error, updatedRateResults) => {
+            if (error){
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
+            } else {
+              res.json({
+                update: true,
+                results: updatedRateResults
+              })
+            }
+          })
+        } else {
+          knexQueries.postRating(resourceRating, userID, resourceID, (error, postRateResults) => {
+            if (error){
+              console.log('error', error.message)
+              res.status(500).json({ error: error.message });
+            } else {
+              res.json({
+                update: false,
+                results: postRateResults
+              })
+            }
+          })
+        }
+      }
+    })
+  })
+
   router.post("/categorize", (req, res) => {
     let userID      = Number(req.body.user_id);
     let resourceID  = Number(req.body.resource_id);

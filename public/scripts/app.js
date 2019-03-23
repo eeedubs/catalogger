@@ -17,7 +17,7 @@ $(document).ready(() => {
       let $description = $(`<p class="resourceDescription"> ${resource.description}</p>`).appendTo($singleResource);
       let $footer = $("<footer>").appendTo($singleResource);
         let $leftSideDivs = $(`<div class="left-side-divs">`).appendTo($footer);
-          let $commentButton = $(`<button class="comment-button">Comment</button>`).appendTo($leftSideDivs);
+          let $commentButton = $(`<button class="comment-button">Comments</button>`).appendTo($leftSideDivs);
           let $likeDiv = $(`<div class="like-div">`).appendTo($leftSideDivs);
             let $likeCount = $(`<p class="like-count">0</p>`).appendTo($likeDiv);
             let $likeButton = $(`<i id="like-button" class="fas fa-thumbs-up">`).appendTo($likeDiv);
@@ -26,14 +26,14 @@ $(document).ready(() => {
         let $rightSideDivs = $(`<div class="right-side-divs">`).appendTo($footer);
           let $selectRatingForm = $(`<form id="submitRating" method="POST" action="${baseURL}/api/resources/rate">`).appendTo($rightSideDivs);
             let $selectRatingList = $(`<select id="selectRatingList">`).appendTo($selectRatingForm);
-              let $selectRatingOption = $(`<option value="" selected disabled hidden>Rate Article</option>`).appendTo($selectRatingList);
+              let $selectRatingOption = $(`<option id="select-rating-disabled" value="" selected disabled hidden>Rate Article</option>`).appendTo($selectRatingList);
               for (let ratingValue = 1; ratingValue <= 5; ratingValue++){
                 let $selectRatingValue = $(`<option id="select-rating" value="${ratingValue}">${ratingValue} Stars</option>`).appendTo($selectRatingList);
               }
             let $selectRatingInput = $(`<input class="ratingSubmit" type="submit" value="Submit">`).appendTo($selectRatingForm);
           let $selectCategoryForm = $(`<form id="submitCategory" method="POST" action="${baseURL}/api/resources/categorize">`).appendTo($rightSideDivs);
             let $selectCategoryList = $(`<select id="selectCategoryList">`).appendTo($selectCategoryForm);
-              let $selectCategoryOption  = $(`<option value="" selected disabled hidden>Categorize</option>`).appendTo($selectCategoryList);
+              let $selectCategoryOption  = $(`<option id="select-category-disabled" value="" selected disabled hidden>Categorize</option>`).appendTo($selectCategoryList);
               for (let eachCategory of categories){
                 let $selectCategoryValue = $(`<option id="select-category" value="${eachCategory.id}">${eachCategory.label}</option>`).appendTo($selectCategoryList);
               }
@@ -115,11 +115,26 @@ $(document).ready(() => {
   }
 
   function renderRatings(ratingData){
-    ratingData.forEach((rating) => {
+    let totalRatingsObject = {}
+    ratingData.forEach((eachRating) => {
+      let rateResourceID = String(eachRating.resource_id);
+      if (totalRatingsObject[rateResourceID]){
+        let oldRatingTotalLength   = totalRatingsObject[rateResourceID].totalLength;
+        let oldRatingTotalSum      = totalRatingsObject[rateResourceID].totalSum;
+        totalRatingsObject[rateResourceID].totalLength = oldRatingTotalLength + 1;
+        totalRatingsObject[rateResourceID].totalSum = oldRatingTotalSum + eachRating.rating;
+      } else {
+        totalRatingsObject[rateResourceID] = {"totalLength": 1, "totalSum": eachRating.rating};
+      }
+      let newAverage = (totalRatingsObject[rateResourceID].totalSum / totalRatingsObject[rateResourceID].totalLength).toFixed(2);
       $("div.resource").each((index, element) => {
         let targetResourceIDValue = Number($(element).find('input#resourceID')[0].value);
-        if (targetResourceIDValue === rating.resource_id){
-          console.log(rating)
+        if (targetResourceIDValue === eachRating.resource_id){
+          $(element).find("p.average-rating").text(`${newAverage}/5`);
+          if (eachRating.user_id === userID){
+            let $userRating = $(`<input hidden id="userRating" name="userRating" value="${eachRating.rating}">`);
+            $(element).append($userRating);
+          }
         }
       })
     })
@@ -245,6 +260,7 @@ $(document).ready(() => {
       },
       success: (results) => {
         $(event.target).find("#selectCategoryList option:selected").removeAttr("selected");
+        $(event.target).find("#selectCategoryList").prop("selectedIndex", 0);
         results.success ? alert("The categorization was successful!") : alert(`Error: ${results.error}`);
       }
     }).fail((error) => {
@@ -254,24 +270,45 @@ $(document).ready(() => {
 
   $("body").on("submit", "form#submitRating", (event) => {
     event.preventDefault();
-    let selectedRating  = Number($(event.target).find("#selectRatingList option:selected").val());
+    let oldRating       = $(event.target).closest("div.resource").find("input#userRating").val();
+    let newRating       = Number($(event.target).find("#selectRatingList option:selected").val());
     let resourceID      = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
-    console.log(selectedRating);
-    // $.ajax({
-    //   method: "POST",
-    //   url: `${baseURL}/api/resources/rate`,
-    //   data: {
-    //     rating: selectedRating,
-    //     user_id: userID,
-    //     resource_id: resourceID
-    //   },
-    //   success: (results) => {
-    //     $(event.target).find("#selectRatingList option:selected").removeAttr("selected");
-    //     results.success ? alert("The rating was successfully posted!") : alert(`Error: ${results.error}`);
-    //   }
-    // }).fail((error) => {
-    //   alert(`${errpr.status}: ${error.statusText}`);
-    // })
+    let createdByID     = Number($(event.target).closest('div.resource').find('input#createdBy')[0].value);
+    if (userID === createdByID){
+      alert('You cannot rate your own articles!');
+      $(event.target).find("#selectRatingList").prop("selectedIndex", 0);
+      return;
+    }
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/resources/rate`,
+      data: {
+        rating: newRating,
+        user_id: userID,
+        resource_id: resourceID
+      },
+      success: (ratingResults) => {
+        let totalRatingsLength = ratingResults.results.length;
+        let sumRatings = 0;
+        for (let eachResult of ratingResults.results){
+          sumRatings += Number(eachResult.rating);
+        }
+        let newAverage = (sumRatings / totalRatingsLength).toFixed(2);
+        let $userRating = $(`<input hidden id="userRating" name="userRating" value="${newRating}">`);
+        $(event.target).find("#selectRatingList option:selected").removeAttr("selected");
+        $(event.target).find("#selectRatingList").prop("selectedIndex", 0);
+        $(event.target).closest('div.resource').find('p.average-rating').text(`${newAverage}/5`);
+        if (ratingResults.update){
+          $(event.target).closest('div.resource').find('input#userRating').val(newRating);
+          alert(`The rating was successfully changed from ${oldRating} Stars to ${newRating} Stars`)
+        } else {
+          $(event.target).closest('div.resource').append($userRating);
+          alert("The rating was successfully posted!") 
+        };
+      }
+    }).fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
   })
 
 
