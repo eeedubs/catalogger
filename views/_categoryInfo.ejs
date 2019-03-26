@@ -1,0 +1,10 @@
+<div class="infoContainer">
+  <form id="categoryForm" action="/api/users/change-categories" method="POST">
+    <% for (let eachCategory in categories){ %>
+      <label class="infoLabel" for="categoryLabel">Rename category "<%= categories[eachCategory].label %>":</label>
+      <input hidden name="cat<%= Number(eachCategory) + 1%>ID" value="<%= categories[eachCategory].id %>">
+      <input class="infoInput" type="text" name="newCat<%= Number(eachCategory) + 1 %>" placeholder="Enter a new category name...">
+    <% } %>
+    <input class="categorySubmit" type="submit" name="changeCategoryLabelSubmit" value="Change Categories">
+  </form>
+</div>

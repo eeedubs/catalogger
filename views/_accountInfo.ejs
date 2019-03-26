@@ -1,5 +1,5 @@
 <div class="infoContainer">
-  <form action="/api/users/change-info" method="POST">
+  <form action="/api/users/change-info" method="POST" onSubmit="confirm('Are you sure you want to change your information?')">
     <label class="infoLabel" for="userName">Username:</label>
     <input class="infoInput" type="text" name="userName" placeholder="Enter your name...">
     <label class="infoLabel"for="oldPass">Old Password:</label>
@@ -10,13 +10,7 @@
     <input class="infoInput" type="text" name="newPassConfirm" placeholder="Confirm your new password..."><br>
     <input class="infoSubmit" type="submit" name="changePassSubmit" value="Change Info">
   </form>
-
-  <form action="/api/users/change-categories" method="POST">
-    <% for (let eachCategory in categories){ %>
-      <label class="infoLabel" for="categoryLabel">Rename <%= categories[eachCategory].label %>:</label>
-      <input hidden name="cat<%= Number(eachCategory) + 1%>ID" value="<%= categories[eachCategory].id %>">
-      <input class="infoInput" type="text" name="newCat<%= Number(eachCategory) + 1 %>" placeholder="Enter a new category name...">
-    <% } %>
-    <input class="infoSubmit" type="submit" name="changeCategoryLabelSubmit" value="Change Categories">
+  <form action="/api/users/delete" method="POST" onsubmit="confirm('Are you sure you want to delete your account?')">
+    <input class="deleteAccount" type="submit" name="deleteAccount" value="Delete Account">
   </form>
 </div>

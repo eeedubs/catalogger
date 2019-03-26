@@ -6,9 +6,15 @@
       <input class="search-field" type="text" name="query" placeholder="Search for articles...">
     </form>
     <input form="search-form" class="search-button" type="submit" value="Search">
-    <form id="info-form" action="/account" method="GET">
-      <input class="info-button" type="submit" value="Account">
-    </form>
+
+    <div class="dropdown">
+      <button class="drop-button">Account</button>
+      <div class="dropdown-content">
+        <a href="/account?page=info">Info</a>
+        <a href="/account?page=categories">Categories</a>
+      </div>
+    </div>
+    
     <form id="logout-form" action="/api/users/logout" method="POST">
       <input class="logout-button" type="submit" value="Logout">
     </form>

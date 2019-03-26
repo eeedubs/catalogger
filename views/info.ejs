@@ -29,7 +29,11 @@
         <% include _sidebar %>
         <main class="container">
             <h2><%= pagename %></h2>
-            <% include _info %>
+            <% if (pagename === "Account Information"){ %>
+                <% include _accountInfo %>
+            <% } else { %>
+                <% include _categoryInfo %>
+            <% } %>
       </main>
     </body>
 </html>
