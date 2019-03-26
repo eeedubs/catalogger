@@ -13,7 +13,8 @@ $(document).ready(() => {
       let $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
       let $resourceID = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($singleResource);        
       let $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
-      let $title = $(`<h3> ${resource.title} <br> <a href="${resource.resourceURL}">Source</a>`).appendTo($singleResource);
+      let $titleAndURL = $(`<h3> <a href="${resource.resourceURL}">${resource.title}</a></h3>`).appendTo($singleResource);
+      let $username = $(`<h4> Posted by: ${resource.username}</h4>`).appendTo($singleResource);
       let $description = $(`<p class="resourceDescription"> ${resource.description}</p>`).appendTo($singleResource);
       let $footer = $("<footer>").appendTo($singleResource);
         let $leftSideDivs = $(`<div class="left-side-divs">`).appendTo($footer);
@@ -150,9 +151,9 @@ $(document).ready(() => {
   // URLSearchParams acquires the query parameters from the URL link
   function getResources(userCategories) {
     let searchPath      = `/search`;
-    let categoriesPath  = `/${username}/categories`;
-    let resourcesPath   = `/${username}/resources`;
-    let likedPath       = `/${username}/liked-resources`;
+    let categoriesPath  = `/categories`;
+    let resourcesPath   = `/resources`;
+    let likedPath       = `/liked-resources`;
 
     // /search?query=dogvideos
     if (document.location.pathname === searchPath){
@@ -202,7 +203,7 @@ $(document).ready(() => {
     } else if (document.location.pathname === resourcesPath){
       $.ajax({
         method: "GET",
-        url: `${baseURL}/api/users/${username}/resources`,
+        url: `${baseURL}/api/users/resources`,
       }).done((resources) => {
         if (!resources[0]){
           alert('No resources were found.');
@@ -222,7 +223,7 @@ $(document).ready(() => {
     } else if (document.location.pathname === likedPath){
       $.ajax({
         method: "GET",
-        url: `${baseURL}/api/users/${username}/resources/liked`,
+        url: `${baseURL}/api/users/resources/liked`,
       }).done((resources) => {
         if (!resources[0]){
           alert("You haven't liked any resources yet.");
@@ -314,5 +315,135 @@ $(document).ready(() => {
       }
     })
   }
+
+  $("body").on("submit", "form#submitCategory", (event) => {
+    event.preventDefault();
+    let resourceID          = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    let selectedCategoryID  = Number($(event.target).find("#selectCategoryList option:selected").val());
+    if (!selectedCategoryID){
+      alert('No category was selected.');
+      return;
+    }
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/resources/categorize`,
+      data: {
+        user_id: userID,
+        resource_id: resourceID,
+        category_id: selectedCategoryID
+      },
+      success: (results) => {
+        $(event.target).find("#selectCategoryList option:selected").removeAttr("selected");
+        $(event.target).find("#selectCategoryList").prop("selectedIndex", 0);
+        results.success ? alert("The categorization was successful!") : alert(`Error: ${results.error}`);
+      }
+    }).fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
+  })
+
+  $("body").on("submit", "form#submitRating", (event) => {
+    event.preventDefault();
+    let oldRating       = $(event.target).closest("div.resource").find("input#userRating").val();
+    let newRating       = Number($(event.target).find("#selectRatingList option:selected").val());
+    let resourceID      = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    let createdByID     = Number($(event.target).closest('div.resource').find('input#createdBy')[0].value);
+    if (!newRating){
+      alert('No rating was selected.');
+      return;
+    }
+    if (userID === createdByID){
+      alert('You cannot rate your own articles!');
+      $(event.target).find("#selectRatingList").prop("selectedIndex", 0);
+      return;
+    }
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/resources/rate`,
+      data: {
+        rating: newRating,
+        user_id: userID,
+        resource_id: resourceID
+      },
+      success: (ratingResults) => {
+        let totalRatingsLength = ratingResults.results.length;
+        let sumRatings = 0;
+        for (let eachResult of ratingResults.results){
+          sumRatings += Number(eachResult.rating);
+        }
+        let newAverage = (sumRatings / totalRatingsLength).toFixed(2);
+        let $userRating = $(`<input hidden id="userRating" name="userRating" value="${newRating}">`);
+        $(event.target).find("#selectRatingList option:selected").removeAttr("selected");
+        $(event.target).find("#selectRatingList").prop("selectedIndex", 0);
+        $(event.target).closest('div.resource').find('p.average-rating').text(`${newAverage}/5`);
+        if (ratingResults.update){
+          $(event.target).closest('div.resource').find('input#userRating').val(newRating);
+          alert(`The rating was successfully changed from ${oldRating} Stars to ${newRating} Stars`)
+        } else {
+          $(event.target).closest('div.resource').append($userRating);
+          alert("The rating was successfully posted!") 
+        };
+      }
+    }).fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
+  })
+
+  // POST THE COMMENTS and RELOAD
+  $("body").on("submit", "form.submitComment", (event) => {
+    event.preventDefault();
+    let userComment = event.target.commentInput.value;
+    let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    if (!userComment){
+      alert('Comment input cannot be blank.');
+      return;
+    }
+    let newCommentData = {
+      userComment: userComment,
+      userName: username,
+      userID: userID,
+      time_created: Date.now(),
+      resourceID: resourceID
+    }
+    appendComment(newCommentData);
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/users/comment`,
+      data: newCommentData,
+      success: () => {
+        $(event.target)[0].reset();
+      }
+    })
+    .fail((error) => {
+      removeComment(newCommentData);
+      alert(`${error.status}: ${error.statusText}`);
+    });
+  })
+
+  $("body").on("click", "#like-button", (event) => {
+    event.preventDefault();
+    let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    let createdByID = Number($(event.target).closest('div.resource').find('input#createdBy')[0].value);
+    if (userID === createdByID){
+      alert('You cannot like your own articles!');
+      return;
+    }
+    let likeData = {
+      user_id: userID,
+      resource_id: resourceID
+    };
+    $.ajax({
+      method: "POST",
+      url: `${baseURL}/api/resources/like`,
+      data: likeData,
+      success: (newLikeData) => {
+        $(event.target).closest('div.resource').find("p.like-count").text(newLikeData.length);
+      }
+    })
+    .fail((error) => {
+      alert(`${error.status}: ${error.statusText}`);
+    })
+  })
+
 })
 

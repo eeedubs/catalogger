@@ -1,5 +1,6 @@
 @import 'header';
 @import 'sidebar';
+@import 'info';
 
 body {
   background-color: white;
@@ -28,11 +29,6 @@ body {
       .submit-resource-button {
         background-color: lightgreen;
       }
-    }
-
-    form.needs-validation {
-      padding-top: 100px;
-      padding-left: 100px;
     }
     .registration {
       display: inline-block;

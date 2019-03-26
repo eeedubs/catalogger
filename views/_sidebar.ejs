@@ -7,43 +7,21 @@
             <span>Home</span>
         </button>
     </form>
-    <form action='/<%= user.name %>/resources' method="GET"> 
+    <form action='/resources' method="GET"> 
         <button class="list-group-item">
             <i class="fas fa-bookmark" style="font-size: 1em"></i>
             <span>Resources</span>
         </button>
     </form>
-    <form action='/<%= user.name %>/categories' formmethod="GET">
-        <button type="submit" class="list-group-item" name="name" value="Category 1">
+    <% for (let eachCategory in categories){ %>
+    <form action='/categories' method="GET">
+        <button type="submit" class="list-group-item" name="name" value="<%= categories[eachCategory].label %>">
             <i class="fa fa-archive"></i>
-            <span>Category 1</span>
+            <span><%= categories[eachCategory].label %></span>
         </button>
     </form>
-    <form action='/<%= user.name %>/categories' formmethod="GET">
-        <button type="submit" class="list-group-item" name="name" value="Category 2">
-            <i class="fa fa-archive"></i>
-            <span>Category 2</span>
-        </button>
-    </form>
-    <form action='/<%= user.name %>/categories' formmethod="GET">
-        <button type="submit" class="list-group-item" name="name" value="Category 3">
-            <i class="fa fa-archive"></i>
-            <span>Category 3</span>
-        </button>
-    </form>
-    <form action='/<%= user.name %>/categories' formmethod="GET">
-        <button type="submit" class="list-group-item" name="name" value="Category 4">
-            <i class="fa fa-archive"></i>
-            <span>Category 4</span>
-        </button>
-    </form>
-    <form action='/<%= user.name %>/categories' formmethod="GET">
-        <button type="submit" class="list-group-item" name="name" value="Category 5">
-            <i class="fa fa-archive"></i>
-            <span>Category 5</span>
-        </button>
-    </form>
-    <form action='/<%= user.name %>/liked-resources' method="GET"> 
+    <% } %>
+    <form action='/liked-resources' method="GET"> 
         <button class="list-group-item">
             <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
             <span>Liked</span>

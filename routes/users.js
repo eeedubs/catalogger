@@ -40,7 +40,7 @@ module.exports = (knex) => {
     })
   })
 
-  router.get("/:username/resources/liked", (req, res) => {
+  router.get("/resources/liked", (req, res) => {
     let sessionID = req.session.user_id;
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error){
@@ -60,7 +60,7 @@ module.exports = (knex) => {
     })
   })
 
-  router.get("/:username/resources", (req, res) => {
+  router.get("/resources", (req, res) => {
     let sessionID = req.session.user_id;
     knexQueries.getUserBySessionID(sessionID, (error, results) => {
       if (error){
@@ -80,23 +80,80 @@ module.exports = (knex) => {
     })
   })
 
+  router.post("/change-info", (req, res) => {
+    let { userName, oldPass, newPass, newPassConfirm } = req.body;
+    if (!userName || !oldPass || !newPass || !newPassConfirm){
+      alert("You are missing some of the required information.");
+      return;
+    }
+    if (newPass !== newPassConfirm){
+      alert("Your new passwords do not match. Please try again.");
+      return;
+    }
+    knexQueries.getUserByName(userName, (error, userExists) => {
+      if (error){
+        console.log('Error getting user by name.', error.message)
+        res.status(500).json({ error: error.message })
+      } else {
+        if (userExists[0]){
+          if (bcrypt.compareSync(oldPass, userExists[0].password)){
+            let newPassHashed = bcrypt.hashSync(newPass, 10);
+            knexQueries.updateUserPassword(userExists[0].id, newPassHashed, (error, newPassResults) => {
+              if (error){
+                console.log('Error getting user by name.', error.message)
+                res.status(500).json({ error: error.message })
+              } else {
+                oldPass, newPass, newPassConfirm, userExists = null;
+                res.redirect("/");
+              }
+            })
+          } else {
+            alert("The credentials you have entered for this user are incorrect.");
+            return;
+          }
+        } else {
+          alert("The credentials you have entered for this user are incorrect.");
+        } 
+      }
+    })
+  });
+
+  router.post("/change-categories", (req, res) => {
+    let {
+      newCat1, newCat2, newCat3, newCat4, newCat5, 
+      cat1ID, cat2ID, cat3ID, cat4ID, cat5ID
+    } = req.body;
+    let categoryLabelArray = [newCat1, newCat2, newCat3, newCat4, newCat5];
+    let categoryIDArray = [cat1ID, cat2ID, cat3ID, cat4ID, cat5ID];
+    for (let i = 0; i < categoryLabelArray.length; i++){
+      if (categoryLabelArray[i]){
+        knexQueries.renameCategoryLabel(categoryIDArray[i], categoryLabelArray[i], (error, results) => {
+          if (error){
+            console.log('Error getting user by name.', error.message)
+            res.status(500).json({ error: error.message })
+          }
+        })
+      }
+    }
+    res.redirect("/");
+  })
+
   // LOGIN USER ROUTE
   router.post("/login", (req, res) => {
-    let username = req.body.loginUsername;
-    let password = req.body.loginPassword;
+    let { loginUsername, loginPassword } = req.body;
     let uniqueID = uuidv1();
-    if (!username || !password){
+    if (!loginUsername || !loginPassword){
       res.status(400).send("400 Bad Request Error: username and/or password missing.");
     } else {
-      knexQueries.getUserByName(username, (error, userExists) => {
+      knexQueries.getUserByName(loginUsername, (error, userExists) => {
         if (error){
           console.log('Error getting user by name.', error.message)
           res.status(500).json({ error: error.message })
         } else {
           if (userExists[0]){
-            if (bcrypt.compareSync(password, userExists[0].password)){
-              password, userExists = null;
-              knexQueries.updateCookie(uniqueID, username, (error, cookieResults) => {
+            if (bcrypt.compareSync(loginPassword, userExists[0].password)){
+              loginPassword, userExists = null;
+              knexQueries.updateCookie(uniqueID, loginUsername, (error, cookieResults) => {
                 if (error){
                   console.log('Error updating the cookie.', error.message)
                   res.status(500).json({ error: error.message });
@@ -118,15 +175,14 @@ module.exports = (knex) => {
 
   // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
-    let username = req.body.registerUsername;
-    let password = req.body.registerPassword;
+    let { registerUsername, registerPassword } = req.body;
     let uniqueID = uuidv1();
-    if (!username || !password){
+    if (!registerUsername || !registerPassword){
       res.status(400).send("400 Bad Request Error: username and/or password are missing.");      
     } else {
-      let hashedPassword = bcrypt.hashSync(password, 10);
-      password = null;
-      knexQueries.getUserByName(username, (error, usernameResults) => {
+      let hashedPassword = bcrypt.hashSync(registerPassword, 10);
+      registerPassword = null;
+      knexQueries.getUserByName(registerUsername, (error, usernameResults) => {
         if (error){
           console.log('Error getting user by name.', error.message)
           res.status(500).json({ error: error.message });
@@ -134,7 +190,7 @@ module.exports = (knex) => {
           if (usernameResults[0]){
             res.status(400).send("400 Bad Request Error: an account with this username already exists.");
           } else {
-            knexQueries.postUser(username, hashedPassword, uniqueID, (error, postUserResults) => {
+            knexQueries.postUser(registerUsername, hashedPassword, uniqueID, (error, postUserResults) => {
               if (error){
                 console.log('Error posting user.', error.message)
                 res.status(500).json({ error: error.message });
@@ -164,18 +220,17 @@ module.exports = (knex) => {
 
   // Comment On Resource
   router.post("/comment", (req, res) => {
-    let userComment = req.body.comment;
-    let username    = req.body.user_name;
-    let userID      = JSON.parse(req.body.user_id);
-    let resourceID  = JSON.parse(req.body.resource_id);
+    let { userComment, userName } = req.body;
+    let userID      = JSON.parse(req.body.userID);
+    let resourceID  = JSON.parse(req.body.resourceID);
     if (!userComment){
       res.status(400).send("400 Bad Request Error: comment input is empty.");
-    } else if (!username || !userID){
+    } else if (!userName || !userID){
       res.status(400).send("400 Bad Request Error: missing user credentials. Please log in to post comments.");
     } else if (!resourceID){
       res.status(500).send("500 Internal Server Error: missing the resource ID number.");
     } else {
-      knexQueries.postComment(userComment, username, userID, resourceID, (error, commentResults) => {
+      knexQueries.postComment(userComment, userName, userID, resourceID, (error, commentResults) => {
         if (error){
           console.log('Error posting comment to the database.', error.message)
           res.status(500).json({ error: error.message });

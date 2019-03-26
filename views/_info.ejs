@@ -1,0 +1,22 @@
+<div class="infoContainer">
+  <form action="/api/users/change-info" method="POST">
+    <label class="infoLabel" for="userName">Username:</label>
+    <input class="infoInput" type="text" name="userName" placeholder="Enter your name...">
+    <label class="infoLabel"for="oldPass">Old Password:</label>
+    <input class="infoInput" type="text" name="oldPass" placeholder="Enter your old password...">
+    <label class="infoLabel" for="newPass">New Password:</label>
+    <input class="infoInput" type="text" name="newPass" placeholder="Enter a new password...">
+    <label class="infoLabel" for="newPassAgain">Confirm New Password:</label>
+    <input class="infoInput" type="text" name="newPassConfirm" placeholder="Confirm your new password..."><br>
+    <input class="infoSubmit" type="submit" name="changePassSubmit" value="Change Info">
+  </form>
+
+  <form action="/api/users/change-categories" method="POST">
+    <% for (let eachCategory in categories){ %>
+      <label class="infoLabel" for="categoryLabel">Rename <%= categories[eachCategory].label %>:</label>
+      <input hidden name="cat<%= Number(eachCategory) + 1%>ID" value="<%= categories[eachCategory].id %>">
+      <input class="infoInput" type="text" name="newCat<%= Number(eachCategory) + 1 %>" placeholder="Enter a new category name...">
+    <% } %>
+    <input class="infoSubmit" type="submit" name="changeCategoryLabelSubmit" value="Change Categories">
+  </form>
+</div>
