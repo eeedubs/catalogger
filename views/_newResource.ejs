@@ -1,30 +1,13 @@
-<!-- HANDLES THE BOX TO ENTER NEW RESOURCES -->
 <form class="submitNewResource" method="POST" action="/api/resources/">
-    <div class="form-group">
-        <label for="resourceURL">Source Link</label>
-        <div class="input-group">
-            <input type="text" class="form-control" name="resourceURL" placeholder="Enter your article's URL"/>
-        </div>
+    <label class="submit-resource-label" for="resourceURL">Source Link</label>
+    <input type="text" class="new-resource-input" name="resourceURL" placeholder="Enter your article's URL"/>
+    <label class="submit-resource-label" for="title">Title</label>
+    <input type="text" class="new-resource-input" name="resourceTitle" placeholder="Enter your article's title"/>
+    <label class="submit-resource-label" for="category">Image URL</label>
+    <input type="text" class="new-resource-input" name="resourceImage" placeholder="Enter an image URL for your article"/>
+    <label class="submit-resource-label" for="confirm">Description</label>
+    <input type="text" class="new-resource-input" name="resourceDescription" placeholder="Add a short description for your article"/>
+    <div class="new-resource-submit">
+        <button class="submit-button" type="submit">Submit</button>
     </div>
-
-    <div class="form-group">
-        <label for="title">Title</label>
-        <div class="input-group">
-            <input type="text" class="form-control" name="resourceTitle" placeholder="Enter your article's title"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label for="category">Image URL</label>
-        <div class="input-group">
-            <input type="text" class="form-control" name="resourceImage" placeholder="Enter an image URL for your article"/>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="confirm">Description</label>
-        <div class="input-group">
-            <input type="text" class="form-control" name="resourceDescription" placeholder="Add a short description for your article"/>
-        </div>
-    </div>
-    <button class="submit-resource-button" type="submit">Submit</button>
 </form>

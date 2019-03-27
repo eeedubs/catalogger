@@ -29,30 +29,27 @@ body {
     }
 
     .submitNewResource {
-      width: inherit;
-      margin: 0 auto;
-      margin-bottom: 20px;
+      display: block;
+      padding: 0.5em;
       background-color: rgb(236, 236, 236);
-      padding: 10px;
       border: 2px solid black;
 
-      .submit-resource-button {
-        background-color: lightgreen;
+      label {
+        width: 100%;
+        margin-top: 0.5em;
       }
-    }
-    .registration {
-      display: inline-block;
-      position: relative;
-      border: 1px black solid;
-      border-radius: 10px;
-      width: 90%;
-      padding-top: 10px;
-      padding-left: 20px;
-      padding-bottom: 20px;
-      padding-right: 20px;
-      margin: auto;
-      margin-top: 100px;
-      background-color: rgb(236, 236, 236);
+
+      .new-resource-input {
+        width: 100%;
+        margin-top: 0.5em;
+      }
+      .new-resource-submit {
+        margin-top: 1em;
+        text-align: center;
+        button {
+          background-color: lightgreen;
+        }
+      }
     }
 
     .all-resources {
