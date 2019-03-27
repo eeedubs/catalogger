@@ -182,8 +182,8 @@ module.exports = (knex) => {
       } else {
         if (results[0]){
           res.json({
-            success: false,
-            error: "The selected resource already belongs to that category."
+            error: "The selected resource already belongs to that category.",
+            success: false
           })
         } else {
           knexQueries.categorizeResource(userID, resourceID, categoryID, (error, results) => {
@@ -192,8 +192,8 @@ module.exports = (knex) => {
               res.status(500).json({ error: error.message });
             } else {
               res.status(200).json({
-                success: true,
-                error: null
+                error: null,
+                success: true
               })
             }
           })
@@ -205,19 +205,16 @@ module.exports = (knex) => {
 
   // FOR ADDING NEW RESOURCES - WORKS √
   router.post("/", (req, res) => {
-    let resourceURL         = req.body.resourceURL;
-    let resourceTitle       = req.body.title;
-    let resourceDescription = req.body.description;
-    let resourceImage       = req.body.imageURL;
-    let sessionID           = req.session.user_id;
+    let { resourceURL, resourceTitle, resourceImage, resourceDescription }  = req.body;
+    let sessionID = req.session.user_id;
     if (sessionID){
-      knexQueries.getUserBySessionID(sessionID, (error, results) => {
+      knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
         if (error) {
           console.log('error', error.message)
           res.status(500).json({ error: error.message });
         } else {
-          let userID = results[0].id;
-          knexQueries.postResource(resourceURL, resourceTitle, resourceImage, resourceDescription, userID, (error, results) => {
+          let userID = userResults[0].id;
+          knexQueries.postResource(resourceURL, resourceTitle, resourceImage, resourceDescription, userID, (error, resourceResults) => {
             if (error){
               console.log('error', error.message)
               res.status(500).json({ error: error.message });
@@ -230,6 +227,32 @@ module.exports = (knex) => {
     } else {
       res.redirect("/register");
     }
+  })
+
+  router.post("/decategorize", (req, res) => {
+    let userID      = req.body.user_id;
+    let resourceID  = req.body.resource_id;
+    let catID       = req.body.category_id;
+    knexQueries.removeFromCategory(userID, resourceID, catID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json(results);
+      }
+    })
+  })
+
+  router.post("/delete", (req, res) => {
+    let resourceID = req.body.resource_id;
+    knexQueries.deleteResource(resourceID, (error, results) => {
+      if (error) {
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json(results);
+      }
+    })
   })
 
   return router;

@@ -11,6 +11,8 @@ $nav-background: hsl(0, 10%, 39%);
     font: 100% $nav-font-stack;
     
     h2 {
+        position: absolute;
+        top: 10px;
         display: flex;
         align-items: center;
         color: black;
@@ -19,7 +21,7 @@ $nav-background: hsl(0, 10%, 39%);
         font-weight: bold;
         margin-top: 0;
         margin-bottom: 0;
-        margin-left: 1.5em;
+        margin-left: 1em;
     }
     .input-bar {
         font: 100% Times;
@@ -27,18 +29,18 @@ $nav-background: hsl(0, 10%, 39%);
         border: none;
         margin-left: auto;
         margin-right: 52px;
-
-        form#search-form, form#info-form, form#logout-form {
+        
+        form#search-form, form#logout-form {
             display: flex;
             align-self: center;
             height: 2em;
             .search-field {
-                width: 450px;
+                width: 30em;
                 padding-left: 8px;
             }
         }
 
-        .search-button, .info-button, .logout-button {
+        .search-button, div.dropdown, .logout-button {
             display: flex;
             align-self: center;
             background-color: $nav-background;
@@ -48,8 +50,44 @@ $nav-background: hsl(0, 10%, 39%);
             border-radius: 5px;
             margin-left: 3px;
         }
+        button.drop-button {
+            background-color: $nav-background;
+            border: none;
+            position: relative;
+            display: inline-block;
+        }
 
-        .search-button:hover, .info-button:hover, .logout-button:hover {
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 20px;
+            color: white;
+            background-color: $nav-background;
+        }
+
+        .dropdown-content a {
+            color: white;
+            opacity: 0.6;
+            padding: 5px 7px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: $nav-background;
+            opacity: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .drop-button {
+            background-color: $nav-background;
+            opacity: 1;
+        }
+
+        .search-button:hover, .dropdown:hover, .logout-button:hover {
             opacity: 1;
         }
     }

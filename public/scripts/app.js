@@ -2,19 +2,30 @@
 // the web page (jQuery - client side)
 
 $(document).ready(() => {
-  const username    = JSON.parse($("input#user")[0].value).name;
-  const userID      = JSON.parse($("input#user")[0].value).id;
-  const baseURL     = window.location.origin;
+  const username      = JSON.parse($("input#user")[0].value).name;
+  const currentUserID = JSON.parse($("input#user")[0].value).id;
+  const baseURL       = window.location.origin;
+  const searchPath      = `/search`;
+  const categoriesPath  = `/categories`;
+  const resourcesPath   = `/resources`;
+  const likedPath       = `/liked-resources`;
 
   //CREATES THE RESOURCE DOM TREE
   function createResource (resource, categories){
     let $allResources = $(`<div class="all-resources">`);
     let $singleResource = $(`<div class="resource">`).appendTo($allResources);
+      if (document.location.pathname === categoriesPath){
+        let $decategorize = $(`<button class="decategorize">Remove</button>`).appendTo($singleResource);
+        let $catID = $(`<input hidden id="catID" name="catID" value="${resource.cat_id}">`).appendTo($singleResource);
+      }
+      if (resource.created_by === currentUserID){
+        let $deleteResource = $(`<button class="delete-resource">X</button>`).appendTo($singleResource);
+      }
       let $img = $(`<img class="card-img-top" src="${resource.imageURL}"></img>`).appendTo($singleResource);
       let $resourceID = $(`<input type="hidden" id="resourceID" name="resourceID" value="${resource.id}">`).appendTo($singleResource);        
       let $createdBy = $(`<input type="hidden" id="createdBy" name="createdBy" value="${resource.created_by}">`).appendTo($singleResource);
-      let $titleAndURL = $(`<h3> <a href="${resource.resourceURL}">${resource.title}</a></h3>`).appendTo($singleResource);
-      let $username = $(`<h4> Posted by: ${resource.username}</h4>`).appendTo($singleResource);
+      let $titleAndURL = $(`<h3 class="titleURL"> <a href="${resource.resourceURL}">${resource.title}</a></h3>`).appendTo($singleResource);
+      let $username = $(`<h4> Posted ${unixDate(resource.time_created, "resource")} by ${resource.username}</h4>`).appendTo($singleResource);
       let $description = $(`<p class="resourceDescription"> ${resource.description}</p>`).appendTo($singleResource);
       let $footer = $("<footer>").appendTo($singleResource);
         let $leftSideDivs = $(`<div class="left-side-divs">`).appendTo($footer);
@@ -52,26 +63,29 @@ $(document).ready(() => {
   function createComment (comment) {
     let $eachComment = $("<div>").addClass("comment");
       let $header = $("<header>").appendTo($eachComment);
+      if (comment.user_id === currentUserID){
+        let $deleteComment = $(`<button class="delete-comment">X</button>`).appendTo($eachComment);
+      }
         let $commentID = $(`<input type="hidden" id="commentID" name="commentID" value="${comment.id}">`).appendTo($eachComment);
         let $userName = $(`<h4 class="username">${comment.user_name}</h4>`).appendTo($header);
       let $content = $("<p>").text(`${comment.comment}`).appendTo($eachComment);
       let $footer = $("<footer>").appendTo($eachComment);
-        let $span = $("<span>").addClass("timestamp").text(unixDate(comment.time_created)).appendTo($footer);
+        let $span = $("<span>").addClass("timestamp").text(unixDate(comment.time_created, "comment")).appendTo($footer);
     return $eachComment;
   }    
 
-  function unixDate(digits){
+  function unixDate(digits, purpose){
     let daysAgo = Math.floor((Date.now() - digits) / 86400000);
     let hoursAgo = Math.floor((Date.now() - digits) / 3600000);
     let minutesAgo = Math.floor((Date.now() - digits) / 60000);
     if (daysAgo < 2 && hoursAgo < 2 && minutesAgo < 2){
-        return "Moments ago.";
+      return (purpose === "comment") ? "Moments ago." : "moments ago";
     } else if (daysAgo < 2 && hoursAgo < 2){
-        return minutesAgo + " minutes ago.";
+      return (purpose === "comment") ? minutesAgo + " minutes ago." : minutesAgo + " minutes ago";
     } else if (daysAgo < 2 && hoursAgo >= 2){
-        return hoursAgo + " hours ago.";
+      return (purpose === "comment") ? hoursAgo + " hours ago." : hoursAgo + " hours ago";
     } else {
-        return daysAgo + " days ago";
+      return (purpose === "comment") ? daysAgo + " days ago." : daysAgo + " days ago";
     }
   }
 
@@ -111,23 +125,21 @@ $(document).ready(() => {
   }
 
   function renderRatings(ratingData){
-    let totalRatingsObject = {}
+    let ratingsObject = {}
     ratingData.forEach((eachRating) => {
-      let rateResourceID = String(eachRating.resource_id);
-      if (totalRatingsObject[rateResourceID]){
-        let oldRatingTotalLength   = totalRatingsObject[rateResourceID].totalLength;
-        let oldRatingTotalSum      = totalRatingsObject[rateResourceID].totalSum;
-        totalRatingsObject[rateResourceID].totalLength = oldRatingTotalLength + 1;
-        totalRatingsObject[rateResourceID].totalSum = oldRatingTotalSum + eachRating.rating;
+      let resourceID = String(eachRating.resource_id);
+      if (ratingsObject[resourceID]){
+        ratingsObject[resourceID].totalLength += 1;
+        ratingsObject[resourceID].totalSum += eachRating.rating;
       } else {
-        totalRatingsObject[rateResourceID] = {"totalLength": 1, "totalSum": eachRating.rating};
+        ratingsObject[resourceID] = {"totalLength": 1, "totalSum": eachRating.rating};
       }
-      let newAverage = (totalRatingsObject[rateResourceID].totalSum / totalRatingsObject[rateResourceID].totalLength).toFixed(2);
+      let newAverage = (ratingsObject[resourceID].totalSum / ratingsObject[resourceID].totalLength).toFixed(2);
       $("div.resource").each((index, element) => {
         let targetResourceIDValue = Number($(element).find('input#resourceID')[0].value);
         if (targetResourceIDValue === eachRating.resource_id){
           $(element).find("p.average-rating").text(`${newAverage}/5`);
-          if (eachRating.user_id === userID){
+          if (eachRating.user_id === currentUserID){
             let $userRating = $(`<input hidden id="userRating" name="userRating" value="${eachRating.rating}">`);
             $(element).append($userRating);
           }
@@ -143,17 +155,13 @@ $(document).ready(() => {
     $.ajax({
       method: "GET",
       url: `${baseURL}/api/users/categories`
-    }).done((categories) => {
-      getResources(categories);
+    }).done((categoryResources) => {
+      getResources(categoryResources);
     })
   })
 
   // URLSearchParams acquires the query parameters from the URL link
   function getResources(userCategories) {
-    let searchPath      = `/search`;
-    let categoriesPath  = `/categories`;
-    let resourcesPath   = `/resources`;
-    let likedPath       = `/liked-resources`;
 
     // /search?query=dogvideos
     if (document.location.pathname === searchPath){
@@ -307,11 +315,20 @@ $(document).ready(() => {
     })
   }
 
-  function removeComment(comment) {
-    $("div.comment-container").each((index, container) => {
-      let targetID = Number($(container).closest('div.resource').find('input#resourceID')[0].value);
-      if (targetID === comment.resource_id){
-        $(container).find('div.comment').remove();
+  function removeComment(commentID) {
+    $("div.comment").each((index, container) => {
+      let targetID = Number($(container).find('input#commentID')[0].value);
+      if (targetID === commentID){
+        $(container).closest('div.comment').remove();
+      }
+    })
+  }
+
+  function removeResource(resourceID) {
+    $("div.resource").each((index, resource) => {
+      let targetID = Number($(resource).find("input#resourceID")[0].value);
+      if (targetID === resourceID){
+        $(resource).closest('div.all-resources').remove();
       }
     })
   }
@@ -328,7 +345,7 @@ $(document).ready(() => {
       method: "POST",
       url: `${baseURL}/api/resources/categorize`,
       data: {
-        user_id: userID,
+        user_id: currentUserID,
         resource_id: resourceID,
         category_id: selectedCategoryID
       },
@@ -352,7 +369,7 @@ $(document).ready(() => {
       alert('No rating was selected.');
       return;
     }
-    if (userID === createdByID){
+    if (currentUserID === createdByID){
       alert('You cannot rate your own articles!');
       $(event.target).find("#selectRatingList").prop("selectedIndex", 0);
       return;
@@ -362,7 +379,7 @@ $(document).ready(() => {
       url: `${baseURL}/api/resources/rate`,
       data: {
         rating: newRating,
-        user_id: userID,
+        user_id: currentUserID,
         resource_id: resourceID
       },
       success: (ratingResults) => {
@@ -399,23 +416,22 @@ $(document).ready(() => {
       return;
     }
     let newCommentData = {
-      userComment: userComment,
-      userName: username,
-      userID: userID,
+      comment: userComment,
+      user_name: username,
+      user_id: currentUserID,
       time_created: Date.now(),
-      resourceID: resourceID
+      resource_id: resourceID
     }
-    appendComment(newCommentData);
     $.ajax({
       method: "POST",
       url: `${baseURL}/api/users/comment`,
       data: newCommentData,
-      success: () => {
+      success: (returnedComment) => {
+        appendComment(returnedComment[0]);
         $(event.target)[0].reset();
       }
     })
     .fail((error) => {
-      removeComment(newCommentData);
       alert(`${error.status}: ${error.statusText}`);
     });
   })
@@ -424,12 +440,12 @@ $(document).ready(() => {
     event.preventDefault();
     let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
     let createdByID = Number($(event.target).closest('div.resource').find('input#createdBy')[0].value);
-    if (userID === createdByID){
+    if (currentUserID === createdByID){
       alert('You cannot like your own articles!');
       return;
     }
     let likeData = {
-      user_id: userID,
+      user_id: currentUserID,
       resource_id: resourceID
     };
     $.ajax({
@@ -444,6 +460,71 @@ $(document).ready(() => {
       alert(`${error.status}: ${error.statusText}`);
     })
   })
+  
+  $("body").on("click", "button.delete-resource", (event) => {
+    event.preventDefault();
+    let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+    if (window.confirm("Are you sure you want to delete this resource?")){
+      let resourceData = {
+        resource_id: resourceID
+      }
+      $.ajax({
+        method: "POST",
+        url: `${baseURL}/api/resources/delete`,
+        data: resourceData,
+        success: (response) => {
+          removeResource(resourceID);
+        }
+      })
+      .fail((error) => {
+        alert(`${error.status}: ${error.statusText}`);
+      })
+    }
+  })
 
+  $("body").on("click", "button.delete-comment", (event) => {
+    event.preventDefault();
+    if (window.confirm("Are you sure you want to delete this comment?")){
+      let commentID  = Number($(event.target).closest('div.comment').find('input#commentID')[0].value);
+      let commentData = {
+        comment_id: commentID
+      }
+      $.ajax({
+        method: "POST",
+        url: `${baseURL}/api/users/delete-comment`,
+        data: commentData,
+        success: (response) => {
+          removeComment(commentID);
+        }
+      })
+      .fail((error) => {
+        alert(`${error.status}: ${error.statusText}`);
+      })
+    }
+  })
+
+  $("body").on("click", "button.decategorize", (event) => {
+    event.preventDefault();
+    if (window.confirm("Are you sure you want to remove this resource?")){
+      let resourceID  = Number($(event.target).closest('div.resource').find('input#resourceID')[0].value);
+      let selectedCategoryID  = Number($(event.target).closest('div.resource').find("#catID")[0].value);
+      let categoryData = {
+        user_id: currentUserID,
+        resource_id: resourceID,
+        category_id: selectedCategoryID
+      }
+      $.ajax({
+        method: "POST", 
+        url: `${baseURL}/api/resources/decategorize`,
+        data: categoryData,
+        success: (response) => {
+          removeResource(resourceID);
+        }
+      })
+      .fail((error) => {
+        alert(`${error.status}: ${error.statusText}`);
+      })
+    }
+  })
 })
 

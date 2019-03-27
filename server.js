@@ -184,6 +184,7 @@ app.get('/categories', (req, res) => {
 // User Profile update page
 app.get("/account", (req, res) => {
   let sessionID = req.session.user_id;
+  let query = req.query['page']
   if (sessionID){
     knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
       if (error){
@@ -197,7 +198,7 @@ app.get("/account", (req, res) => {
           } else {
             let templateVars = {
               user: userResults[0],
-              pagename: "Account Information",
+              pagename: (query === "info") ? "Account Information" : "Category Information",
               categories: categoryResults
             }
             res.render("info", templateVars);

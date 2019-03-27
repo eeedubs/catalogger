@@ -1,6 +1,16 @@
 @import 'header';
 @import 'sidebar';
 @import 'info';
+@import 'login';
+
+%delete-buttons {
+  background-color: lightgray;
+  color: red;
+  opacity: 0.95;
+  font-style: bold;
+  border-radius: 20px;
+  float: right;
+}
 
 body {
   background-color: white;
@@ -70,6 +80,38 @@ body {
         padding-right: 5px;
         background-color: lightblue;
 
+        h3 {
+          max-width: 80%;
+        }
+
+        .delete-resource {
+          @extend %delete-buttons;
+          width: 2.2em;
+        }
+
+        .delete-resource:hover {
+          opacity: 1;
+        }
+
+        .delete-resource:focus {
+          outline: none;
+        }
+
+        .decategorize {
+          color: black;
+          opacity: 0.95;
+          font-style: bold;
+          border-radius: 10px;
+        }
+
+        .decategorize:hover {
+          opacity: 1;
+        }
+
+        .delete-resource:focus {
+          outline: none;
+        }
+
         p.resourceDescription {
           width: 78%;
           text-align: justify;
@@ -77,9 +119,9 @@ body {
         }
         .card-img-top {
           float: right;
-          margin-right: 10px;
-          margin-left: 5px;
-          margin-top: 35px;
+          position: absolute;
+          top: 40px;
+          right: 10px;
           min-width: 80px;
           max-width: 120px;
           min-height: 80px;
@@ -244,6 +286,14 @@ body {
                 margin-left: 2px;
               }
             }
+
+            .delete-comment {
+              @extend %delete-buttons;
+              position: relative;
+              top: -30px;
+              width: 2em;
+            }
+
             p {
               height: 60%;
               margin-left: 8px;

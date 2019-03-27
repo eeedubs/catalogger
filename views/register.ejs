@@ -26,38 +26,28 @@
 
     <body>
         <main class="container">
-            <!-- Login -->
-            <div class="login-container registration">
-                <div class="row">
-                    <div class="col-md-6 login-form-1">
-                        <h3>Login</h3>
-                        <form action="/api/users/login" method="POST">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="loginUsername" autocomplete="on" placeholder="Your Username *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" name="loginPassword" autocomplete="on" placeholder="Your Password *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btnSubmit" value="Login" />
-                            </div>
-                        </form>
-                    </div>
-                    <!-- Registration -->
-                    <div class="col-md-6 login-form-2">
-                        <h3>Register</h3>
-                        <form method="POST" action="/api/users/register">
-                            <div class="form-group">
-                                <input type="text" class="form-control" name="registerUsername" autocomplete="on" placeholder="New Username *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="password" class="form-control" name="registerPassword" autocomplete="on" placeholder="New Password *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btnSubmit" value="Register" />
-                            </div>
-                        </form>
-                    </div>
+
+            <div class="authorize-container">
+                <div class="login-container">
+                    <h3>Log In</h3>
+                    <form action="/api/users/login" method="POST">
+                        <input type="text" class="authorize-input" name="loginUsername" autocomplete="on" placeholder="Your Username *" value="" />
+                        <input type="password" class="authorize-input" name="loginPassword" autocomplete="on" placeholder="Your Password *" value="" />
+                        <div class="authorize-submit">
+                            <input type="submit" class="submit-button" value="Login" />
+                        </div>
+                    </form>
+                </div>
+
+                <div class="register-container">
+                    <h3>Register</h3>
+                    <form action="/api/users/register" method="POST">
+                        <input type="text" class="authorize-input" name="registerUsername" autocomplete="on" placeholder="New Username *" value="" />
+                        <input type="password" class="authorize-input" name="registerPassword" autocomplete="on" placeholder="New Password *" value="" />
+                        <div class="authorize-submit">
+                            <input type="submit" class="submit-button" value="Register" />
+                        </div>
+                    </form>
                 </div>
             </div>
         </main>

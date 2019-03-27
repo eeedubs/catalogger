@@ -1,26 +1,39 @@
 div.infoContainer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
+  display: block;
+  width: 70%;
+  margin: 0 auto;
   height: 100%;
   text-align: center;
-  
-  form {
-    width: 50%;
-    display: block;
-    .infoLabel {
-      text-align: left;
-      width: 85%;
-      margin-top: 3%;
-    }
+}
 
-    input.infoInput {
-      width: 85%;
-    }
-    input.infoSubmit {
-      margin-top: 3%;
-      width: 10em;
-    }
-  }
+.infoLabel {
+  text-align: left;
+  width: 100%;
+  margin-top: 3%;
+}
+
+input.infoInput {
+  width: 100%;
+}
+input.infoSubmit {
+  float: left;
+  margin-top: 3%;
+  background-color: lightgrey;
+  border-radius: 30px;
+  width: 12em;
+}
+
+input.categorySubmit {
+  @extend input.infoSubmit;
+  text-align: center;
+  float: none;
+}
+
+.deleteAccount {
+  float: right;
+  background-color: #cc0202;
+  color: white;
+  margin-top: 3%;
+  border-radius: 30px;
+  width: 12em;
 }

@@ -218,29 +218,60 @@ module.exports = (knex) => {
     res.redirect("/register");
   })
 
+  router.post("/delete-comment", (req, res) => {
+    let { comment_id } = req.body;
+    knexQueries.deleteComment(comment_id, (error, results) => {
+      if (error){
+        console.log('Error posting comment to the database.', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        res.status(200).json(results);
+      }
+    })
+  })
+
   // Comment On Resource
   router.post("/comment", (req, res) => {
-    let { userComment, userName } = req.body;
-    let userID      = JSON.parse(req.body.userID);
-    let resourceID  = JSON.parse(req.body.resourceID);
-    if (!userComment){
+    let { comment, user_name } = req.body;
+    let userID      = JSON.parse(req.body.user_id);
+    let resourceID  = JSON.parse(req.body.resource_id);
+    if (!comment){
       res.status(400).send("400 Bad Request Error: comment input is empty.");
-    } else if (!userName || !userID){
+    } else if (!user_name || !userID){
       res.status(400).send("400 Bad Request Error: missing user credentials. Please log in to post comments.");
     } else if (!resourceID){
       res.status(500).send("500 Internal Server Error: missing the resource ID number.");
     } else {
-      knexQueries.postComment(userComment, userName, userID, resourceID, (error, commentResults) => {
+      knexQueries.postComment(comment, user_name, userID, resourceID, (error, commentResults) => {
         if (error){
           console.log('Error posting comment to the database.', error.message)
           res.status(500).json({ error: error.message });
         } else {
-          res.status(200).json({
-            success: true
-          })
+          res.status(200).json(commentResults)
         }
       })
     }
+  })
+
+  router.post("/delete", (req, res) => {
+    let sessionID = req.session.user_id;
+    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
+      if (error){
+        console.log('error', error.message)
+        res.status(500).json({ error: error.message });
+      } else {
+        let userID = userResults[0].id;
+        knexQueries.deleteUser(userID, (error, results) => {
+          if (error){
+            console.log('error', error.message)
+            res.status(500).json({ error: error.message });
+          } else {
+            req.session = null;
+            res.redirect("/register");
+          }
+        })
+      }
+    })
   })
 
   return router;

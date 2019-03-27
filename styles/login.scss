@@ -1,0 +1,37 @@
+.authorize-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 1em;
+  width: 120%;
+  height: 60%;
+  background-color: lightgrey;
+
+  h3 {
+    text-align: center;
+  }
+
+  .login-container {
+    width: 40%;
+  }
+  .register-container {
+    width: 40%;
+  }
+
+  .authorize-input {
+    margin-top: 2em;
+    width: 100%;
+  }
+
+  .authorize-submit {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    
+    .submit-button {
+      width: 5em;
+      border: 1px solid darkslategrey;
+      border-radius: 20px;
+    }
+  }
+}

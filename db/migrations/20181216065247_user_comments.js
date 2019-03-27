@@ -4,8 +4,8 @@ exports.up = function(knex, Promise) {
         table.increments('id').primary();
         table.string('comment');
         table.string('user_name');
-        table.integer('user_id').references('users.id');
-        table.integer('resource_id').references('resources.id');
+        table.integer('user_id').references('users.id').onDelete('cascade');
+        table.integer('resource_id').references('resources.id').onDelete('cascade');
         table.string('time_created');
       })
   };
