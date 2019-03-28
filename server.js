@@ -5,7 +5,6 @@ require('dotenv').config();
 
 const PORT          = process.env.PORT || 8080;
 const ENV           = process.env.ENV || "development";
-const webURL        = (PORT === 8080) ? "localhost:8080" : "https://eeedubs-catalogger.herokuapp.com" 
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
@@ -25,7 +24,7 @@ app.use(cookieSession({
 // Setting up Knex with PostgreSQL
 // knexConfig[ENV] is set to use the production environment (const ENV = 'Production')
 // knexQueries contains all of the Knex queries to the PSQL database
-const knexConfig  = require('./knexfile');
+const knexConfig  = require('./knexfile')(PORT);
 const knex        = require('knex')(knexConfig[ENV]);
 const knexQueries = require('./lib/knex-queries')(knex);
 const morgan      = require('morgan');

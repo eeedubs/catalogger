@@ -1,19 +1,20 @@
 'use strict'
 
+
 require('dotenv').config();
 
-module.exports = {
+module.exports = (PORT) = {
 
   development: {
     client: 'postgresql',
-    connection: {
+    connection: (PORT === 8080) ? {
       host     : process.env.DB_HOST,
       user     : process.env.DB_USER,
       password : process.env.DB_PASS,
       database : process.env.DB_NAME,
       port     : process.env.DB_PORT,
       ssl      : false
-    },
+    } : process.env.DATABASE_URL,
     migrations: {
       directory: './db/migrations',
       tableName: 'migrations'

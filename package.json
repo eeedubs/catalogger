@@ -2,6 +2,10 @@
   "name": "node-skeleton",
   "version": "1.0.0",
   "description": "## Project Setup",
+  "engines": {
+    "node": "8.12.0",
+    "npm": "6.9.0"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
