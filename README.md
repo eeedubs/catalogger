@@ -2,6 +2,15 @@
 
 Catalogger is a Pinterest replica which allows users to post and interact with news articles (resources). The application is built with HTML, SCSS, Bootstrap, jQuery and AJAX on the front-end, and Node, Express and Postgres on the back-end. 
 
+
+## Heroku Server
+
+This application is served at http://eeedubs-catalogger.herokuapp.com/
+
+## Important Information
+
+This application is best used via a Google Chrome browser with wider dimensions than normal.
+
 ## Getting Started
 
 1. You will need a postgres database to run the server. Create a database called 'catalogger'
@@ -36,6 +45,6 @@ Catalogger is a Pinterest replica which allows users to post and interact with n
 - PG
 - UUID
 
-## Heroku Server
+## Future Improvements
 
-- This application is served at http://eeedubs-catalogger.herokuapp.com/
+- Improve responsive design of application to allow for better user experience on different browsers and devices.
