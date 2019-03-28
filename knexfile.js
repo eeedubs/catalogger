@@ -1,11 +1,12 @@
 'use strict'
 
-
-require('dotenv').config();
+// require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.load();
 
 module.exports = {
 
-  local: {
+  development: {
     client: 'postgresql',
     connection: {
       host     : process.env.DATABASE_HOST,
@@ -24,32 +25,15 @@ module.exports = {
     }
   },
 
-  development : {
-    client: 'postgresql',
-    connection: {
-      host      : '127.0.0.01',
-      user      : process.env.TODO_DB_USER,
-      password  : process.env.TODO_DB_PW,
-      database  : process.env.DATABASE_URL
-    },
+  production : {
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
     migrations: {
-      directory: './db/migrations',
-      tableName: 'migrations'
+      directory: __dirname + '/db/migrations'
     },
     seeds: {
-      directory: './db/seeds'
-    }
-  },
-
-  production: {
-    client: 'postgresql',
-    connection: process.env.DATABASE_URL + '?ssl=true',
-    pool: {
-      min: 2,
-      max: 10
+      directory: __dirname + '/db/seeds/production'
     },
-    migrations: {
-      tableName: 'migrations'
-    }
+    useNullasDefault: true
   }
 };

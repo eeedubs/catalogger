@@ -1,11 +1,13 @@
 // server.js Handles all HTTP requests (server-side)
-"use strict";
+// "use strict";
 
 require('dotenv').config();
 
 const PORT          = process.env.PORT || 8080;
-// const ENV           = process.env.ENV || "development";
-const ENV           = (PORT === 8080) ? "local" : "development";
+let environment     = process.env.NODE_ENV || "production";
+if (PORT === 8080){
+  environment = process.env.ENV || "development";
+}
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
@@ -26,7 +28,7 @@ app.use(cookieSession({
 // knexConfig[ENV] is set to use the production environment (const ENV = 'Production')
 // knexQueries contains all of the Knex queries to the PSQL database
 const knexConfig  = require('./knexfile');
-const knex        = require('knex')(knexConfig[ENV]);
+const knex        = require('knex')(knexConfig[environment]);
 const knexQueries = require('./lib/knex-queries')(knex);
 const morgan      = require('morgan');
 const knexLogger  = require('knex-logger');
