@@ -1,5 +1,5 @@
 // server.js Handles all HTTP requests (server-side)
-// "use strict";
+"use strict";
 
 require('dotenv').config();
 
