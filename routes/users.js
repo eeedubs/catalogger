@@ -6,7 +6,6 @@ const express       = require('express');
 const router        = express.Router();
 const cookieParser  = require('cookie-parser');
 const bodyParser    = require('body-parser');
-const cookieSession = require('cookie-session');
 const bcrypt        = require ("bcrypt");
 const uuidv1        = require('uuid/v1');
 
@@ -19,21 +18,20 @@ module.exports = (knex) => {
   
   const knexQueries = require('../lib/knex-queries')(knex);
 
-  // gets all the categories (NOT THE RESOURCES) for a given user
   router.get("/categories", (req, res) => {
     let sessionID = req.session.user_id;
-    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        let userID = results[0].id;
-        knexQueries.getCategoriesByUserID(userID, (error, results) => {
+        let userID = userResults[0].id;
+        knexQueries.getCategoriesByUserID(userID, (error, categoryResults) => {
           if (error){
             console.log('Error getting user by name.', error.message)
             res.status(500).json({ error: error.message })
           } else {
-            res.json(results);
+            res.json(categoryResults);
           }
         })
       }
@@ -42,18 +40,18 @@ module.exports = (knex) => {
 
   router.get("/resources/liked", (req, res) => {
     let sessionID = req.session.user_id;
-    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        let userID = results[0].id;
-        knexQueries.getLikedResources(userID, (error, results) => {
+        let userID = userResults[0].id;
+        knexQueries.getLikedResources(userID, (error, resourceResults) => {
           if (error){
             console.log('error', error.message)
             res.status(500).json({ error: error.message });
           } else {
-            res.json(results);
+            res.json(resourceResults);
           }
         })
       }
@@ -62,18 +60,18 @@ module.exports = (knex) => {
 
   router.get("/resources", (req, res) => {
     let sessionID = req.session.user_id;
-    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        let userID = results[0].id;
-        knexQueries.getLikedOrPostedResources(userID, (error, results) => {
+        let userID = userResults[0].id;
+        knexQueries.getLikedOrPostedResources(userID, (error, resourceResults) => {
           if (error){
             console.log('Error getting user by name.', error.message)
             res.status(500).json({ error: error.message })
           } else {
-            res.json(results);
+            res.json(resourceResults);
           }
         })
       }
@@ -127,7 +125,7 @@ module.exports = (knex) => {
     let categoryIDArray = [cat1ID, cat2ID, cat3ID, cat4ID, cat5ID];
     for (let i = 0; i < categoryLabelArray.length; i++){
       if (categoryLabelArray[i]){
-        knexQueries.renameCategoryLabel(categoryIDArray[i], categoryLabelArray[i], (error, results) => {
+        knexQueries.renameCategoryLabel(categoryIDArray[i], categoryLabelArray[i], (error, categoryResults) => {
           if (error){
             console.log('Error getting user by name.', error.message)
             res.status(500).json({ error: error.message })
@@ -138,7 +136,6 @@ module.exports = (knex) => {
     res.redirect("/");
   })
 
-  // LOGIN USER ROUTE
   router.post("/login", (req, res) => {
     let { loginUsername, loginPassword } = req.body;
     let uniqueID = uuidv1();
@@ -173,7 +170,6 @@ module.exports = (knex) => {
     }
   })
 
-  // REGISTER NEW USER ROUTE
   router.post("/register", (req, res) => {
     let { registerUsername, registerPassword } = req.body;
     let uniqueID = uuidv1();
@@ -212,7 +208,6 @@ module.exports = (knex) => {
     }
   })
 
-  // LOGOUT USER
   router.post("/logout", (req, res) => {
     req.session = null;
     res.redirect("/register");
@@ -220,17 +215,16 @@ module.exports = (knex) => {
 
   router.post("/delete-comment", (req, res) => {
     let { comment_id } = req.body;
-    knexQueries.deleteComment(comment_id, (error, results) => {
+    knexQueries.deleteComment(comment_id, (error, commentResults) => {
       if (error){
         console.log('Error posting comment to the database.', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.status(200).json(results);
+        res.status(200).json(commentResults);
       }
     })
   })
 
-  // Comment On Resource
   router.post("/comment", (req, res) => {
     let { comment, user_name } = req.body;
     let userID      = JSON.parse(req.body.user_id);
@@ -261,7 +255,7 @@ module.exports = (knex) => {
         res.status(500).json({ error: error.message });
       } else {
         let userID = userResults[0].id;
-        knexQueries.deleteUser(userID, (error, results) => {
+        knexQueries.deleteUser(userID, (error, deleteResults) => {
           if (error){
             console.log('error', error.message)
             res.status(500).json({ error: error.message });

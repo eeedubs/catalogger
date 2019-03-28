@@ -85,6 +85,7 @@ app.get("/search", (req, res) => {
               pagename: `Search results for "${searchQuery}":`,
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render('resource-page', templateVars);
           }
         })
@@ -113,6 +114,7 @@ app.get("/resources", (req, res) => {
               pagename: "Resources you've liked or posted:",
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render('resource-page', templateVars);
           }
         })
@@ -141,6 +143,7 @@ app.get("/liked-resources", (req, res) => {
               pagename: "Resources you've liked:",
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render('resource-page', templateVars);
           }
         })
@@ -171,6 +174,7 @@ app.get('/categories', (req, res) => {
               pagename: categoryName,
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render("resource-page", templateVars);
           }
         })
@@ -201,6 +205,7 @@ app.get("/account", (req, res) => {
               pagename: (query === "info") ? "Account Information" : "Category Information",
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render("info", templateVars);
           }
         })
@@ -230,6 +235,7 @@ app.get("/", (req, res) => {
               pagename: "Home",
               categories: categoryResults
             }
+            userResults, categoryResults = null;
             res.render('index', templateVars);
           }
         })

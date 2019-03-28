@@ -4,9 +4,6 @@ const express       = require('express');
 const router        = express.Router();
 const cookieParser  = require('cookie-parser');
 const bodyParser    = require('body-parser');
-const cookieSession = require('cookie-session');
-const bcrypt        = require ("bcrypt");
-const uuidv1        = require('uuid/v1');
 
 router.use(cookieParser());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -16,34 +13,34 @@ module.exports = (knex) => {
   const knexQueries = require('../lib/knex-queries')(knex);
 
   router.get('/comments', (req, res) => {
-    knexQueries.getAllComments((error, results) => {
+    knexQueries.getAllComments((error, commentResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.json(results);
+        res.json(commentResults);
       }
     })
   })
 
   router.get("/likes", (req, res) => {
-    knexQueries.getLikes((error, results) => {
+    knexQueries.getLikes((error, likeResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.json(results);
+        res.json(likeResults);
       }
     })
   })
 
   router.get("/ratings", (req, res) => {
-    knexQueries.getRatings((error, results) => {
+    knexQueries.getRatings((error, ratingResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.json(results);
+        res.json(ratingResults);
       }
     })
   })
@@ -51,12 +48,12 @@ module.exports = (knex) => {
   router.get('/search', (req, res) => {
     let sessionID = req.session.user_id;
     let searchQuery = req.query['query'].toLowerCase();
-    knexQueries.getResourcesBySearchQuery(searchQuery, (error, results) => {
+    knexQueries.getResourcesBySearchQuery(searchQuery, (error, resourceResults) => {
       if (error) {
         console.log('error', error.message);
         res.status(500).json({ error: error.message });
       } else {
-        res.json(results);
+        res.json(resourceResults);
       }
     })
   })
@@ -64,12 +61,12 @@ module.exports = (knex) => {
   router.get('/categories', (req, res) => {
     let sessionID = req.session.user_id;
     let catName = req.query['catName'];
-    knexQueries.getUserBySessionID(sessionID, (error, results) => {
+    knexQueries.getUserBySessionID(sessionID, (error, userResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        let userID = results[0].id;
+        let userID = userResults[0].id;
         knexQueries.getCategoryIDByName(catName, userID, (error, catIDResults) => {
           if (error) {
             console.log('error', error.message);
@@ -92,12 +89,12 @@ module.exports = (knex) => {
 
   // LOAD ALL RESOURCES FOR HOME PAGE
   router.get('/', (req, res) => {
-    knexQueries.getAllResources((error, results) => {
+    knexQueries.getAllResources((error, resourceResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.json(results);
+        res.json(resourceResults);
       }
     })
   })
@@ -175,18 +172,18 @@ module.exports = (knex) => {
     let userID      = Number(req.body.user_id);
     let resourceID  = Number(req.body.resource_id);
     let categoryID  = Number(req.body.category_id);
-    knexQueries.checkCategorization(userID, resourceID, categoryID, (error, results) => {
+    knexQueries.checkCategorization(userID, resourceID, categoryID, (error, checkResults) => {
       if (error){
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        if (results[0]){
+        if (checkResults[0]){
           res.json({
             error: "The selected resource already belongs to that category.",
             success: false
           })
         } else {
-          knexQueries.categorizeResource(userID, resourceID, categoryID, (error, results) => {
+          knexQueries.categorizeResource(userID, resourceID, categoryID, (error, categorizeResults) => {
             if (error){
               console.log('error', error.message)
               res.status(500).json({ error: error.message });
@@ -233,24 +230,24 @@ module.exports = (knex) => {
     let userID      = req.body.user_id;
     let resourceID  = req.body.resource_id;
     let catID       = req.body.category_id;
-    knexQueries.removeFromCategory(userID, resourceID, catID, (error, results) => {
+    knexQueries.removeFromCategory(userID, resourceID, catID, (error, categoryResults) => {
       if (error) {
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.status(200).json(results);
+        res.status(200).json(categoryResults);
       }
     })
   })
 
   router.post("/delete", (req, res) => {
     let resourceID = req.body.resource_id;
-    knexQueries.deleteResource(resourceID, (error, results) => {
+    knexQueries.deleteResource(resourceID, (error, deleteResults) => {
       if (error) {
         console.log('error', error.message)
         res.status(500).json({ error: error.message });
       } else {
-        res.status(200).json(results);
+        res.status(200).json(deleteResults);
       }
     })
   })
