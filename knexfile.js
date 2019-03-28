@@ -1,8 +1,6 @@
 'use strict'
 
-// require('dotenv').config();
-const dotenv = require('dotenv');
-dotenv.load();
+require('dotenv').config();
 
 module.exports = {
 
