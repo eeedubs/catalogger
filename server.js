@@ -25,7 +25,7 @@ app.use(cookieSession({
 // Setting up Knex with PostgreSQL
 // knexConfig[ENV] is set to use the production environment (const ENV = 'Production')
 // knexQueries contains all of the Knex queries to the PSQL database
-const knexConfig  = require('./knexfile')(PORT);
+const knexConfig  = require('./knexfile');
 const knex        = require('knex')(knexConfig[ENV]);
 const knexQueries = require('./lib/knex-queries')(knex);
 const morgan      = require('morgan');
