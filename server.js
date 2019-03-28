@@ -5,11 +5,11 @@ require('dotenv').config();
 
 const PORT          = process.env.PORT || 8080;
 const ENV           = process.env.ENV || "development";
+const webURL        = (PORT === 8080) ? "localhost:8080" : "https://eeedubs-catalogger.herokuapp.com" 
 const express       = require("express");
 const bodyParser    = require("body-parser");
 const sass          = require("node-sass-middleware");
 const app           = express();
-const uuidv1        = require('uuid/v1');
 const cookieParser  = require('cookie-parser');
 
 app.use(cookieParser());
